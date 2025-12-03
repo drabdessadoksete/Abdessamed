@@ -3,7 +3,6 @@ import { motion } from 'framer-motion'
 const features = [
   { title: 'Radiographies numériques', desc: 'Imagerie à faible radiation pour des diagnostics précis et confortables.'},
   { title: 'Caméras intraorales', desc: 'Voyez ce que nous voyons — des visuels clairs pour de meilleures décisions.'},
-  { title: 'Couronnes en une journée', desc: 'Technologie CAD/CAM pour des restaurations durables et esthétiques.'},
   { title: 'Anesthésie maîtrisée', desc: 'Techniques d’anesthésie douces pour votre confort.'},
 ]
 
@@ -32,4 +31,3 @@ export default function Features(){
     </section>
   )
 }
-

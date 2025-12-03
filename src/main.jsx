@@ -1,6 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import { HelmetProvider } from 'react-helmet-async'
 import './styles/index.css'
 import App from './App'
 import Home from './pages/Home'
@@ -8,6 +9,10 @@ import About from './pages/About'
 import Services from './pages/Services'
 import Gallery from './pages/Gallery'
 import Contact from './pages/Contact'
+import Admin from './pages/Admin'
+import Actualities from './pages/Actualities'
+import Article from './pages/Article'
+import ActualitiesAdmin from './pages/ActualitiesAdmin'
 import logoUrl from './assets/new logo.png'
 
 // Ensure favicon uses the provided logo
@@ -31,12 +36,18 @@ const router = createBrowserRouter([
       { path: 'services', element: <Services /> },
       { path: 'gallery', element: <Gallery /> },
       { path: 'contact', element: <Contact /> },
+      { path: 'actualities', element: <Actualities /> },
+      { path: 'actualities/:id', element: <Article /> },
     ]
-  }
+  },
+  { path: '/admin', element: <Admin /> },
+  { path: '/admin/actualities', element: <ActualitiesAdmin /> },
 ])
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <HelmetProvider>
+      <RouterProvider router={router} />
+    </HelmetProvider>
   </React.StrictMode>
 )

@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { motion } from 'framer-motion'
+import { useState as useState2 } from 'react'
+import { getGallery } from '../services/api'
 import implant1 from '../assets/Implantologie & Chirurgie Orale galery 1.png'
 import implant2 from '../assets/Implantologie & Chirurgie Orale galery 2.png'
 import implant3 from '../assets/Implantologie & Chirurgie Orale.png'
@@ -77,12 +79,16 @@ function SectionCarousel({ title, badge, images }){
 
 export default function Gallery(){
   const { hash } = useLocation()
+  const [dynamic, setDynamic] = useState2(null)
   useEffect(() => {
     if (hash) {
       const el = document.getElementById(hash.slice(1))
       if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
     }
   }, [hash])
+  useEffect(() => {
+    getGallery().then((g) => setDynamic(g)).catch(() => setDynamic(null))
+  }, [])
   return (
     <section className="section">
       <div className="container-max">
@@ -99,7 +105,7 @@ export default function Gallery(){
         <div id="implant">
           <SectionCarousel
             title="Implantologie & Chirurgie Orale"
-            images={[implant1, implant2, implant3]}
+            images={dynamic?.implant?.map((i) => i.url) || [implant1, implant2, implant3]}
           />
         </div>
 
@@ -107,13 +113,13 @@ export default function Gallery(){
           <SectionCarousel
             title="Invisalign® - L'Orthodontie Invisible"
             badge="Certifié Platinum Provider"
-            images={[invis1, invis2, invis3]}
+            images={dynamic?.invisalign?.map((i) => i.url) || [invis1, invis2, invis3]}
           />
         </div>
 
         <SectionCarousel
           title="Soins généraux"
-          images={[gen1, gen2, gen3]}
+          images={dynamic?.general?.map((i) => i.url) || [gen1, gen2, gen3]}
         />
       </div>
     </section>

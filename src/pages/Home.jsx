@@ -1,4 +1,6 @@
 import Hero from '../components/Hero'
+import { useState } from 'react'
+import { Helmet } from 'react-helmet-async'
 import implantImg from "../assets/Implantologie & Chirurgie Orale.png"
 import alignerImg from "../assets/nvisalign® - L'Orthodontie Invisible.png"
 import implantIcon from "../assets/Implantologie & Chirurgie Orale icon.png"
@@ -9,8 +11,14 @@ import Testimonials from '../components/Testimonials'
 import CTA from '../components/CTA'
 
 export default function Home(){
+  const [showInvisalignPortal, setShowInvisalignPortal] = useState(false)
   return (
     <>
+      <Helmet>
+        <title>Dr Abdessadok | Dentiste Sète - Implantologie BioTech & Invisalign</title>
+        <meta name="description" content="Cabinet dentaire à Sète (34). Spécialiste en implants dentaires français (BioTech) et orthodontie invisible (Invisalign). Prenez RDV en ligne." />
+        <meta name="keywords" content="Dentiste Sète, Implant dentaire Montpellier, Invisalign Sète, Urgence dentaire 34, Facettes dentaires" />
+      </Helmet>
       <Hero />
       <section className="section pt-0">
         <div className="container-max grid md:grid-cols-2 gap-5 md:gap-10">
@@ -27,7 +35,7 @@ export default function Home(){
               <img src={implantImg} alt="Implantologie BioTech" className="rounded-xl shadow-soft w-full h-auto object-cover mb-6" />
               <div className="flex flex-col md:flex-row md:flex-wrap md:items-start gap-3">
                 <a
-                  href="#LINK_IMPLANT"
+                  href="https://www.doctolib.fr/dentiste/sete/abdessamed-abdessadok-levallois-perret/booking/motives?specialityId=1&telehealth=false&placeId=practice-518332&bookingFunnelSource=profile"
                   aria-label="Réserver Bilan Implant"
                   rel="noopener"
                   onClick={(e) => {
@@ -64,7 +72,7 @@ export default function Home(){
               <img src={alignerImg} alt="Orthodontie Invisible Invisalign" className="rounded-xl shadow-soft w-full h-auto object-cover mb-6" />
               <div className="flex flex-col md:flex-row md:flex-wrap md:items-start gap-3">
                 <a
-                  href="#LINK_INVISALIGN"
+                  href="https://www.doctolib.fr/dentiste/sete/abdessamed-abdessadok-levallois-perret/booking/availabilities?specialityId=1&telehealth=false&placeId=practice-518332&motiveCategoryIds%5B%5D=492540&motiveIds%5B%5D=15059876&bookingFunnelSource=deep_link"
                   aria-label="Réserver Bilan Invisalign"
                   rel="noopener"
                   onClick={(e) => {
@@ -88,7 +96,18 @@ export default function Home(){
                 </a>
                 <Link to="/gallery#invisalign" className="btn-outline min-w-[200px] md:min-w-0 h-11 whitespace-nowrap rounded-2xl">Voir la galerie</Link>
                 <Link to="/services" className="btn-outline min-w-[200px] md:min-w-0 h-11 whitespace-nowrap rounded-2xl">En savoir plus</Link>
+                <button type="button" className="btn-primary min-w-[200px] md:min-w-0 h-11 whitespace-nowrap rounded-2xl" onClick={() => setShowInvisalignPortal((v) => !v)}>{showInvisalignPortal ? 'Masquer dans la page' : 'Prenez votre selfie'}</button>
               </div>
+              {showInvisalignPortal && (
+                <div className="mt-4 rounded-2xl border border-slate-800 bg-surface/60 backdrop-blur overflow-hidden">
+                  <iframe
+                    src="https://www.invisalign.fr/SV/1851755"
+                    title="Portail Invisalign"
+                    className="w-full h-[600px]"
+                    loading="lazy"
+                  />
+                </div>
+              )}
             </div>
           </div>
         </div>

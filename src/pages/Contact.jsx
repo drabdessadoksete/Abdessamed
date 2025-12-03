@@ -1,8 +1,15 @@
 import { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
+import { Helmet } from 'react-helmet-async'
+import { submitMessage } from '../services/api'
 
 export default function Contact(){
   const [openIndex, setOpenIndex] = useState(null)
+  const [name, setName] = useState('')
+  const [email, setEmail] = useState('')
+  const [phone, setPhone] = useState('')
+  const [message, setMessage] = useState('')
+  const [status, setStatus] = useState('')
   const faqData = [
     {
       question: "Quelle est l'adresse du Dr Abdessamed ABDESSADOK ?",
@@ -35,14 +42,39 @@ export default function Contact(){
   ]
   return (
     <section className="section">
+      <Helmet>
+        <title>Contact Dr Abdessadok | Dentiste Sète - Rendez-vous Implantologie Invisalign</title>
+        <meta name="description" content="Prise de rendez-vous pour implantologie et orthodontie invisible à Sète. Contactez le cabinet dentaire Dr Abdessadok par téléphone ou email." />
+        <meta name="keywords" content="Contact dentiste Sète, Rendez-vous Implantologie, Rendez-vous Invisalign, Adresse cabinet Sète, Téléphone dentiste 34" />
+      </Helmet>
       <div className="container-max grid md:grid-cols-2 gap-10">
-        <form className="card p-6 space-y-4">
+        <form className="card p-6 space-y-4" onSubmit={async (e) => {
+          e.preventDefault()
+          setStatus('')
+          try {
+            const res = await submitMessage({ name, email, phone, message })
+            if (res && res.id) {
+              setStatus('Message envoyé')
+              setName('')
+              setEmail('')
+              setPhone('')
+              setMessage('')
+            } else {
+              setStatus('Erreur lors de l’envoi')
+            }
+          } catch {
+            setStatus('Erreur lors de l’envoi')
+          }
+        }}>
           <h1 className="text-3xl font-bold">Contact</h1>
-          <input className="w-full rounded-xl bg-surface border border-slate-700 px-4 py-3" placeholder="Nom" />
-          <input type="email" className="w-full rounded-xl bg-surface border border-slate-700 px-4 py-3" placeholder="Email" />
-          <input className="w-full rounded-xl bg-surface border border-slate-700 px-4 py-3" placeholder="Téléphone" />
-          <textarea className="w-full rounded-xl bg-surface border border-slate-700 px-4 py-3 h-32" placeholder="Message"></textarea>
-          <button type="button" className="btn-primary">Envoyer</button>
+          <input className="w-full rounded-xl bg-surface border border-slate-700 px-4 py-3" placeholder="Nom" value={name} onChange={(e) => setName(e.target.value)} />
+          <input type="email" className="w-full rounded-xl bg-surface border border-slate-700 px-4 py-3" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
+          <input className="w-full rounded-xl bg-surface border border-slate-700 px-4 py-3" placeholder="Téléphone" value={phone} onChange={(e) => setPhone(e.target.value)} />
+          <textarea className="w-full rounded-xl bg-surface border border-slate-700 px-4 py-3 h-32" placeholder="Message" value={message} onChange={(e) => setMessage(e.target.value)}></textarea>
+          <div className="flex items-center gap-3">
+            <button type="submit" className="btn-primary">Envoyer</button>
+            {status && <span className="text-sm text-muted">{status}</span>}
+          </div>
         </form>
         <div className="card p-6">
           <h2 className="text-xl font-semibold mb-3">Nous trouver</h2>

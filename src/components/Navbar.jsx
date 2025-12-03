@@ -7,10 +7,10 @@ const NavItem = ({ to, children }) => (
   <NavLink
     to={to}
     className={({ isActive }) =>
-      `px-3 py-2 rounded-xl transition focus:outline-none focus:ring-2 focus:ring-rolexGold ${
+      `px-3 py-2 rounded-xl transition focus:outline-none focus:ring-2 focus:ring-rolexGreen/40 ${
         isActive
-          ? 'text-rolexGold border border-rolexGold/40 bg-rolexGold/10 backdrop-blur-sm'
-          : 'hover:bg-rolexGold/10'
+          ? 'text-foreground border border-rolexGreen/40 bg-rolexGreen/45 backdrop-blur-sm'
+          : 'hover:bg-rolexGreen/10'
       }`}
   >
     {children}
@@ -22,7 +22,7 @@ export default function Navbar() {
   const closeMenu = () => setOpen(false)
 
   return (
-    <header className="sticky top-0 z-50 backdrop-blur bg-rolexGreen/45 border-b border-slate-800">
+    <header className="sticky top-0 z-50 backdrop-blur navbar-gold border-b border-slate-800">
       <div className="container-max flex items-center justify-between h-14 md:h-16">
         <Link to="/" className="flex items-center gap-2 min-w-0" onClick={closeMenu}>
           <img src={logo} alt="Logo du Cabinet Dentaire" className="h-8 w-8 rounded-full object-cover" />
@@ -34,6 +34,7 @@ export default function Navbar() {
           <NavItem to="/">Accueil</NavItem>
           <NavItem to="/about">À propos</NavItem>
           <NavItem to="/services">Services</NavItem>
+          <NavItem to="/actualities">Actualités</NavItem>
           <NavItem to="/gallery">Galerie</NavItem>
           <NavItem to="/contact">Contact</NavItem>
         </nav>
@@ -43,7 +44,7 @@ export default function Navbar() {
           <a
             href="https://www.doctolib.fr/dentiste/sete/abdessamed-abdessadok-levallois-perret/booking/motives?specialityId=1&telehealth=false&placeId=practice-518332&bookingFunnelSource=profile"
             aria-label="Prendre rendez-vous"
-            className="hidden md:inline-flex items-center justify-center h-10 w-10 rounded-xl border border-slate-800 bg-surface hover:bg-slate-800/60 focus:outline-none focus:ring-2 focus:ring-rolexGold"
+            className="hidden md:inline-flex items-center justify-center h-10 w-10 rounded-xl border border-rolexGreen/40 bg-rolexGreen/45 hover:bg-rolexGreen/60 focus:outline-none focus:ring-2 focus:ring-rolexGreen/40"
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" className="text-foreground">
               <path d="M7 2a1 1 0 0 1 1 1v1h8V3a1 1 0 1 1 2 0v1h1a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1V3a1 1 0 0 1 1-1zm12 7H5v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9zM7 12h4v4H7v-4z"/>
@@ -53,7 +54,7 @@ export default function Navbar() {
           <a
             href="https://www.doctolib.fr/dentiste/sete/abdessamed-abdessadok-levallois-perret/booking/motives?specialityId=1&telehealth=false&placeId=practice-518332&bookingFunnelSource=profile"
             aria-label="Prendre rendez‑vous"
-            className="md:hidden inline-flex items-center justify-center h-10 w-10 rounded-xl border border-slate-800 bg-surface hover:bg-slate-800/60 focus:outline-none focus:ring-2 focus:ring-rolexGold"
+            className="md:hidden inline-flex items-center justify-center h-10 w-10 rounded-xl border border-rolexGreen/40 bg-rolexGreen/45 hover:bg-rolexGreen/60 focus:outline-none focus:ring-2 focus:ring-rolexGreen/40"
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" className="text-foreground">
               <path d="M7 2a1 1 0 0 1 1 1v1h8V3a1 1 0 1 1 2 0v1h1a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1V3a1 1 0 0 1 1-1zm12 7H5v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9zM7 12h4v4H7v-4z"/>
@@ -62,7 +63,7 @@ export default function Navbar() {
           {/* Mobile burger */}
           <button
             aria-label={open ? 'Fermer le menu' : 'Ouvrir le menu'}
-            className="md:hidden inline-flex items-center justify-center h-10 w-10 rounded-xl border border-slate-800 bg-surface hover:bg-slate-800/60 transition"
+            className="md:hidden inline-flex items-center justify-center h-10 w-10 rounded-xl border border-rolexGreen/40 bg-rolexGreen/45 hover:bg-rolexGreen/60 transition"
             onClick={() => setOpen((v) => !v)}
           >
             {!open ? (
@@ -92,11 +93,12 @@ export default function Navbar() {
             className="md:hidden border-t border-slate-800 bg-surface/95 backdrop-blur"
           >
             <nav className="container-max py-3 flex flex-col">
-              <NavLink onClick={closeMenu} to="/" className={({ isActive }) => `px-3 py-3 rounded-xl transition ${isActive ? 'text-rolexGold border border-rolexGold/40 bg-rolexGold/10 backdrop-blur-sm' : 'hover:bg-rolexGold/10'}`}>Accueil</NavLink>
-              <NavLink onClick={closeMenu} to="/about" className={({ isActive }) => `px-3 py-3 rounded-xl transition ${isActive ? 'text-rolexGold border border-rolexGold/40 bg-rolexGold/10 backdrop-blur-sm' : 'hover:bg-rolexGold/10'}`}>À propos</NavLink>
-              <NavLink onClick={closeMenu} to="/services" className={({ isActive }) => `px-3 py-3 rounded-xl transition ${isActive ? 'text-rolexGold border border-rolexGold/40 bg-rolexGold/10 backdrop-blur-sm' : 'hover:bg-rolexGold/10'}`}>Services</NavLink>
-              <NavLink onClick={closeMenu} to="/gallery" className={({ isActive }) => `px-3 py-3 rounded-xl transition ${isActive ? 'text-rolexGold border border-rolexGold/40 bg-rolexGold/10 backdrop-blur-sm' : 'hover:bg-rolexGold/10'}`}>Galerie</NavLink>
-              <NavLink onClick={closeMenu} to="/contact" className={({ isActive }) => `px-3 py-3 rounded-xl transition ${isActive ? 'text-rolexGold border border-rolexGold/40 bg-rolexGold/10 backdrop-blur-sm' : 'hover:bg-rolexGold/10'}`}>Contact</NavLink>
+              <NavLink onClick={closeMenu} to="/" className={({ isActive }) => `px-3 py-3 rounded-xl transition ${isActive ? 'text-foreground border border-rolexGreen/40 bg-rolexGreen/45 backdrop-blur-sm' : 'hover:bg-rolexGreen/10'}`}>Accueil</NavLink>
+              <NavLink onClick={closeMenu} to="/about" className={({ isActive }) => `px-3 py-3 rounded-xl transition ${isActive ? 'text-foreground border border-rolexGreen/40 bg-rolexGreen/45 backdrop-blur-sm' : 'hover:bg-rolexGreen/10'}`}>À propos</NavLink>
+              <NavLink onClick={closeMenu} to="/services" className={({ isActive }) => `px-3 py-3 rounded-xl transition ${isActive ? 'text-foreground border border-rolexGreen/40 bg-rolexGreen/45 backdrop-blur-sm' : 'hover:bg-rolexGreen/10'}`}>Services</NavLink>
+              <NavLink onClick={closeMenu} to="/actualities" className={({ isActive }) => `px-3 py-3 rounded-xl transition ${isActive ? 'text-foreground border border-rolexGreen/40 bg-rolexGreen/45 backdrop-blur-sm' : 'hover:bg-rolexGreen/10'}`}>Actualités</NavLink>
+              <NavLink onClick={closeMenu} to="/gallery" className={({ isActive }) => `px-3 py-3 rounded-xl transition ${isActive ? 'text-foreground border border-rolexGreen/40 bg-rolexGreen/45 backdrop-blur-sm' : 'hover:bg-rolexGreen/10'}`}>Galerie</NavLink>
+              <NavLink onClick={closeMenu} to="/contact" className={({ isActive }) => `px-3 py-3 rounded-xl transition ${isActive ? 'text-foreground border border-rolexGreen/40 bg-rolexGreen/45 backdrop-blur-sm' : 'hover:bg-rolexGreen/10'}`}>Contact</NavLink>
               <div className="mt-3 border-t border-slate-800 pt-3">
                 <div className="px-3 py-3 rounded-xl bg-rolexGreen/45 backdrop-blur border border-slate-800">
                   <div className="font-semibold">Dr. Abdessamed Abdessadok</div>

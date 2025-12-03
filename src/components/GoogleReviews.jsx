@@ -34,7 +34,7 @@ export default function GoogleReviews({ placeId = import.meta.env.VITE_GOOGLE_PL
         </div>
       ) : (
         <div className="card p-6">
-          <p className="text-sm text-muted">Configuration nécessaire pour afficher les avis en direct. Utilisez une clé API Google Maps et l’identifiant du lieu.</p>
+          <p className="text-sm text-muted">Cliquez sur le bouton « Voir sur Google ».</p>
         </div>
       )}
     </div>

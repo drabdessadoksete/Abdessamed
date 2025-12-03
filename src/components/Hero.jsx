@@ -15,7 +15,7 @@ export default function Hero(){
           <h1 className="text-4xl md:text-6xl font-extrabold leading-tight mb-6">
             Cabinet Dentaire <span className="text-primary">Dr. Abdessadok</span>
           </h1>
-          <p className="text-muted mb-8 max-w-xl">« Un sourire sain, une confiance retrouvée. » Soins modernes, approche humaine, au cœur de Béziers.</p>
+          <p className="text-muted mb-8 max-w-xl">« Un sourire sain, une confiance retrouvée. » Soins modernes, approche humaine, au cœur de Sète.</p>
           <div className="flex flex-col sm:flex-row gap-3">
             {/* Desktop text CTA */}
             <motion.a href="https://www.doctolib.fr/dentiste/sete/abdessamed-abdessadok-levallois-perret/booking/motives?specialityId=1&telehealth=false&placeId=practice-518332&bookingFunnelSource=profile" target="_blank" rel="noopener" whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }} className="btn-primary hidden md:inline-flex">Prendre rendez‑vous</motion.a>
