@@ -40,21 +40,6 @@ export default function Home(){
                   href="https://www.doctolib.fr/dentiste/sete/abdessamed-abdessadok-levallois-perret/booking/motives?specialityId=1&telehealth=false&placeId=practice-518332&bookingFunnelSource=profile"
                   aria-label="Réserver Bilan Implant"
                   rel="noopener"
-                  onClick={(e) => {
-                    e.preventDefault()
-                    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
-                    const isAndroid = /Android/.test(navigator.userAgent)
-                    const iosLink = 'doctolib://booking/implant'
-                    const androidIntent = 'intent://booking/implant#Intent;scheme=doctolib;package=fr.doctolib.www;S.browser_fallback_url=https%3A%2F%2Fwww.doctolib.fr%2F;end'
-                    if (isIOS) {
-                      window.location.href = iosLink
-                      setTimeout(() => { window.location.href = e.currentTarget.href }, 1200)
-                    } else if (isAndroid) {
-                      window.location.href = androidIntent
-                    } else {
-                      window.location.href = e.currentTarget.href
-                    }
-                  }}
                   className="btn-primary min-w-[200px] md:min-w-0 h-11 whitespace-nowrap rounded-2xl"
                 >
                   {t('buttons.reserveImplant')}
