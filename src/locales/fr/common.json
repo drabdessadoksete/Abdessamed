@@ -1,0 +1,158 @@
+{
+  "nav": {
+    "home": "Accueil",
+    "about": "À propos",
+    "services": "Services",
+    "actualities": "Actualités",
+    "gallery": "Galerie",
+    "contact": "Contact"
+  },
+  "aria": {
+    "openMenu": "Ouvrir le menu",
+    "closeMenu": "Fermer le menu",
+    "book": "Prendre rendez‑vous",
+    "language": "Changer de langue"
+  },
+  "hero": {
+    "badge": "Soins modernes • Équipe à l’écoute",
+    "tagline": "« Un sourire sain, une confiance retrouvée. » Soins modernes, approche humaine, au cœur de Sète.",
+    "seeServices": "Voir les services"
+  },
+  "buttons": {
+    "reserveImplant": "Réserver Bilan Implant",
+    "reserveInvisalign": "Réserver Bilan Invisalign",
+    "gallery": "Voir la galerie",
+    "learn": "En savoir plus",
+    "selfie": "Prenez votre selfie",
+    "hideInPage": "Masquer dans la page"
+  },
+  "sections": {
+    "implant": {
+      "title": "Implantologie BioTech",
+      "madeInFrance": "(Made in France)",
+      "desc": "Retrouvez le confort et l'esthétique de votre sourire. Implants conçus et fabriqués en France avec une garantie certifiée et une traçabilité complète."
+    },
+    "invisalign": {
+      "title": "Orthodontie Invisible Invisalign®",
+      "desc": "Alignement dentaire discret par gouttières transparentes. Visualisez votre futur sourire grâce à notre planification numérique. Résultat garanti."
+    }
+  },
+  "reviews": {
+    "title": "Avis Google en direct",
+    "viewOnGoogle": "Voir sur Google",
+    "prompt": "Cliquez sur le bouton « Voir sur Google »."
+  },
+  "footer": {
+    "contact": "Contact",
+    "hours": "Horaires",
+    "copy": "© {{year}} Cabinet Dentaire Dr. Abdessadok. Tous droits réservés.",
+    "tagline": "« Un sourire sain, une confiance retrouvée. »"
+  },
+  "servicesPage": {
+    "title": "Nos Expertises & Soins",
+    "subtitle": "Une approche globale : de la prévention à la réhabilitation du sourire.",
+    "implantTitle": "Implantologie & Chirurgie Orale",
+    "implantBadge": "BioTech Dental - Made in France",
+    "invisalignTitle": "Invisalign® - L'Orthodontie Invisible",
+    "invisalignBadge": "Certifié Platinum Provider",
+    "bookImplant": "Prendre RDV Implant",
+    "bookInvisalign": "Prendre RDV Invisalign",
+    "implantDesc": "Remplace les dents manquantes avec des implants stables et durables, fabriqués en France, pour retrouver confort et esthétique au quotidien.",
+    "implantBullets": [
+      { "title": "Planification 3D", "text": "Scanner et guide chirurgical pour une pose précise." },
+      { "title": "Matériaux premium", "text": "Titane et céramiques biocompatibles à haute fiabilité." },
+      { "title": "Sécurité & traçabilité", "text": "Numéro de lot et certificat garantis." },
+      { "title": "Confort post‑opératoire", "text": "Techniques mini‑invasives et suivi attentif." }
+    ],
+    "invisalignDesc": "Aligneurs transparents sur‑mesure pour redresser les dents en douceur, avec visualisation numérique du résultat avant le traitement.",
+    "invisalignBullets": [
+      { "title": "Simulation 3D", "text": "Projection du sourire avec ClinCheck." },
+      { "title": "Discret & amovible", "text": "Aligneurs invisibles, retirables pour manger et se brosser." },
+      { "title": "Suivi régulier", "text": "Rendez‑vous courts et espacés." },
+      { "title": "Résultats prévisibles", "text": "Protocoles validés et contrôles constants." }
+    ],
+    "generalTitle": "Soins généraux",
+    "generalItems": [
+      { "title": "Consultation & prévention", "description": "Bilan, conseils d’hygiène, détection précoce." },
+      { "title": "Détartrage & polissage", "description": "Nettoyage professionnel pour des gencives saines." },
+      { "title": "Soins conservateurs", "description": "Traitement des caries, inlays/onlays, reconstructions." },
+      { "title": "Prothèses & facettes", "description": "Restauration esthétique et fonctionnelle." },
+      { "title": "Blanchiment", "description": "Éclaircissement sécurisé avec protocoles adaptés." },
+      { "title": "Urgences dentaires", "description": "Prise en charge rapide de la douleur et des accidents." }
+    ]
+  },
+  "gallery": {
+    "title": "Galerie",
+    "implant": "Implantologie & Chirurgie Orale",
+    "invisalign": "Invisalign® - L'Orthodontie Invisible",
+    "badge": "Certifié Platinum Provider",
+    "general": "Soins généraux",
+    "prev": "Précédent",
+    "next": "Suivant"
+  },
+  "features": {
+    "title": "Pourquoi nos patients nous choisissent",
+    "items": [
+      { "title": "Radiographies numériques", "desc": "Imagerie à faible radiation pour des diagnostics précis et confortables." },
+      { "title": "Caméras intraorales", "desc": "Voyez ce que nous voyons — des visuels clairs pour de meilleures décisions." },
+      { "title": "Anesthésie maîtrisée", "desc": "Techniques d’anesthésie douces pour votre confort." },
+      { "title": "Stérilisation stricte", "desc": "Protocoles rigoureux pour une sécurité optimale." }
+    ]
+  },
+  "testimonials": {
+    "title": "Témoignages",
+    "items": [
+      "Accueil chaleureux et explications claires. Je recommande !",
+      "Résultat impeccable pour mes implants, sans douleur.",
+      "Suivi sérieux et équipe très professionnelle."
+    ]
+  },
+  "cta": {
+    "title": "Prêt à aimer votre sourire ?",
+    "subtitle": "Prenez rendez-vous dès aujourd’hui et découvrez des soins modernes, à l’écoute.",
+    "book": "Prendre rendez‑vous",
+    "or": "ou",
+    "contact": "Nous contacter"
+  },
+  "about": {
+    "title": "Dr. Abdessamed Abdessadok",
+    "subtitle": "Chirurgien‑Dentiste à Sète",
+    "intro": "Une approche humaine alliée à des technologies de pointe. Nous construisons des plans de traitement clairs, transparents et adaptés à votre sourire.",
+    "badges": {
+      "implantology": "Implantologie",
+      "invisalign": "Invisalign",
+      "ortho": "Orthodontie invisible",
+      "veneers": "Facettes dentaires",
+      "whitening": "Blanchiment",
+      "prosthetics": "Prothèses",
+      "emergency": "Urgences dentaires"
+    },
+    "ctaBooking": "Prendre rendez‑vous sur Doctolib",
+    "ctaMaps": "Voir sur Maps",
+    "journey": "Parcours & Certifications",
+    "location": "Localisation & Accès",
+    "floorNote": "Rez‑de‑chaussée (Accès PMR / Handicapé)",
+    "hours": "Horaires d’ouverture",
+    "skills": "Expertises & Compétences",
+    "faq": {
+      "title": "Questions fréquentes",
+      "items": [
+        { "question": "Quelle est l'adresse du Dr Abdessamed ABDESSADOK ?", "answer": "L'adresse du cabinet est : 10 Boulevard Danièle Casanova, 34200 Sète. Le cabinet est situé au Rez-de-chaussée." },
+        { "question": "Quels sont les horaires d'ouverture ?", "answer": "Lundi: 08h00 - 12h00, 14h00 - 17h00; Mardi: 08h00 - 12h00, 14h00 - 17h00; Mercredi: 08h00 - 12h00; Jeudi: 08h00 - 12h00, 14h00 - 17h00; Vendredi: 08h00 - 12h00, 14h00 - 17h00" },
+        { "question": "Quels sont les moyens de paiement acceptés ?", "answer": "Chèques, espèces et carte bancaire." },
+        { "question": "Est-ce que le cabinet accepte la carte Vitale ?", "answer": "Oui, le Dr Abdessamed ABDESSADOK accepte la carte Vitale." },
+        { "question": "Le cabinet accepte-t-il les nouveaux patients ?", "answer": "Oui, le cabinet accueille les nouveaux patients pour tous types de soins (Consultations, Urgences, Implantologie, Invisalign)." }
+      ]
+    }
+  },
+  "contact": {
+    "title": "Contact",
+    "placeholders": { "name": "Nom", "email": "Email", "phone": "Téléphone", "message": "Message" },
+    "submit": "Envoyer",
+    "status": { "sent": "Message envoyé", "error": "Erreur lors de l’envoi" },
+    "findUs": "Nous trouver",
+    "viewOnMaps": "Voir sur Google Maps",
+    "faq": { "title": "Questions fréquentes" }
+  },
+  "article": { "loading": "Chargement…" }
+}

@@ -1,0 +1,158 @@
+{
+  "nav": {
+    "home": "Inicio",
+    "about": "Acerca de",
+    "services": "Servicios",
+    "actualities": "Actualidades",
+    "gallery": "Galería",
+    "contact": "Contacto"
+  },
+  "aria": {
+    "openMenu": "Abrir menú",
+    "closeMenu": "Cerrar menú",
+    "book": "Reservar cita",
+    "language": "Cambiar idioma"
+  },
+  "hero": {
+    "badge": "Atención moderna • Equipo atento",
+    "tagline": "“Una sonrisa sana, confianza recuperada.” Atención moderna, enfoque humano, en el corazón de Sète.",
+    "seeServices": "Ver servicios"
+  },
+  "buttons": {
+    "reserveImplant": "Reservar evaluación de implante",
+    "reserveInvisalign": "Reservar evaluación Invisalign",
+    "gallery": "Ver galería",
+    "learn": "Más información",
+    "selfie": "Toma tu selfie",
+    "hideInPage": "Ocultar en la página"
+  },
+  "sections": {
+    "implant": {
+      "title": "Implantología BioTech",
+      "madeInFrance": "(Hecho en Francia)",
+      "desc": "Recupera la comodidad y estética de tu sonrisa. Implantes diseñados y fabricados en Francia con garantía certificada y trazabilidad completa."
+    },
+    "invisalign": {
+      "title": "Ortodoncia Invisible Invisalign®",
+      "desc": "Alineación dental discreta con alineadores transparentes. Visualiza tu futura sonrisa gracias a la planificación digital. Resultado garantizado."
+    }
+  },
+  "reviews": {
+    "title": "Opiniones de Google en vivo",
+    "viewOnGoogle": "Ver en Google",
+    "prompt": "Haz clic en el botón “Ver en Google”."
+  },
+  "footer": {
+    "contact": "Contacto",
+    "hours": "Horarios",
+    "copy": "© {{year}} Clínica Dental Dr. Abdessadok. Todos los derechos reservados.",
+    "tagline": "“Una sonrisa sana, confianza recuperada.”"
+  },
+  "servicesPage": {
+    "title": "Nuestra Experiencia y Cuidados",
+    "subtitle": "Un enfoque integral: de la prevención a la rehabilitación de la sonrisa.",
+    "implantTitle": "Implantología y Cirugía Oral",
+    "implantBadge": "BioTech Dental - Hecho en Francia",
+    "invisalignTitle": "Invisalign® - Ortodoncia Invisible",
+    "invisalignBadge": "Proveedor Platinum Certificado",
+    "bookImplant": "Reservar cita de implante",
+    "bookInvisalign": "Reservar cita de Invisalign",
+    "implantDesc": "Reemplaza dientes ausentes con implantes estables y duraderos, hechos en Francia, recuperando comodidad y estética diaria.",
+    "implantBullets": [
+      { "title": "Planificación 3D", "text": "Escáner y guía quirúrgica para colocación precisa." },
+      { "title": "Materiales premium", "text": "Titanio y cerámicas biocompatibles de alta fiabilidad." },
+      { "title": "Seguridad y trazabilidad", "text": "Número de lote y garantía certificada." },
+      { "title": "Comodidad postoperatoria", "text": "Técnicas mínimamente invasivas y seguimiento atento." }
+    ],
+    "invisalignDesc": "Alineadores transparentes a medida que enderezan los dientes suavemente, con visualización digital del resultado antes del tratamiento.",
+    "invisalignBullets": [
+      { "title": "Simulación 3D", "text": "Proyección de la sonrisa con ClinCheck." },
+      { "title": "Discreto y removible", "text": "Alineadores invisibles, removibles para comer y cepillarse." },
+      { "title": "Seguimiento regular", "text": "Citas cortas y espaciadas." },
+      { "title": "Resultados previsibles", "text": "Protocolos validados y controles constantes." }
+    ],
+    "generalTitle": "Cuidados generales",
+    "generalItems": [
+      { "title": "Consulta y prevención", "description": "Chequeo, consejos de higiene, detección temprana." },
+      { "title": "Destartraje y pulido", "description": "Limpieza profesional para encías sanas." },
+      { "title": "Cuidados conservadores", "description": "Tratamientos de caries, inlays/onlays, reconstrucciones." },
+      { "title": "Prótesis y carillas", "description": "Restauración estética y funcional." },
+      { "title": "Blanqueamiento", "description": "Aclarado seguro con protocolos adaptados." },
+      { "title": "Urgencias dentales", "description": "Atención rápida del dolor y accidentes." }
+    ]
+  },
+  "gallery": {
+    "title": "Galería",
+    "implant": "Implantología y Cirugía Oral",
+    "invisalign": "Invisalign® - Ortodoncia Invisible",
+    "badge": "Proveedor Platinum Certificado",
+    "general": "Cuidados generales",
+    "prev": "Anterior",
+    "next": "Siguiente"
+  },
+  "features": {
+    "title": "Por qué los pacientes nos eligen",
+    "items": [
+      { "title": "Radiografías digitales", "desc": "Imagen de baja radiación para diagnósticos precisos y cómodos." },
+      { "title": "Cámaras intraorales", "desc": "Ve lo que vemos: visuales claros para mejores decisiones." },
+      { "title": "Anestesia suave", "desc": "Técnicas de anestesia centradas en la comodidad." },
+      { "title": "Esterilización estricta", "desc": "Protocolos rigurosos para una seguridad óptima." }
+    ]
+  },
+  "testimonials": {
+    "title": "Testimonios",
+    "items": [
+      "Atención cálida y explicaciones claras. ¡Muy recomendable!",
+      "Resultado impecable con mis implantes, sin dolor.",
+      "Seguimiento serio y equipo muy profesional."
+    ]
+  },
+  "cta": {
+    "title": "¿Listo para amar tu sonrisa?",
+    "subtitle": "Reserva hoy y descubre un tratamiento dental moderno y atento.",
+    "book": "Reservar cita",
+    "or": "o",
+    "contact": "Contactarnos"
+  },
+  "about": {
+    "title": "Dr. Abdessamed Abdessadok",
+    "subtitle": "Dentista en Sète",
+    "intro": "Un enfoque humano combinado con tecnología avanzada. Construimos planes de tratamiento claros y transparentes, adaptados a tu sonrisa.",
+    "badges": {
+      "implantology": "Implantología",
+      "invisalign": "Invisalign",
+      "ortho": "Ortodoncia invisible",
+      "veneers": "Carillas dentales",
+      "whitening": "Blanqueamiento",
+      "prosthetics": "Prótesis",
+      "emergency": "Urgencias dentales"
+    },
+    "ctaBooking": "Reservar en Doctolib",
+    "ctaMaps": "Ver en Maps",
+    "journey": "Trayectoria y Certificaciones",
+    "location": "Ubicación y Acceso",
+    "floorNote": "Planta baja (Accesible)",
+    "hours": "Horario de apertura",
+    "skills": "Experiencia y Competencias",
+    "faq": {
+      "title": "Preguntas frecuentes",
+      "items": [
+        { "question": "¿Cuál es la dirección del Dr Abdessamed ABDESSADOK?", "answer": "10 Boulevard Danièle Casanova, 34200 Sète. Planta baja." },
+        { "question": "¿Cuál es el horario de apertura?", "answer": "Lun: 08:00–12:00, 14:00–17:00; Mar: 08:00–12:00, 14:00–17:00; Mié: 08:00–12:00; Jue: 08:00–12:00, 14:00–17:00; Vie: 08:00–12:00, 14:00–17:00" },
+        { "question": "¿Qué métodos de pago se aceptan?", "answer": "Cheques, efectivo y tarjeta bancaria." },
+        { "question": "¿Se acepta la tarjeta sanitaria (Carte Vitale)?", "answer": "Sí, se acepta Carte Vitale." },
+        { "question": "¿Se aceptan nuevos pacientes?", "answer": "Sí, para todo tipo de cuidados (Consultas, Urgencias, Implantología, Invisalign)." }
+      ]
+    }
+  },
+  "contact": {
+    "title": "Contacto",
+    "placeholders": { "name": "Nombre", "email": "Email", "phone": "Teléfono", "message": "Mensaje" },
+    "submit": "Enviar",
+    "status": { "sent": "Mensaje enviado", "error": "Error al enviar" },
+    "findUs": "Cómo encontrarnos",
+    "viewOnMaps": "Ver en Google Maps",
+    "faq": { "title": "Preguntas frecuentes" }
+  },
+  "article": { "loading": "Cargando…" }
+}
