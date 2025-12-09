@@ -2,11 +2,68 @@ import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import logo from '../assets/new logo.png'
-import { getServices, createService, updateService, deleteService, getGallery, addGalleryItem, deleteGalleryItem, getMessages } from '../services/api'
+import { getServices, createService, updateService, deleteService, getGallery, addGalleryItem, deleteGalleryItem, getMessages, loginAdmin } from '../services/api'
+import { getUser, signOut } from '../services/supabase'
+
+function Login({ onLogin }) {
+  const [email, setEmail] = useState('admin@local')
+  const [password, setPassword] = useState('')
+  const [loading, setLoading] = useState(false)
+
+  const submit = async (e) => {
+    e.preventDefault()
+    setLoading(true)
+    try {
+      await onLogin(email, password)
+    } catch {}
+    setLoading(false)
+  }
+
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-background">
+      <motion.div
+        className="card p-8 w-full max-w-md"
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+      >
+        <div className="text-center mb-6">
+          <img src={logo} alt="Logo" className="h-12 w-12 mx-auto mb-4 rounded-full object-cover" />
+          <h1 className="text-2xl font-bold">Admin Login</h1>
+        </div>
+        <form onSubmit={submit} className="space-y-4">
+          <input
+            type="email"
+            className="w-full rounded-xl bg-surface border border-slate-700 px-4 py-3"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+          <input
+            type="password"
+            className="w-full rounded-xl bg-surface border border-slate-700 px-4 py-3"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+          <button
+            type="submit"
+            className="w-full btn-primary"
+            disabled={loading}
+          >
+            {loading ? 'Logging in...' : 'Login'}
+          </button>
+        </form>
+      </motion.div>
+    </div>
+  )
+}
 
 export default function Admin(){
   const [tab, setTab] = useState('services')
   const [open, setOpen] = useState(true)
+
   return (
     <div className="min-h-screen bg-background text-foreground relative">
       {!open && (
@@ -194,7 +251,7 @@ function MessagesAdmin(){
           <tbody>
             {items.map((m) => (
               <tr key={m.id} className="border-t border-slate-700">
-                <td className="p-2 whitespace-nowrap">{new Date(m.createdAt).toLocaleString()}</td>
+                <td className="p-2 whitespace-nowrap">{new Date(m.created_at).toLocaleString()}</td>
                 <td className="p-2 whitespace-nowrap">{m.name}</td>
                 <td className="p-2 whitespace-nowrap">{m.email}</td>
                 <td className="p-2 whitespace-nowrap">{m.phone}</td>

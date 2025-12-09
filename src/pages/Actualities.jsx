@@ -16,8 +16,8 @@ export default function Actualities(){
           {items.map((a) => (
             <Link key={a.id} to={`/actualities/${a.id}`} className="card p-6 hover:scale-[1.01] transition">
               <div className="font-semibold mb-2">{a.title}</div>
-              <div className="text-xs text-muted mb-3">{new Date(a.updatedAt).toLocaleDateString()}</div>
-              <div className="text-sm text-muted" dangerouslySetInnerHTML={{ __html: (a.contentHTML || '').slice(0, 200) + '…' }} />
+              <div className="text-xs text-muted mb-3">{new Date(a.updated_at).toLocaleDateString()}</div>
+              <div className="text-sm text-muted" dangerouslySetInnerHTML={{ __html: (a.content_html || '').slice(0, 200) + '…' }} />
             </Link>
           ))}
         </div>

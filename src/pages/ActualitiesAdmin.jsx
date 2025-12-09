@@ -68,6 +68,7 @@ export default function ActualitiesAdmin(){
   const [articles, setArticles] = useState([])
   const [editing, setEditing] = useState(null)
   const [title, setTitle] = useState('')
+  const [contentHTML, setContentHTML] = useState('')
   const editorRef = useRef(null)
   const [status, setStatus] = useState('draft')
   const [preview, setPreview] = useState(false)
@@ -91,12 +92,21 @@ export default function ActualitiesAdmin(){
     }
   }
 
-  const startEdit = (a) => { setEditing(a); setTitle(a.title); setStatus(a.status); setPreview(false); setTimeout(() => { if (editorRef.current) editorRef.current.innerHTML = a.contentHTML }, 0) }
-  const resetEdit = () => { setEditing(null); setTitle(''); setStatus('draft'); if (editorRef.current) editorRef.current.innerHTML = '' }
+  const startEdit = (a) => { setEditing(a); setTitle(a.title); setStatus(a.status); setContentHTML(a.content_html); setPreview(false); setTimeout(() => { if (editorRef.current) editorRef.current.innerHTML = a.content_html }, 0) }
+  const resetEdit = () => { setEditing(null); setTitle(''); setContentHTML(''); setStatus('draft'); if (editorRef.current) editorRef.current.innerHTML = '' }
   const save = async () => {
-    const contentHTML = editorRef.current?.innerHTML || ''
-    if (editing) await updateArticle(editing.id, { title, contentHTML, status })
-    else await createArticle({ title, contentHTML, status })
+    const html = editorRef.current?.innerHTML || ''
+    setContentHTML(html)
+    if (editing) await updateArticle(editing.id, { title, content_html: html, status })
+    else await createArticle({ title, content_html: html, status })
+    resetEdit(); refresh()
+  }
+  const publish = async () => {
+    const html = editorRef.current?.innerHTML || ''
+    setContentHTML(html)
+    setStatus('published')
+    if (editing) await updateArticle(editing.id, { title, content_html: html, status: 'published' })
+    else await createArticle({ title, content_html: html, status: 'published' })
     resetEdit(); refresh()
   }
   const remove = async (id) => { await deleteArticle(id); if (editing?.id === id) resetEdit(); refresh() }
@@ -136,10 +146,12 @@ export default function ActualitiesAdmin(){
             className="rounded-xl border border-slate-700 bg-slate-800/50 min-h-[240px] p-4"
             contentEditable
             suppressContentEditableWarning
+            onInput={(e) => setContentHTML(e.target.innerHTML)}
             onDrop={onDrop}
           />
           <div className="mt-3 flex items-center gap-2">
             <button type="button" className="btn-primary" onClick={save}>{editing ? 'Mettre à jour' : 'Enregistrer'}</button>
+            <button type="button" className="btn-outline" onClick={publish}>Publier l'article</button>
             <button type="button" className="btn-outline" onClick={() => setPreview((v) => !v)}>{preview ? 'Masquer aperçu' : 'Voir aperçu'}</button>
             {editing && <button type="button" className="btn-outline" onClick={resetEdit}>Annuler</button>}
           </div>
@@ -148,7 +160,7 @@ export default function ActualitiesAdmin(){
             <YouTubeEmbed onInsert={insertHTML} />
           </div>
           {preview && (
-            <div className="mt-4 rounded-xl border border-slate-700 bg-slate-800/40 p-4" dangerouslySetInnerHTML={{ __html: editorRef.current?.innerHTML || '' }} />
+            <div className="mt-4 rounded-xl border border-slate-700 bg-slate-800/40 p-4" dangerouslySetInnerHTML={{ __html: contentHTML }} />
           )}
         </motion.div>
 
@@ -162,9 +174,9 @@ export default function ActualitiesAdmin(){
               <div key={a.id} className="rounded-xl border border-slate-700 bg-slate-800/50 p-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <div className="font-semibold">{a.title}</div>
-                    <div className="text-xs text-muted">{a.status} • {new Date(a.updatedAt).toLocaleString()}</div>
-                  </div>
+                      <div className="font-semibold">{a.title}</div>
+                      <div className="text-xs text-muted">{a.status} • {new Date(a.updated_at).toLocaleString()}</div>
+                    </div>
                   <div className="flex gap-2">
                     <button type="button" className="btn-outline" onClick={() => startEdit(a)}>Modifier</button>
                     <button type="button" className="btn-outline" onClick={() => remove(a.id)}>Supprimer</button>
