@@ -17,7 +17,7 @@ export default function Footer(){
           <h4 className="font-semibold mb-3">{t('footer.contact')}</h4>
           <ul className="space-y-1 text-sm">
             <li>+33 4 67 00 00 00</li>
-            <li>contact@drabdessadok.fr</li>
+            <li>contact@cabinetdentairesete.fr</li>
             <li>RDC, 10 Bd Danièle Casanova, 34200 Sète, France</li>
           </ul>
         </div>

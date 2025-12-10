@@ -16,7 +16,7 @@ export default function LoginPage() {
     setLoading(true)
     try {
       // Hardcoded credentials for simple admin access
-      const expectedEmail = 'drabdessadoksete@gmail.com'
+      const expectedEmail = 'contact@cabinetdentairesete.fr'
       const expectedPassword = 'drabde.optimumtech'
 
       if (email === expectedEmail && password === expectedPassword) {
