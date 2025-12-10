@@ -2,8 +2,6 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import logo from '../assets/new logo.png'
-import { loginAdmin } from '../services/api'
-import { getUser } from '../services/supabase'
 
 export default function LoginPage() {
   const navigate = useNavigate()
@@ -17,13 +15,15 @@ export default function LoginPage() {
     setError('')
     setLoading(true)
     try {
-      const res = await loginAdmin(email, password)
-      if (res?.token) {
-        const useSupabase = import.meta.env.VITE_USE_SUPABASE === 'true'
-        if (useSupabase) await getUser()
+      // Hardcoded credentials for simple admin access
+      const expectedEmail = 'drabdessadoksete@gmail.com'
+      const expectedPassword = 'drabde.optimumtech'
+
+      if (email === expectedEmail && password === expectedPassword) {
+        localStorage.setItem('admin_token', 'hardcoded-admin-token')
         navigate('/admin')
       } else {
-        setError(res?.error || 'Connexion refusée')
+        setError('Email ou mot de passe incorrect')
       }
     } catch (err) {
       setError(err.message || 'Erreur inconnue')

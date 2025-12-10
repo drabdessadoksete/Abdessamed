@@ -1,101 +1,23 @@
-import { useEffect, useState } from 'react'
+import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import logo from '../assets/new logo.png'
-import { getServices, createService, updateService, deleteService, getGallery, addGalleryItem, deleteGalleryItem, getMessages, loginAdmin } from '../services/api'
-import { getUser, signOut } from '../services/supabase'
+import { getServices, createService, updateService, deleteService, getGallery, addGalleryItem, deleteGalleryItem, getMessages } from '../services/api'
 
-function Login({ onLogin }) {
-  const [email, setEmail] = useState('admin@local')
-  const [password, setPassword] = useState('')
-  const [loading, setLoading] = useState(false)
-
-  const submit = async (e) => {
-    e.preventDefault()
-    setLoading(true)
-    try {
-      await onLogin(email, password)
-    } catch {}
-    setLoading(false)
-  }
-
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-background">
-      <motion.div
-        className="card p-8 w-full max-w-md"
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-      >
-        <div className="text-center mb-6">
-          <img src={logo} alt="Logo" className="h-12 w-12 mx-auto mb-4 rounded-full object-cover" />
-          <h1 className="text-2xl font-bold">Admin Login</h1>
-        </div>
-        <form onSubmit={submit} className="space-y-4">
-          <input
-            type="email"
-            className="w-full rounded-xl bg-surface border border-slate-700 px-4 py-3"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-          <input
-            type="password"
-            className="w-full rounded-xl bg-surface border border-slate-700 px-4 py-3"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-          <button
-            type="submit"
-            className="w-full btn-primary"
-            disabled={loading}
-          >
-            {loading ? 'Logging in...' : 'Login'}
-          </button>
-        </form>
-      </motion.div>
-    </div>
-  )
-}
+const handleLogout = () => {
+  localStorage.removeItem("admin_token"); // clear the login token
+  window.location.href = "/login"; // redirect directly to login page
+};
 
 export default function Admin(){
   const [tab, setTab] = useState('services')
   const [open, setOpen] = useState(true)
-  const useSupabase = import.meta.env.VITE_USE_SUPABASE === 'true'
-  const [user, setUser] = useState(null)
-  const [authLoading, setAuthLoading] = useState(true)
 
-  useEffect(() => {
-    getUser().then((u) => setUser(u)).finally(() => setAuthLoading(false))
-  }, [])
-
-  const handleLogin = async (email, password) => {
-    const res = await loginAdmin(email, password)
-    if (res?.token) {
-      const u = useSupabase ? await getUser() : { email }
-      setUser(u)
-    } else {
-      throw new Error(res?.error || 'Login failed')
-    }
+  // Check if user is logged in
+  if (!localStorage.getItem('admin_token')) {
+    window.location.href = '/login'
+    return null
   }
-
-  const handleLogout = async () => {
-    await signOut()
-    localStorage.removeItem('admin_token')
-    setUser(null)
-  }
-
-  if (authLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-background text-foreground">
-        <div className="text-sm text-muted">Checking session...</div>
-      </div>
-    )
-  }
-
-  if (!user) return <Login onLogin={handleLogin} />
 
   return (
     <div className="min-h-screen bg-background text-foreground relative">
