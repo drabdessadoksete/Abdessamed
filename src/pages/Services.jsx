@@ -4,6 +4,9 @@ import implantImg from "../assets/Gemini_Generated_Image_3b45m3b45m3b45m3.png"
 import alignerImg from "../assets/nvisalign® - L'Orthodontie Invisible.png"
 import implantIcon from "../assets/new logo.png"
 import alignerIcon from "../assets/nvisalign® - L'Orthodontie Invisible icon.png"
+import alignTechLogo from "../assets/Align logo.png"
+import invisalignLogo from "../assets/Invisalign_logo.png"
+import iteroLogo from "../assets/iTero logo.jpeg"
 
 const doctolibBooking = 'https://www.doctolib.fr/dentiste/sete/abdessamed-abdessadok-levallois-perret/booking/motives?specialityId=1&telehealth=false&placeId=practice-518332&bookingFunnelSource=profile'
 
@@ -51,6 +54,11 @@ export default function Services(){
             <div className="flex items-center gap-3 mb-2">
               <img src={alignerIcon} alt="Icone Invisalign" className="h-10 w-10 rounded-md object-cover" />
               <h2 className="text-2xl md:text-3xl font-bold">{t('servicesPage.invisalignTitle')}</h2>
+            </div>
+            <div className="flex flex-wrap items-center gap-3 mb-3">
+              <img src={invisalignLogo} alt="Invisalign" className="h-9 w-auto object-contain" />
+              <img src={alignTechLogo} alt="Align Technology" className="h-9 w-auto object-contain" />
+              <img src={iteroLogo} alt="iTero" className="h-9 w-auto object-contain" />
             </div>
             <span className="badge mt-3 mb-4">{t('servicesPage.invisalignBadge')}</span>
             <p className="text-sm text-muted mb-4">{t('servicesPage.invisalignDesc')}</p>

@@ -5,6 +5,9 @@ import implantImg from "../assets/Gemini_Generated_Image_1nvugv1nvugv1nvu.png"
 import alignerImg from "../assets/nvisalign® - L'Orthodontie Invisible.png"
 import implantIcon from "../assets/new logo.png"
 import alignerIcon from "../assets/nvisalign® - L'Orthodontie Invisible icon.png"
+import alignTechLogo from "../assets/Align logo.png"
+import invisalignLogo from "../assets/Invisalign_logo.png"
+import iteroLogo from "../assets/iTero logo.jpeg"
 import { Link } from 'react-router-dom'
 import Features from '../components/Features'
 import Testimonials from '../components/Testimonials'
@@ -54,6 +57,11 @@ export default function Home(){
               <div className="flex items-center gap-3 mb-4">
                 <img src={alignerIcon} alt="Icone Invisalign" className="h-10 w-10 rounded-md object-cover" />
                 <h2 className="text-xl md:text-2xl font-bold md:whitespace-nowrap">{t('sections.invisalign.title')}</h2>
+              </div>
+              <div className="flex flex-wrap items-center gap-3 mb-3">
+                <img src={invisalignLogo} alt="Invisalign" className="h-9 w-auto object-contain" />
+                <img src={alignTechLogo} alt="Align Technology" className="h-9 w-auto object-contain" />
+                <img src={iteroLogo} alt="iTero" className="h-9 w-auto object-contain" />
               </div>
               <p className="text-sm md:text-base text-muted mb-4">{t('sections.invisalign.desc')}</p>
               <img src={alignerImg} alt="Orthodontie Invisible Invisalign" className="rounded-xl shadow-soft w-full h-auto object-cover mb-6" />

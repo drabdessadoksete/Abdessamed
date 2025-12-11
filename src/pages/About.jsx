@@ -2,6 +2,9 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import doctorImg from '../assets/dantist.png'
+import alignTechLogo from "../assets/Align logo.png"
+import invisalignLogo from "../assets/Invisalign_logo.png"
+import iteroLogo from "../assets/iTero logo.jpeg"
 
 export default function About(){
   const { t } = useTranslation()
@@ -121,6 +124,11 @@ export default function About(){
             <span className="badge">{t('about.badges.whitening')}</span>
             <span className="badge">{t('about.badges.prosthetics')}</span>
             <span className="badge">{t('about.badges.emergency')}</span>
+          </div>
+          <div className="mt-4 flex items-center gap-4">
+            <img src={invisalignLogo} alt="Invisalign" className="h-8 w-auto object-contain" />
+            <img src={alignTechLogo} alt="Align Technology" className="h-8 w-auto object-contain" />
+            <img src={iteroLogo} alt="iTero" className="h-8 w-auto object-contain" />
           </div>
         </div>
 

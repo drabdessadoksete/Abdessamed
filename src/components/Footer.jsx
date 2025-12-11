@@ -1,4 +1,7 @@
 import logo from '../assets/new logo.png'
+import alignTechLogo from "../assets/Align logo.png"
+import invisalignLogo from "../assets/Invisalign_logo.png"
+import iteroLogo from "../assets/iTero logo.jpeg"
 import { useTranslation } from 'react-i18next'
 
 export default function Footer(){
@@ -12,11 +15,16 @@ export default function Footer(){
             <span className="font-bold">Cabinet Dentaire Dr. Abdessadok</span>
           </div>
           <p className="text-sm text-muted">{t('footer.tagline')}</p>
+          <div className="mt-3 flex items-center gap-3">
+            <img src={invisalignLogo} alt="Invisalign" className="h-7 w-auto object-contain" />
+            <img src={alignTechLogo} alt="Align Technology" className="h-7 w-auto object-contain" />
+            <img src={iteroLogo} alt="iTero" className="h-7 w-auto object-contain" />
+          </div>
         </div>
         <div>
           <h4 className="font-semibold mb-3">{t('footer.contact')}</h4>
           <ul className="space-y-1 text-sm">
-            <li>+33 4 67 00 00 00</li>
+            <li>04 22 91 05 94</li>
             <li>contact@cabinetdentairesete.fr</li>
             <li>RDC, 10 Bd Danièle Casanova, 34200 Sète, France</li>
           </ul>
