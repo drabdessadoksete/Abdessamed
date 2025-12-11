@@ -6,6 +6,21 @@ const useSupabase = true // Hardcoded to ensure Supabase is used
 
 export const supabase = useSupabase && supabaseUrl && supabaseKey ? createClient(supabaseUrl, supabaseKey) : null
 
+const extractStoragePath = (url, bucket) => {
+  if (!url) return null
+  const marker = `/${bucket}/`
+  try {
+    const u = new URL(url)
+    if (u.pathname.includes(marker)) return decodeURIComponent(u.pathname.split(marker)[1])
+    const parts = u.pathname.split('/')
+    return decodeURIComponent(parts[parts.length - 1])
+  } catch {
+    if (url.includes(marker)) return decodeURIComponent(url.split(marker)[1])
+    const parts = url.split('/')
+    return decodeURIComponent(parts[parts.length - 1])
+  }
+}
+
 // Services
 export const getServices = async () => {
   if (!supabase) return []
@@ -81,6 +96,13 @@ export const createMessage = async (message) => {
   return data
 }
 
+export const deleteMessage = async (id) => {
+  if (!supabase) return null
+  const { error } = await supabase.from('messages').delete().eq('id', id)
+  if (error) throw error
+  return true
+}
+
 // Articles
 export const getArticles = async (status = null) => {
   if (!supabase) return []
@@ -137,6 +159,21 @@ export const uploadMedia = async (file) => {
   const { data, error } = await supabase.from('media').insert(item).select().single()
   if (error) throw error
   return data
+}
+
+export const deleteMedia = async (id, url) => {
+  if (!supabase) return null
+  const path = extractStoragePath(url, 'media')
+  if (path) {
+    try {
+      await supabase.storage.from('media').remove([path])
+    } catch {
+      // ignore storage cleanup errors so DB entry still gets removed
+    }
+  }
+  const { error } = await supabase.from('media').delete().eq('id', id)
+  if (error) throw error
+  return true
 }
 
 // Auth

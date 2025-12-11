@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
-import { loginAdmin, listMedia, uploadMedia, createArticle, updateArticle, deleteArticle, getArticles } from '../services/api'
+import { loginAdmin, listMedia, uploadMedia, deleteMedia, createArticle, updateArticle, deleteArticle, getArticles } from '../services/api'
 
 function Toolbar({ exec, insertHeading, insertList }){
   return (
@@ -22,6 +22,7 @@ function MediaPicker({ onPick }){
   const refresh = async () => { try { const m = await listMedia(); setItems(m) } catch {} }
   useEffect(() => { refresh() }, [])
   const upload = async () => { if (file) { await uploadMedia(file); setFile(null); refresh() } }
+  const remove = async (item) => { await deleteMedia(item.id, item.url || item.file_url); refresh() }
   return (
     <div className="rounded-2xl border border-slate-800 bg-surface/60 backdrop-blur p-4">
       <div className="flex items-center gap-2 mb-3">
@@ -30,9 +31,13 @@ function MediaPicker({ onPick }){
       </div>
       <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-3">
         {items.map((i) => (
-          <button type="button" key={i.id} className="rounded-xl overflow-hidden border border-slate-700" onClick={() => onPick(i)}>
-            <img src={i.thumbUrl || i.url} alt="media" className="w-full h-32 object-cover" />
-          </button>
+          <div key={i.id} className="rounded-xl overflow-hidden border border-slate-700 bg-slate-800/40">
+            <img src={i.thumbUrl || i.thumb_url || i.url} alt="media" className="w-full h-32 object-cover" />
+            <div className="p-3 flex items-center justify-between gap-2">
+              <button type="button" className="btn-outline" onClick={() => onPick(i)}>Inserer</button>
+              <button type="button" className="btn-outline text-red-300 border-red-500 hover:bg-red-500/10" onClick={() => remove(i)}>Supprimer</button>
+            </div>
+          </div>
         ))}
       </div>
     </div>
@@ -57,7 +62,7 @@ function YouTubeEmbed({ onInsert }){
   return (
     <div className="flex items-center gap-2">
       <input className="rounded-xl bg-surface border border-slate-700 px-3 py-2 w-full" placeholder="Lien YouTube" value={url} onChange={(e) => setUrl(e.target.value)} />
-      <button type="button" className="btn-outline" onClick={insert}>Insérer</button>
+      <button type="button" className="btn-outline" onClick={insert}>Inserer</button>
     </div>
   )
 }

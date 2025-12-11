@@ -2,7 +2,7 @@ import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import logo from '../assets/new logo.png'
-import { getServices, createService, updateService, deleteService, getGallery, addGalleryItem, deleteGalleryItem, getMessages } from '../services/api'
+import { getServices, createService, updateService, deleteService, getGallery, addGalleryItem, deleteGalleryItem, getMessages, deleteMessage } from '../services/api'
 
 const handleLogout = () => {
   localStorage.removeItem("admin_token"); // clear the login token
@@ -194,6 +194,7 @@ function MessagesAdmin(){
   const [items, setItems] = useState([])
   useEffect(() => { refresh() }, [])
   const refresh = async () => { try { const m = await getMessages(); setItems(m) } catch {} }
+  const remove = async (id) => { await deleteMessage(id); refresh() }
   return (
     <motion.div className="card p-6" initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
       <h2 className="text-xl font-semibold mb-3">Messages</h2>
@@ -204,18 +205,22 @@ function MessagesAdmin(){
               <th className="p-2">Date</th>
               <th className="p-2">Nom</th>
               <th className="p-2">Email</th>
-              <th className="p-2">Téléphone</th>
+              <th className="p-2">Telephone</th>
               <th className="p-2">Message</th>
+              <th className="p-2 text-right">Actions</th>
             </tr>
           </thead>
           <tbody>
             {items.map((m) => (
               <tr key={m.id} className="border-t border-slate-700">
-                <td className="p-2 whitespace-nowrap">{new Date(m.created_at).toLocaleString()}</td>
+                <td className="p-2 whitespace-nowrap">{new Date(m.created_at || m.createdAt).toLocaleString()}</td>
                 <td className="p-2 whitespace-nowrap">{m.name}</td>
                 <td className="p-2 whitespace-nowrap">{m.email}</td>
                 <td className="p-2 whitespace-nowrap">{m.phone}</td>
                 <td className="p-2">{m.message}</td>
+                <td className="p-2 text-right">
+                  <button type="button" className="btn-outline" onClick={() => remove(m.id)}>Supprimer</button>
+                </td>
               </tr>
             ))}
           </tbody>

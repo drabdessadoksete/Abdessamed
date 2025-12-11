@@ -34,6 +34,10 @@ export async function getMessages() {
   return supabaseApi.getMessages()
 }
 
+export async function deleteMessage(id) {
+  return supabaseApi.deleteMessage(id)
+}
+
 export async function submitMessage(payload) {
   return supabaseApi.createMessage(payload)
 }
@@ -50,6 +54,10 @@ export async function loginAdmin(email, password) {
 
 export async function uploadMedia(file) {
   return supabaseApi.uploadMedia(file)
+}
+
+export async function deleteMedia(id, url) {
+  return supabaseApi.deleteMedia(id, url)
 }
 
 export async function listMedia() {
