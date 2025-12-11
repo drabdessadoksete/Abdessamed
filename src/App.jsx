@@ -1,3 +1,4 @@
+import KeepAlive from './components/KeepAlive'
 import { Outlet, useLocation } from 'react-router-dom'
 import { useEffect } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
@@ -13,7 +14,8 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }, [location.pathname])
   return (
-    <div className="min-h-screen bg-background text-foreground">
+   <div className="min-h-screen bg-background text-foreground">
+     <KeepAlive />
       <Helmet>
         <meta name="description" content="Cabinet Dentaire Dr. Abdessadok — Un sourire sain, une confiance retrouvée." />
         <meta name="theme-color" content="#2563eb" />
