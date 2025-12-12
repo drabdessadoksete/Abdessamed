@@ -3,7 +3,7 @@ import { Outlet, useLocation } from 'react-router-dom'
 import { useEffect } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Helmet } from 'react-helmet-async'
-import logoUrl from './assets/new logo.png'
+import logoUrl from './assets/Favicon/android-chrome-192x192.png'
 import Navbar from './components/Navbar'
 import './i18n/index.js'
 import Footer from './components/Footer'
@@ -26,10 +26,10 @@ export default function App() {
           image: typeof window !== 'undefined' ? new URL(logoUrl, window.location.origin).toString() : logoUrl,
           '@id': typeof window !== 'undefined' ? window.location.origin : '',
           url: typeof window !== 'undefined' ? window.location.origin : '',
-          telephone: '+33467000000',
+          telephone: '+33422910594',
           address: {
             '@type': 'PostalAddress',
-            streetAddress: '10 Boulevard Danièle Casanova',
+            streetAddress: 'RDC, 10 Bd Danièle Casanova',
             addressLocality: 'Sète',
             postalCode: '34200',
             addressCountry: 'FR',

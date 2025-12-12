@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from 'framer-motion'
 import { Link } from 'react-router-dom'
-import logo from '../assets/new logo.png'
+import logo from '../assets/Favicon/android-chrome-192x192.png'
 import { getServices, createService, updateService, deleteService, getGallery, addGalleryItem, deleteGalleryItem, getMessages, deleteMessage } from '../services/api'
 
 const handleLogout = () => {

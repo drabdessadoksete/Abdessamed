@@ -1,4 +1,4 @@
-import logo from '../assets/new logo.png'
+import logo from '../assets/Favicon/android-chrome-192x192.png'
 import alignTechLogo from "../assets/Align logo.png"
 import invisalignLogo from "../assets/Invisalign_logo.png"
 import iteroLogo from "../assets/iTero logo.jpeg"

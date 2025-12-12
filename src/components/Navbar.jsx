@@ -2,7 +2,7 @@ import { NavLink, Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import logo from '../assets/new logo.png'
+import logo from '../assets/Favicon/android-chrome-192x192.png'
 
 const NavItem = ({ to, children }) => (
   <NavLink

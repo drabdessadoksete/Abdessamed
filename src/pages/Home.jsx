@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 import implantImg from "../assets/Gemini_Generated_Image_1nvugv1nvugv1nvu.png"
 import alignerImg from "../assets/nvisalign® - L'Orthodontie Invisible.png"
-import implantIcon from "../assets/new logo.png"
+import implantIcon from "../assets/Favicon/android-chrome-192x192.png"
 import alignerIcon from "../assets/nvisalign® - L'Orthodontie Invisible icon.png"
 import alignTechLogo from "../assets/Align logo.png"
 import invisalignLogo from "../assets/Invisalign_logo.png"
