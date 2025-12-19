@@ -4,6 +4,7 @@ import { motion } from 'framer-motion'
 import { useState as useState2 } from 'react'
 import { getGallery } from '../services/api'
 import { useTranslation } from 'react-i18next'
+import { Helmet } from 'react-helmet-async'
 import implant1 from '../assets/Gemini_Generated_Image_1nvugv1nvugv1nvu.png'
 import implant2 from '../assets/Gemini_Generated_Image_3b45m3b45m3b45m3.png'
 import implant3 from '../assets/Gemini_Generated_Image_h8ew12h8ew12h8ew.png'
@@ -134,6 +135,10 @@ export default function Gallery(){
   }, [])
   return (
     <section className="section">
+      <Helmet>
+        <title>Galerie avant/après | Cabinet Dentaire Dr Abdessadok</title>
+        <meta name="description" content="Exemples de cas en implantologie, Invisalign et soins generaux realises au cabinet dentaire du Dr Abdessadok a Sete." />
+      </Helmet>
       <div className="container-max">
         <motion.h1
           className="text-3xl font-bold mb-8"

@@ -3,6 +3,7 @@ import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { getArticles } from '../services/api'
 import { useTranslation } from 'react-i18next'
+import { Helmet } from 'react-helmet-async'
 
 export default function Actualities(){
   const { t } = useTranslation()
@@ -10,6 +11,10 @@ export default function Actualities(){
   useEffect(() => { getArticles('published').then(setItems).catch(() => setItems([])) }, [])
   return (
     <section className="section">
+      <Helmet>
+        <title>Actualites dentaires | Dr Abdessadok</title>
+        <meta name="description" content="Articles et conseils du Dr Abdessadok : implantologie, Invisalign, esthetique dentaire et prevention." />
+      </Helmet>
       <div className="container-max">
         <motion.h1 className="text-3xl font-bold mb-6" initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>{t('nav.actualities')}</motion.h1>
         <div className="grid md:grid-cols-2 gap-6">

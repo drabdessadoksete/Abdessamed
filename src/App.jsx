@@ -8,17 +8,30 @@ import Navbar from './components/Navbar'
 import './i18n/index.js'
 import Footer from './components/Footer'
 
+const baseUrl = 'https://cabinetdentairesete.fr'
+
 export default function App() {
   const location = useLocation()
+  const normalizedPath = location.pathname === '/' ? '/' : location.pathname.replace(/\/+$/, '')
+  const canonicalUrl = `${baseUrl}${normalizedPath}`
+  const isPrivate = normalizedPath.startsWith('/admin') || normalizedPath.startsWith('/login')
+
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }, [location.pathname])
+
   return (
-   <div className="min-h-screen bg-background text-foreground">
-     <KeepAlive />
+    <div className="min-h-screen bg-background text-foreground">
+      <KeepAlive />
       <Helmet>
-        <meta name="description" content="Cabinet Dentaire Dr. Abdessadok — Un sourire sain, une confiance retrouvée." />
+        <meta name="description" content="Cabinet Dentaire Dr. Abdessadok - Un sourire sain, une confiance retrouvee." />
         <meta name="theme-color" content="#2563eb" />
+        <link rel="canonical" href={canonicalUrl} />
+        <link rel="alternate" href={canonicalUrl} hreflang="fr" />
+        <link rel="alternate" href={canonicalUrl} hreflang="x-default" />
+        <meta property="og:url" content={canonicalUrl} />
+        <meta property="og:type" content="website" />
+        <meta name="robots" content={isPrivate ? 'noindex,nofollow' : 'index,follow'} />
         <script type="application/ld+json">{JSON.stringify({
           '@context': 'https://schema.org',
           '@type': 'Dentist',
@@ -29,8 +42,8 @@ export default function App() {
           telephone: '+33422910594',
           address: {
             '@type': 'PostalAddress',
-            streetAddress: 'RDC, 10 Bd Danièle Casanova',
-            addressLocality: 'Sète',
+            streetAddress: 'RDC, 10 Bd Daniele Casanova',
+            addressLocality: 'Sete',
             postalCode: '34200',
             addressCountry: 'FR',
           },

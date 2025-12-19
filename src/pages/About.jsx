@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Helmet } from 'react-helmet-async'
 import doctorImg from '../assets/dantist.png'
 import alignTechLogo from "../assets/Align logo.png"
 import invisalignLogo from "../assets/Invisalign_logo.png"
@@ -13,6 +14,11 @@ export default function About(){
   const faqData = t('about.faq.items', { returnObjects: true })
   return (
     <section className="section">
+      <Helmet>
+        <title>A propos du Dr Abdessadok | Cabinet Dentaire Sete</title>
+        <meta name="description" content="Parcours, diplomes et expertise du Dr Abdessadok a Sete : implantologie, orthodontie invisible, chirurgie orale et urgences." />
+        <meta property="og:type" content="website" />
+      </Helmet>
       <div className="container-max space-y-10">
         <motion.div
           className="grid md:grid-cols-[1.1fr_0.9fr] gap-6 md:gap-10 items-center"
