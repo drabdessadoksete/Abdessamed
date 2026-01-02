@@ -15,19 +15,6 @@ import Actualities from './pages/Actualities'
 import Article from './pages/Article'
 import ActualitiesAdmin from './pages/ActualitiesAdmin'
 import Login from './pages/Login'
-import logoUrl from './assets/Favicon/favicon-32x32.png'
-
-// Ensure favicon uses the provided logo
-const ensureFavicon = () => {
-  const existing = document.querySelector("link[rel~='icon']") || document.createElement('link')
-  existing.setAttribute('rel', 'icon')
-  existing.setAttribute('href', logoUrl)
-  if (!existing.parentNode) {
-    document.head.appendChild(existing)
-  }
-}
-ensureFavicon()
-
 const router = createBrowserRouter([
   {
     path: '/',
