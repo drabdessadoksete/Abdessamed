@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion'
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Helmet } from 'react-helmet-async'
 import doctorImg from '../assets/dantist.png'
@@ -11,6 +11,8 @@ import clinicVideo from "../assets/video/Cinematic_Motion_Logo_Sequence_Creation
 export default function About(){
   const { t } = useTranslation()
   const [openIndex, setOpenIndex] = useState(null)
+  const [isMuted, setIsMuted] = useState(false)
+  const videoRef = useRef(null)
   const faqData = t('about.faq.items', { returnObjects: true })
   return (
     <section className="section">
@@ -138,14 +140,16 @@ export default function About(){
             <img src={iteroLogo} alt="iTero" className="h-8 w-auto object-contain" />
           </div>
         </div>
-        <div className="rounded-2xl border border-slate-800 bg-surface/60 backdrop-blur shadow-soft overflow-hidden">
+        <div className="rounded-2xl border border-slate-800 bg-surface/60 backdrop-blur shadow-soft overflow-hidden relative group">
           <video
+            ref={videoRef}
             src={clinicVideo}
-            className="w-full h-full max-h-[520px] object-cover"
+            className="w-full h-full max-h-[520px] object-cover cursor-pointer"
             autoPlay
-            muted
+            muted={isMuted}
             loop
             playsInline
+            onClick={() => setIsMuted(!isMuted)}
           />
         </div>
 

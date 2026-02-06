@@ -1,10 +1,14 @@
 import { motion } from 'framer-motion'
+import { useState, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import heroVideo from "../assets/video/Cinematic_Motion_Logo_Sequence_Creation.mp4"
 
 export default function Hero(){
   const { t } = useTranslation()
+  const [isMuted, setIsMuted] = useState(false)
+  const videoRef = useRef(null)
+
   return (
     <section className="section relative overflow-hidden">
       <div className="absolute inset-0 pointer-events-none opacity-40" aria-hidden>
@@ -34,14 +38,16 @@ export default function Hero(){
             <Link to="/services" className="btn-outline">{t('hero.seeServices')}</Link>
           </div>
         </div>
-        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} viewport={{ once: true }} className="card p-2 overflow-hidden">
+        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} viewport={{ once: true }} className="card p-2 overflow-hidden relative group">
           <video
+            ref={videoRef}
             src={heroVideo}
-            className="w-full h-full rounded-2xl object-cover bg-white/5"
+            className="w-full h-full rounded-2xl object-cover bg-white/5 cursor-pointer"
             autoPlay
-            muted
+            muted={isMuted}
             loop
             playsInline
+            onClick={() => setIsMuted(!isMuted)}
           />
         </motion.div>
       </div>
