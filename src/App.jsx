@@ -23,7 +23,7 @@ export default function App() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <KeepAlive />
-      <Helmet>
+      <Helmet defaultTitle="Cabinet Dentaire Dr. Abdessadok" titleTemplate="%s | Cabinet Dentaire Dr. Abdessadok">
         <meta name="description" content="Cabinet Dentaire Dr. Abdessadok - Un sourire sain, une confiance retrouvee." />
         <meta name="theme-color" content="#2563eb" />
         <link rel="canonical" href={canonicalUrl} />
