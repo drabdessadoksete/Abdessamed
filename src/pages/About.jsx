@@ -20,6 +20,22 @@ export default function About(){
         <title>A propos du Dr Abdessadok | Cabinet Dentaire Sete</title>
         <meta name="description" content="Parcours, diplomes et expertise du Dr Abdessadok a Sete : implantologie, orthodontie invisible, chirurgie orale et urgences." />
         <meta property="og:type" content="website" />
+        {faqData && Array.isArray(faqData) && (
+          <script type="application/ld+json">
+            {JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "FAQPage",
+              "mainEntity": faqData.map(item => ({
+                "@type": "Question",
+                "name": item.question,
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": item.answer
+                }
+              }))
+            })}
+          </script>
+        )}
       </Helmet>
       <div className="container-max space-y-10">
         <motion.div
@@ -48,7 +64,7 @@ export default function About(){
           </div>
           <motion.img
             src={doctorImg}
-            alt="Chirurgien‑dentiste"
+            alt="Dr Abdessadok Chirurgien-Dentiste Sète"
             className="rounded-2xl shadow-soft w-full h-auto object-cover"
             loading="lazy"
             initial={{ opacity: 0, y: 12 }}

@@ -19,7 +19,7 @@ export default function Hero(){
         <div>
           <span className="badge mb-4">{t('hero.badge')}</span>
           <h1 className="text-4xl md:text-6xl font-extrabold leading-tight mb-6">
-            Cabinet Dentaire <span className="text-primary">Dr. Abdessadok</span>
+            {t('hero.title')}
           </h1>
           <p className="text-muted mb-8 max-w-xl">{t('hero.tagline')}</p>
           <div className="flex flex-col sm:flex-row gap-3">

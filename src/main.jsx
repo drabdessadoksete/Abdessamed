@@ -8,6 +8,8 @@ import App from './App'
 import Home from './pages/Home'
 import About from './pages/About'
 import Services from './pages/Services'
+import Implantologie from './pages/Implantologie'
+import Invisalign from './pages/Invisalign'
 import Gallery from './pages/Gallery'
 import Contact from './pages/Contact'
 import Admin from './pages/Admin'
@@ -23,6 +25,8 @@ const router = createBrowserRouter([
       { index: true, element: <Home /> },
       { path: 'about', element: <About /> },
       { path: 'services', element: <Services /> },
+      { path: 'implantologie', element: <Implantologie /> },
+      { path: 'invisalign', element: <Invisalign /> },
       { path: 'gallery', element: <Gallery /> },
       { path: 'contact', element: <Contact /> },
       { path: 'actualities', element: <Actualities /> },

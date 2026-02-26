@@ -14,9 +14,18 @@
     "language": "Changer de langue"
   },
   "hero": {
+    "title": "Cabinet Dentaire Sète - Dr. Abdessadok | Dentiste, Invisalign & Implantologie",
     "badge": "Soins modernes • Équipe à l’écoute",
     "tagline": "« Un sourire sain, une confiance retrouvée. » Soins modernes, approche humaine, au cœur de Sète.",
     "seeServices": "Voir les services"
+  },
+  "implantologiePage": {
+    "introTitle": "Implantologie à Sète",
+    "introText": "Notre cabinet dentaire à Sète est spécialisé dans la pose d'implants dentaires de haute qualité. Nous utilisons des technologies de pointe pour restaurer votre sourire de manière durable et esthétique."
+  },
+  "invisalignPage": {
+    "introTitle": "Invisalign à Sète",
+    "introText": "Transformez votre sourire discrètement avec Invisalign à Sète. En tant que Platinum Provider, le Dr. Abdessadok vous accompagne pour un alignement dentaire invisible et confortable."
   },
   "buttons": {
     "reserveImplant": "Réserver Bilan Implant",
@@ -45,6 +54,8 @@
   "footer": {
     "contact": "Contact",
     "hours": "Horaires",
+    "areaServedTitle": "Zone d'Intervention",
+    "areaServedText": "Notre cabinet dentaire à Sète accueille les patients du Bassin de Thau : Sète, Frontignan, Balaruc-les-Bains, Mèze et Agde.",
     "copy": "© {{year}} Cabinet Dentaire Dr. Abdessadok. Tous droits réservés.",
     "tagline": "« Un sourire sain, une confiance retrouvée. »"
   },

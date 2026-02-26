@@ -14,26 +14,32 @@ import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { getServices } from '../services/api'
 
-export default function Services(){
+export default function Services({ isSubPage = false }){
   const { t } = useTranslation()
   const [showInvisalignPortal, setShowInvisalignPortal] = useState(false)
   return (
     <section className="section">
       <div className="container-max space-y-12">
-        <Helmet>
-          <title>Implantologie & Invisalign à Sète | Dr Abdessadok</title>
-          <meta name="description" content="Expertise en chirurgie implantaire (Made in France) et alignement dentaire invisible. Solutions esthétiques et durables à Sète." />
-        </Helmet>
+        {!isSubPage && (
+          <Helmet>
+            <title>Implantologie & Invisalign à Sète | Dr Abdessadok</title>
+            <meta name="description" content="Expertise en chirurgie implantaire (Made in France) et alignement dentaire invisible. Solutions esthétiques et durables à Sète." />
+          </Helmet>
+        )}
         <motion.div initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-          <h1 className="text-3xl md:text-4xl font-extrabold mb-2">{t('servicesPage.title')}</h1>
+          {isSubPage ? (
+            <h2 className="text-3xl md:text-4xl font-extrabold mb-2">{t('servicesPage.title')}</h2>
+          ) : (
+            <h1 className="text-3xl md:text-4xl font-extrabold mb-2">{t('servicesPage.title')}</h1>
+          )}
           <p className="text-muted">{t('servicesPage.subtitle')}</p>
         </motion.div>
 
         <div className="grid md:grid-cols-2 gap-8 items-center">
-          <motion.img src={implantImg} alt="Implant dentaire" className="rounded-2xl shadow-soft w-full h-auto object-cover" initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} />
+          <motion.img src={implantImg} alt="Implant dentaire BioTech Made in France" className="rounded-2xl shadow-soft w-full h-auto object-cover" initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} />
           <motion.div className="rounded-2xl border border-slate-800 bg-surface/60 backdrop-blur p-6 shadow-soft" initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             <div className="flex items-center gap-3 mb-2">
-              <img src={implantIcon} alt="Icone Implantologie" className="h-10 w-10 rounded-md object-cover" />
+              <img src={implantIcon} alt="Icone Implantologie Dentaire" className="h-10 w-10 rounded-md object-cover" />
               <h2 className="text-2xl md:text-3xl font-bold">{t('servicesPage.implantTitle')}</h2>
             </div>
             <span className="badge mt-3 mb-4">{t('servicesPage.implantBadge')}</span>
@@ -52,13 +58,13 @@ export default function Services(){
         <div className="grid md:grid-cols-2 gap-8 items-center">
           <motion.div className="rounded-2xl border border-slate-800 bg-surface/60 backdrop-blur p-6 shadow-soft order-2 md:order-1" initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
             <div className="flex items-center gap-3 mb-2">
-              <img src={alignerIcon} alt="Icone Invisalign" className="h-10 w-10 rounded-md object-cover" />
+              <img src={alignerIcon} alt="Icone Orthodontie Invisible" className="h-10 w-10 rounded-md object-cover" />
               <h2 className="text-2xl md:text-3xl font-bold">{t('servicesPage.invisalignTitle')}</h2>
             </div>
             <div className="flex flex-wrap items-center gap-3 mb-3">
-              <img src={invisalignLogo} alt="Invisalign" className="h-9 w-auto object-contain" />
-              <img src={alignTechLogo} alt="Align Technology" className="h-9 w-auto object-contain" />
-              <img src={iteroLogo} alt="iTero" className="h-9 w-auto object-contain" />
+              <img src={invisalignLogo} alt="Logo Invisalign" className="h-9 w-auto object-contain" />
+              <img src={alignTechLogo} alt="Logo Align Technology" className="h-9 w-auto object-contain" />
+              <img src={iteroLogo} alt="Logo iTero Scanner 3D" className="h-9 w-auto object-contain" />
             </div>
             <span className="badge mt-3 mb-4">{t('servicesPage.invisalignBadge')}</span>
             <p className="text-sm text-muted mb-4">{t('servicesPage.invisalignDesc')}</p>
@@ -84,7 +90,7 @@ export default function Services(){
             )}
           </div>
         </motion.div>
-          <motion.img src={alignerImg} alt="Aligneurs Invisalign" className="rounded-2xl shadow-soft w-full h-auto object-cover order-1 md:order-2" initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} />
+          <motion.img src={alignerImg} alt="Traitement Orthodontique Invisalign Sète" className="rounded-2xl shadow-soft w-full h-auto object-cover order-1 md:order-2" initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} />
         </div>
 
         <div>

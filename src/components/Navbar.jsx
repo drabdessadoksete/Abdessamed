@@ -29,7 +29,7 @@ export default function Navbar() {
     <header className="sticky top-0 z-50 backdrop-blur navbar-gold border-b border-slate-800">
       <div className="container-max flex items-center justify-between h-14 md:h-16">
         <Link to="/" className="flex items-center gap-2 min-w-0" onClick={closeMenu}>
-          <img src={logo} alt="Logo du Cabinet Dentaire" className="h-8 w-8 rounded-full object-cover" />
+          <img src={logo} alt="Logo Cabinet Dentaire Dr Abdessadok" className="h-8 w-8 rounded-full object-cover" />
           <span className="font-bold text-sm sm:text-base truncate">Dr. Abdessadok</span>
         </Link>
 

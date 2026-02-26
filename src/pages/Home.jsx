@@ -30,14 +30,14 @@ export default function Home(){
           <div className="rounded-2xl shadow-soft overflow-hidden border border-rolexGreen/40 bg-rolexGreen/45 backdrop-blur">
             <div className="p-6 md:p-8 h-full flex flex-col">
               <div className="flex items-center gap-3 mb-4">
-                <img src={implantIcon} alt="Icone Implantologie" className="h-10 w-10 rounded-md object-cover" />
+                <img src={implantIcon} alt="Icone Implantologie Dentaire" className="h-10 w-10 rounded-md object-cover" />
                 <h2 className="text-xl md:text-2xl font-bold">
                   <span className="md:whitespace-nowrap">{t('sections.implant.title')}</span>
                   <span className="block text-sm md:text-base opacity-90">{t('sections.implant.madeInFrance')}</span>
                 </h2>
               </div>
               <p className="text-sm md:text-base text-muted mb-4">{t('sections.implant.desc')}</p>
-              <img src={implantImg} alt="Implantologie BioTech" className="rounded-xl shadow-soft w-full h-auto object-cover mb-6" />
+              <img src={implantImg} alt="Implants Dentaires BioTech Sète" className="rounded-xl shadow-soft w-full h-auto object-cover mb-6" />
               <div className="flex flex-col md:flex-row md:flex-wrap md:items-start gap-3">
                 <a
                   href="https://www.doctolib.fr/dentiste/sete/abdessamed-abdessadok-levallois-perret/booking/motives?specialityId=1&telehealth=false&placeId=practice-518332&bookingFunnelSource=profile"
@@ -55,16 +55,16 @@ export default function Home(){
           <div className="rounded-2xl shadow-soft overflow-hidden border border-rolexGreen/40 bg-rolexGreen/45 backdrop-blur">
             <div className="p-6 md:p-8 h-full flex flex-col">
               <div className="flex items-center gap-3 mb-4">
-                <img src={alignerIcon} alt="Icone Invisalign" className="h-10 w-10 rounded-md object-cover" />
+                <img src={alignerIcon} alt="Icone Orthodontie Invisible" className="h-10 w-10 rounded-md object-cover" />
                 <h2 className="text-xl md:text-2xl font-bold md:whitespace-nowrap">{t('sections.invisalign.title')}</h2>
               </div>
               <div className="flex flex-wrap items-center gap-3 mb-3">
-                <img src={invisalignLogo} alt="Invisalign" className="h-9 w-auto object-contain" />
-                <img src={alignTechLogo} alt="Align Technology" className="h-9 w-auto object-contain" />
-                <img src={iteroLogo} alt="iTero" className="h-9 w-auto object-contain" />
+                <img src={invisalignLogo} alt="Logo Invisalign" className="h-9 w-auto object-contain" />
+                <img src={alignTechLogo} alt="Logo Align Technology" className="h-9 w-auto object-contain" />
+                <img src={iteroLogo} alt="Logo iTero Scanner 3D" className="h-9 w-auto object-contain" />
               </div>
               <p className="text-sm md:text-base text-muted mb-4">{t('sections.invisalign.desc')}</p>
-              <img src={alignerImg} alt="Orthodontie Invisible Invisalign" className="rounded-xl shadow-soft w-full h-auto object-cover mb-6" />
+              <img src={alignerImg} alt="Patient avec Gouttières Invisalign" className="rounded-xl shadow-soft w-full h-auto object-cover mb-6" />
               <div className="flex flex-col md:flex-row md:flex-wrap md:items-start gap-3">
                 <a
                   href="https://www.doctolib.fr/dentiste/sete/abdessamed-abdessadok-levallois-perret/booking/availabilities?specialityId=1&telehealth=false&placeId=practice-518332&motiveCategoryIds%5B%5D=492540&motiveIds%5B%5D=15059876&bookingFunnelSource=deep_link"
