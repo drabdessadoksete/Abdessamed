@@ -7,7 +7,7 @@ export default function Implantologie() {
   return (
     <>
       <Helmet>
-        <title>Implantologie Sète | Pose d'Implants & Chirurgie Dentaire</title>
+        <title>Implantologie Sète : Pose d'Implants</title>
         <meta name="description" content="Cabinet spécialisé en implantologie à Sète. Pose d'implants dentaires BioTech (Made in France) par le Dr Abdessadok. Retrouvez un sourire complet." />
       </Helmet>
       <section className="section pb-0">

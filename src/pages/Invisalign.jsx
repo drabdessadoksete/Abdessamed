@@ -7,7 +7,7 @@ export default function Invisalign() {
   return (
     <>
       <Helmet>
-        <title>Traitement Invisalign Sète | Alignement Dentaire Invisible</title>
+        <title>Invisalign Sète : Alignement Invisible</title>
         <meta name="description" content="Orthodontie invisible Invisalign à Sète. Alignez vos dents discrètement avec le Dr Abdessadok, certifié Platinum Provider. Bilan gratuit." />
       </Helmet>
       <section className="section pb-0">
