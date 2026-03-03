@@ -20,7 +20,7 @@ export default function Home(){
   return (
     <>
       <Helmet>
-        <title>Dr Abdessadok | Dentiste Sète - Implantologie BioTech & Invisalign</title>
+        <title>Dentiste Sète : Implantologie & Invisalign</title>
         <meta name="description" content="Cabinet dentaire à Sète (34). Spécialiste en implants dentaires français (BioTech) et orthodontie invisible (Invisalign). Prenez RDV en ligne." />
         <meta name="keywords" content="Dentiste Sète, Implant dentaire Montpellier, Invisalign Sète, Urgence dentaire 34, Facettes dentaires" />
       </Helmet>
