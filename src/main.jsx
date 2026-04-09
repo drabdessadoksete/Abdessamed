@@ -8,8 +8,6 @@ import App from './App'
 import Home from './pages/Home'
 import About from './pages/About'
 import Services from './pages/Services'
-import Implantologie from './pages/Implantologie'
-import Invisalign from './pages/Invisalign'
 import Gallery from './pages/Gallery'
 import Contact from './pages/Contact'
 import Admin from './pages/Admin'
@@ -17,6 +15,14 @@ import Actualities from './pages/Actualities'
 import Article from './pages/Article'
 import ActualitiesAdmin from './pages/ActualitiesAdmin'
 import Login from './pages/Login'
+import SeoServicePage from './pages/SeoServicePage'
+import SeoBlogPage from './pages/SeoBlogPage'
+import BlogHub from './pages/BlogHub'
+import { blogPages, servicePages } from './data/seoContent'
+
+const seoServiceRoutes = servicePages.map((page) => ({ path: page.path, element: <SeoServicePage /> }))
+const seoBlogRoutes = blogPages.map((page) => ({ path: page.path, element: <SeoBlogPage /> }))
+
 const router = createBrowserRouter([
   {
     path: '/',
@@ -25,13 +31,14 @@ const router = createBrowserRouter([
       { index: true, element: <Home /> },
       { path: 'about', element: <About /> },
       { path: 'services', element: <Services /> },
-      { path: 'implantologie', element: <Implantologie /> },
-      { path: 'invisalign', element: <Invisalign /> },
       { path: 'gallery', element: <Gallery /> },
       { path: 'contact', element: <Contact /> },
+      { path: 'blog', element: <BlogHub /> },
       { path: 'actualities', element: <Actualities /> },
       { path: 'actualities/:id', element: <Article /> },
       { path: 'login', element: <Login /> },
+      ...seoServiceRoutes,
+      ...seoBlogRoutes,
     ]
   },
   { path: '/admin', element: <Admin /> },

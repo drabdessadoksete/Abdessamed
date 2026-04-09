@@ -1,8 +1,9 @@
-import { NavLink, Link } from 'react-router-dom'
+import { NavLink, Link, useLocation } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import logo from '../assets/Favicon/android-chrome-192x192.png'
+import { blogPages, servicePages } from '../data/seoContent'
 
 const NavItem = ({ to, children }) => (
   <NavLink
@@ -20,25 +21,146 @@ const NavItem = ({ to, children }) => (
 
 export default function Navbar() {
   const { t, i18n } = useTranslation()
+  const location = useLocation()
   const [open, setOpen] = useState(false)
   const [langOpen, setLangOpen] = useState(false)
+  const [desktopMenu, setDesktopMenu] = useState(null)
+  const [mobileServicesOpen, setMobileServicesOpen] = useState(false)
+  const [mobileBlogOpen, setMobileBlogOpen] = useState(false)
   const closeMenu = () => setOpen(false)
+  const closeAllMenus = () => {
+    setOpen(false)
+    setLangOpen(false)
+    setDesktopMenu(null)
+    setMobileServicesOpen(false)
+    setMobileBlogOpen(false)
+  }
   const changeLang = (code) => { i18n.changeLanguage(code); localStorage.setItem('lang', code); setLangOpen(false) }
+  const servicePillars = servicePages.filter((page) => page.menuGroup === 'pillars')
+  const serviceLocals = servicePages.filter((page) => page.menuGroup === 'locals')
+
+  useEffect(() => {
+    setOpen(false)
+    setDesktopMenu(null)
+    setLangOpen(false)
+  }, [location.pathname])
+
+  const isServicesActive = location.pathname === '/services' || servicePages.some((page) => page.url === location.pathname)
+  const isBlogActive = location.pathname === '/blog' || blogPages.some((page) => page.url === location.pathname)
 
   return (
     <header className="sticky top-0 z-50 backdrop-blur navbar-gold border-b border-slate-800">
       <div className="container-max flex items-center justify-between h-14 md:h-16">
-        <Link to="/" className="flex items-center gap-2 min-w-0" onClick={closeMenu}>
+        <Link to="/" className="flex items-center gap-2 min-w-0" onClick={closeAllMenus}>
           <img src={logo} alt="Logo Cabinet Dentaire Dr Abdessadok" className="h-8 w-8 rounded-full object-cover" />
           <span className="font-bold text-sm sm:text-base truncate">Dr. Abdessadok</span>
         </Link>
 
         {/* Desktop nav */}
-        <nav className="hidden md:flex items-center gap-1">
+        <nav className="hidden md:flex items-center gap-1 relative">
           <NavItem to="/">{t('nav.home')}</NavItem>
           <NavItem to="/about">{t('nav.about')}</NavItem>
-          <NavItem to="/services">{t('nav.services')}</NavItem>
-          <NavItem to="/actualities">{t('nav.actualities')}</NavItem>
+          <div
+            className="relative"
+            onMouseEnter={() => setDesktopMenu('services')}
+            onMouseLeave={() => setDesktopMenu((current) => (current === 'services' ? null : current))}
+          >
+            <button
+              type="button"
+              className={`px-3 py-2 rounded-xl transition focus:outline-none focus:ring-2 focus:ring-rolexGreen/40 ${
+                isServicesActive || desktopMenu === 'services'
+                  ? 'text-foreground border border-rolexGreen/40 bg-rolexGreen/45 backdrop-blur-sm'
+                  : 'hover:bg-rolexGreen/10'
+              }`}
+              onClick={() => setDesktopMenu((current) => (current === 'services' ? null : 'services'))}
+            >
+              {t('nav.services')}
+            </button>
+            <AnimatePresence>
+              {desktopMenu === 'services' && (
+                <motion.div
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 8 }}
+                  transition={{ duration: 0.18 }}
+                  className="absolute left-1/2 top-full mt-3 w-[720px] -translate-x-1/2 rounded-[2rem] border border-rolexGold/20 bg-surface/95 p-6 shadow-soft backdrop-blur"
+                >
+                  <div className="grid grid-cols-2 gap-6">
+                    <div>
+                      <div className="text-xs uppercase tracking-[0.2em] text-rolexGold mb-3">Pages piliers</div>
+                      <div className="space-y-3">
+                        <Link to="/services" className="block rounded-2xl border border-rolexGold/20 bg-rolexGreen/10 p-4 hover:bg-rolexGreen/20 transition" onClick={closeAllMenus}>
+                          <div className="font-semibold">Vue d&apos;ensemble des services</div>
+                          <div className="text-sm text-slate-300 mt-1">Implantologie, Invisalign et soins du cabinet.</div>
+                        </Link>
+                        {servicePillars.map((page) => (
+                          <Link key={page.url} to={page.url} className="block rounded-2xl border border-rolexGold/20 bg-rolexGreen/10 p-4 hover:bg-rolexGreen/20 transition" onClick={closeAllMenus}>
+                            <div className="font-semibold">{page.menuLabel}</div>
+                            <div className="text-sm text-slate-300 mt-1">{page.menuDescription}</div>
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                    <div>
+                      <div className="text-xs uppercase tracking-[0.2em] text-rolexGold mb-3">Pages locales</div>
+                      <div className="space-y-3">
+                        {serviceLocals.map((page) => (
+                          <Link key={page.url} to={page.url} className="block rounded-2xl border border-rolexGold/20 bg-rolexGreen/10 p-4 hover:bg-rolexGreen/20 transition" onClick={closeAllMenus}>
+                            <div className="font-semibold">{page.menuLabel}</div>
+                            <div className="text-sm text-slate-300 mt-1">{page.menuDescription}</div>
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+          <div
+            className="relative"
+            onMouseEnter={() => setDesktopMenu('blog')}
+            onMouseLeave={() => setDesktopMenu((current) => (current === 'blog' ? null : current))}
+          >
+            <button
+              type="button"
+              className={`px-3 py-2 rounded-xl transition focus:outline-none focus:ring-2 focus:ring-rolexGreen/40 ${
+                isBlogActive || desktopMenu === 'blog'
+                  ? 'text-foreground border border-rolexGreen/40 bg-rolexGreen/45 backdrop-blur-sm'
+                  : 'hover:bg-rolexGreen/10'
+              }`}
+              onClick={() => setDesktopMenu((current) => (current === 'blog' ? null : 'blog'))}
+            >
+              Blog
+            </button>
+            <AnimatePresence>
+              {desktopMenu === 'blog' && (
+                <motion.div
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 8 }}
+                  transition={{ duration: 0.18 }}
+                  className="absolute left-1/2 top-full mt-3 w-[620px] -translate-x-1/2 rounded-[2rem] border border-rolexGold/20 bg-surface/95 p-6 shadow-soft backdrop-blur"
+                >
+                  <div className="grid grid-cols-2 gap-6">
+                    <Link to="/blog" className="rounded-2xl border border-rolexGold/20 bg-rolexGreen/10 p-5 hover:bg-rolexGreen/20 transition" onClick={closeAllMenus}>
+                      <div className="text-xs uppercase tracking-[0.2em] text-rolexGold mb-2">Hub blog</div>
+                      <div className="font-semibold">Tous les articles</div>
+                      <div className="text-sm text-slate-300 mt-2">Guides patients sur Invisalign, le prix et la rehabilitation du sourire.</div>
+                    </Link>
+                    <div className="space-y-3">
+                      {blogPages.map((page) => (
+                        <Link key={page.url} to={page.url} className="block rounded-2xl border border-rolexGold/20 bg-rolexGreen/10 p-4 hover:bg-rolexGreen/20 transition" onClick={closeAllMenus}>
+                          <div className="font-semibold">{page.menuLabel}</div>
+                          <div className="text-sm text-slate-300 mt-1">{page.menuDescription}</div>
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
           <NavItem to="/gallery">{t('nav.gallery')}</NavItem>
           <NavItem to="/contact">{t('nav.contact')}</NavItem>
         </nav>
@@ -47,7 +169,7 @@ export default function Navbar() {
           <Link
             to="/login"
             className="hidden md:inline-flex items-center justify-center h-10 px-3 rounded-xl border border-rolexGreen/40 bg-rolexGreen/45 hover:bg-rolexGreen/60 text-sm focus:outline-none focus:ring-2 focus:ring-rolexGreen/40"
-            onClick={closeMenu}
+            onClick={closeAllMenus}
           >
             Se connecter
           </Link>
@@ -123,13 +245,59 @@ export default function Navbar() {
             className="md:hidden border-t border-slate-800 bg-surface/95 backdrop-blur"
           >
             <nav className="container-max py-3 flex flex-col">
-              <NavLink onClick={closeMenu} to="/" className={({ isActive }) => `px-3 py-3 rounded-xl transition ${isActive ? 'text-foreground border border-rolexGreen/40 bg-rolexGreen/45 backdrop-blur-sm' : 'hover:bg-rolexGreen/10'}`}>{t('nav.home')}</NavLink>
-              <NavLink onClick={closeMenu} to="/about" className={({ isActive }) => `px-3 py-3 rounded-xl transition ${isActive ? 'text-foreground border border-rolexGreen/40 bg-rolexGreen/45 backdrop-blur-sm' : 'hover:bg-rolexGreen/10'}`}>{t('nav.about')}</NavLink>
-            <NavLink onClick={closeMenu} to="/services" className={({ isActive }) => `px-3 py-3 rounded-xl transition ${isActive ? 'text-foreground border border-rolexGreen/40 bg-rolexGreen/45 backdrop-blur-sm' : 'hover:bg-rolexGreen/10'}`}>{t('nav.services')}</NavLink>
-            <NavLink onClick={closeMenu} to="/actualities" className={({ isActive }) => `px-3 py-3 rounded-xl transition ${isActive ? 'text-foreground border border-rolexGreen/40 bg-rolexGreen/45 backdrop-blur-sm' : 'hover:bg-rolexGreen/10'}`}>{t('nav.actualities')}</NavLink>
-            <NavLink onClick={closeMenu} to="/gallery" className={({ isActive }) => `px-3 py-3 rounded-xl transition ${isActive ? 'text-foreground border border-rolexGreen/40 bg-rolexGreen/45 backdrop-blur-sm' : 'hover:bg-rolexGreen/10'}`}>{t('nav.gallery')}</NavLink>
-            <NavLink onClick={closeMenu} to="/contact" className={({ isActive }) => `px-3 py-3 rounded-xl transition ${isActive ? 'text-foreground border border-rolexGreen/40 bg-rolexGreen/45 backdrop-blur-sm' : 'hover:bg-rolexGreen/10'}`}>{t('nav.contact')}</NavLink>
-            <Link onClick={closeMenu} to="/login" className="px-3 py-3 rounded-xl text-left hover:bg-rolexGreen/10">Se connecter</Link>
+              <NavLink onClick={closeAllMenus} to="/" className={({ isActive }) => `px-3 py-3 rounded-xl transition ${isActive ? 'text-foreground border border-rolexGreen/40 bg-rolexGreen/45 backdrop-blur-sm' : 'hover:bg-rolexGreen/10'}`}>{t('nav.home')}</NavLink>
+              <NavLink onClick={closeAllMenus} to="/about" className={({ isActive }) => `px-3 py-3 rounded-xl transition ${isActive ? 'text-foreground border border-rolexGreen/40 bg-rolexGreen/45 backdrop-blur-sm' : 'hover:bg-rolexGreen/10'}`}>{t('nav.about')}</NavLink>
+              <div className="rounded-2xl border border-rolexGold/20 bg-rolexGreen/10 overflow-hidden">
+                <button
+                  type="button"
+                  className="w-full flex items-center justify-between px-3 py-3 text-left"
+                  onClick={() => setMobileServicesOpen((value) => !value)}
+                >
+                  <span className="font-semibold">{t('nav.services')}</span>
+                  <span>{mobileServicesOpen ? '−' : '+'}</span>
+                </button>
+                <AnimatePresence initial={false}>
+                  {mobileServicesOpen && (
+                    <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="px-3 pb-3 overflow-hidden">
+                      <div className="space-y-2">
+                        <Link onClick={closeAllMenus} to="/services" className="block rounded-xl px-3 py-2 hover:bg-rolexGreen/20">Vue d&apos;ensemble des services</Link>
+                        {[...servicePillars, ...serviceLocals].map((page) => (
+                          <Link key={page.url} onClick={closeAllMenus} to={page.url} className="block rounded-xl px-3 py-2 hover:bg-rolexGreen/20">
+                            {page.menuLabel}
+                          </Link>
+                        ))}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+              <div className="rounded-2xl border border-rolexGold/20 bg-rolexGreen/10 overflow-hidden">
+                <button
+                  type="button"
+                  className="w-full flex items-center justify-between px-3 py-3 text-left"
+                  onClick={() => setMobileBlogOpen((value) => !value)}
+                >
+                  <span className="font-semibold">Blog</span>
+                  <span>{mobileBlogOpen ? '−' : '+'}</span>
+                </button>
+                <AnimatePresence initial={false}>
+                  {mobileBlogOpen && (
+                    <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="px-3 pb-3 overflow-hidden">
+                      <div className="space-y-2">
+                        <Link onClick={closeAllMenus} to="/blog" className="block rounded-xl px-3 py-2 hover:bg-rolexGreen/20">Hub blog</Link>
+                        {blogPages.map((page) => (
+                          <Link key={page.url} onClick={closeAllMenus} to={page.url} className="block rounded-xl px-3 py-2 hover:bg-rolexGreen/20">
+                            {page.menuLabel}
+                          </Link>
+                        ))}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+              <NavLink onClick={closeAllMenus} to="/gallery" className={({ isActive }) => `px-3 py-3 rounded-xl transition ${isActive ? 'text-foreground border border-rolexGreen/40 bg-rolexGreen/45 backdrop-blur-sm' : 'hover:bg-rolexGreen/10'}`}>{t('nav.gallery')}</NavLink>
+              <NavLink onClick={closeAllMenus} to="/contact" className={({ isActive }) => `px-3 py-3 rounded-xl transition ${isActive ? 'text-foreground border border-rolexGreen/40 bg-rolexGreen/45 backdrop-blur-sm' : 'hover:bg-rolexGreen/10'}`}>{t('nav.contact')}</NavLink>
+              <Link onClick={closeAllMenus} to="/login" className="px-3 py-3 rounded-xl text-left hover:bg-rolexGreen/10">Se connecter</Link>
             <div className="mt-3 border-t border-slate-800 pt-3">
               <div className="px-3 py-3 rounded-xl bg-rolexGreen/45 backdrop-blur border border-slate-800">
                 <div className="font-semibold">Dr. Abdessamed Abdessadok</div>

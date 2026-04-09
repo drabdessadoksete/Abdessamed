@@ -1,4 +1,4 @@
-
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Playfair+Display:wght@400;600;700;800&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -36,7 +36,6 @@ h1, h2, h3, h4, h5, h6 { font-family: 'Playfair Display', ui-serif, Georgia, Cam
 .badge {
   @apply inline-flex items-center text-xs font-medium px-3 py-1 rounded-full bg-primary/10 text-primary border border-primary/20;
 }
-@import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Playfair+Display:wght@400;600;700;800&display=swap');
 
 /* Navbar metallic gold gradient */
 .navbar-gold {

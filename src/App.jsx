@@ -31,7 +31,7 @@ export default function App() {
         <link rel="alternate" href={canonicalUrl} hreflang="x-default" />
         <meta property="og:url" content={canonicalUrl} />
         <meta property="og:type" content="website" />
-        <meta name="robots" content={isPrivate ? 'noindex,nofollow' : 'index,follow'} />
+        <meta name="robots" content={isPrivate ? 'noindex,nofollow' : 'index,follow,max-image-preview:large'} />
         <script type="application/ld+json">{JSON.stringify({
           '@context': 'https://schema.org',
           '@type': 'Dentist',
