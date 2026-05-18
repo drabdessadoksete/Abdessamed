@@ -56,6 +56,16 @@ export default function Navbar() {
   const serviceLocals = servicePages.filter((page) => page.menuGroup === 'locals')
   const curatedBlogEntries = curatedBlogLinks
     .map((item) => {
+      if (item.url === '/blog') {
+        return {
+          ...item,
+          page: {
+            url: '/blog',
+            menuDescription: item.description,
+            metaDescription: item.description,
+          },
+        }
+      }
       const servicePage = servicePages.find((page) => page.url === item.url)
       const blogPage = blogPages.find((page) => page.url === item.url)
       const page = servicePage || blogPage
