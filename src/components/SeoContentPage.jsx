@@ -1,8 +1,25 @@
 import { Helmet } from 'react-helmet-async'
 import { Link } from 'react-router-dom'
 import { getPagesByUrls } from '../data/seoContent'
+import { buildArticleBodyBlocks } from '../utils/seoArticleContent'
 
 function getPrimaryImage(page, type) {
+  if (page.heroImage?.src) {
+    return {
+      src: page.heroImage.src,
+      ogSrc: page.heroImage.ogSrc || `https://cabinetdentairesete.fr${page.heroImage.src}`,
+      alt: page.heroImage.alt || 'Illustration de la page du Cabinet Dentaire Dr. Abdessadok à Sète',
+    }
+  }
+
+  if (page.image?.src) {
+    return {
+      src: page.image.src,
+      ogSrc: page.image.ogSrc || `https://cabinetdentairesete.fr${page.image.src}`,
+      alt: page.image.alt || 'Illustration de la page du Cabinet Dentaire Dr. Abdessadok à Sète',
+    }
+  }
+
   if (page.url.includes('implant') || page.url.includes('aligner-dents-avant-implant')) {
     return {
       src: '/seo-images/implantologie-biotech-sete.png',
@@ -13,17 +30,17 @@ function getPrimaryImage(page, type) {
 
   if (page.url.includes('prix')) {
     return {
-      src: '/seo-images/sourire-esthetique-sete.jpg',
-      ogSrc: 'https://cabinetdentairesete.fr/seo-images/sourire-esthetique-sete.jpg',
-      alt: "Sourire harmonieux illustre pour une page sur le prix de l'orthodontie invisible a Sete",
+      src: '/seo-images/logo-hero-section.png',
+      ogSrc: 'https://cabinetdentairesete.fr/seo-images/logo-hero-section.png',
+      alt: 'Identité visuelle du Cabinet Dentaire Dr. Abdessadok à Sète',
     }
   }
 
   if (page.url.includes('bassin-de-thau') || page.url.includes('balaruc') || page.url === '/blog') {
     return {
-      src: '/seo-images/dr-abdessadok-sete.jpg',
-      ogSrc: 'https://cabinetdentairesete.fr/seo-images/dr-abdessadok-sete.jpg',
-      alt: 'Portrait du Dr Abdessadok au cabinet dentaire de Sete',
+      src: '/seo-images/logo-hero-section.png',
+      ogSrc: 'https://cabinetdentairesete.fr/seo-images/logo-hero-section.png',
+      alt: 'Identité visuelle du Cabinet Dentaire Dr. Abdessadok à Sète',
     }
   }
 
@@ -130,11 +147,18 @@ function buildPrimarySchema(page, type) {
 
 export default function SeoContentPage({ page, type = 'service' }) {
   const relatedPages = getPagesByUrls(page.internalLinks)
+  const relatedReadingPages = getPagesByUrls(page.relatedReadingLinks)
   const primarySchema = buildPrimarySchema(page, type)
   const breadcrumbSchema = buildBreadcrumbSchema(page, type)
   const faqSchema = buildFaqSchema(page)
   const primaryImage = getPrimaryImage(page, type)
   const absoluteImageUrl = primaryImage.ogSrc
+  const articleBodyBlocks = buildArticleBodyBlocks(page.articleBody)
+  const breadcrumbItems = [
+    { label: 'Accueil', href: '/' },
+    { label: type === 'blog' ? 'Blog' : 'Services', href: type === 'blog' ? '/blog' : '/services' },
+    { label: page.h1, href: page.url },
+  ]
 
   return (
     <section className="section">
@@ -156,10 +180,43 @@ export default function SeoContentPage({ page, type = 'service' }) {
       </Helmet>
 
       <div className="container-max">
+        <nav aria-label="Fil d'ariane" className="mb-5 text-sm text-slate-300">
+          <ol className="flex flex-wrap items-center gap-2">
+            {breadcrumbItems.map((item, index) => (
+              <li key={item.href} className="flex items-center gap-2">
+                {index < breadcrumbItems.length - 1 ? (
+                  <Link to={item.href} className="hover:text-rolexGold transition">{item.label}</Link>
+                ) : (
+                  <span className="text-slate-100">{item.label}</span>
+                )}
+                {index < breadcrumbItems.length - 1 ? <span className="text-slate-500">/</span> : null}
+              </li>
+            ))}
+          </ol>
+        </nav>
+
         <div className="rounded-[2rem] border border-rolexGold/30 bg-gradient-to-br from-rolexGreen/35 via-surface to-background p-8 md:p-12 shadow-soft">
           <div className="badge mb-4">{page.badge}</div>
           <h1 className="text-4xl md:text-5xl font-extrabold mb-6 max-w-5xl">{page.h1}</h1>
           <p className="text-lg text-slate-200 max-w-4xl leading-8">{page.intro}</p>
+          {page.heroActions?.length ? (
+            <div className="mt-6 flex flex-wrap gap-3">
+              {page.heroActions.map((action) => {
+                const baseClass =
+                  action.variant === 'secondary'
+                    ? 'btn-outline'
+                    : action.variant === 'ghost'
+                      ? 'inline-flex items-center justify-center rounded-2xl border border-rolexGold/20 bg-rolexGreen/10 px-5 py-3 text-sm font-semibold text-slate-100 hover:bg-rolexGreen/20 transition'
+                      : 'btn-primary'
+
+                return (
+                  <Link key={`${action.href}-${action.label}`} to={action.href} className={baseClass}>
+                    {action.label}
+                  </Link>
+                )
+              })}
+            </div>
+          ) : null}
           <figure className="mt-8 overflow-hidden rounded-[2rem] border border-rolexGold/20 bg-rolexGreen/10">
             <img
               src={primaryImage.src}
@@ -168,42 +225,134 @@ export default function SeoContentPage({ page, type = 'service' }) {
               loading="eager"
             />
           </figure>
-          <div className="grid md:grid-cols-3 gap-4 mt-8">
-            {page.highlights.map((item) => (
-              <div key={item} className="card p-5 bg-rolexGreen/20 border-rolexGold/20">
-                <div className="text-sm leading-7">{item}</div>
-              </div>
-            ))}
-          </div>
+          {page.highlights?.length ? (
+            <div className="grid md:grid-cols-3 gap-4 mt-8">
+              {page.highlights.map((item) => (
+                <div key={item} className="card p-5 bg-rolexGreen/20 border-rolexGold/20">
+                  <div className="text-sm leading-7">{item}</div>
+                </div>
+              ))}
+            </div>
+          ) : null}
         </div>
 
         <div className="grid lg:grid-cols-[minmax(0,1fr)_320px] gap-8 mt-10 items-start">
           <div className="space-y-8">
-            {page.sections.map((section) => (
-              <section key={section.heading} className="card p-6 md:p-8">
-                <h2 className="text-2xl md:text-3xl font-bold mb-6">{section.heading}</h2>
-                <div className="space-y-6">
-                  {section.blocks.map((block) => (
-                    <div key={block.subheading || block.paragraphs?.[0]}>
-                      {block.subheading ? <h3 className="text-xl font-semibold mb-3">{block.subheading}</h3> : null}
-                      <div className="space-y-4 text-slate-300 leading-8">
-                        {block.paragraphs?.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
-                      </div>
-                      {block.bullets?.length ? (
-                        <ul className="mt-4 space-y-3 text-slate-200">
-                          {block.bullets.map((bullet) => (
-                            <li key={bullet} className="flex items-start gap-3">
+            {page.articleBody ? (
+              <section className="card p-6 md:p-8">
+                <div className="space-y-5">
+                  {articleBodyBlocks.map((block, index) => {
+                    if (block.type === 'heading2') {
+                      return <h2 key={`${block.text}-${index}`} className="text-2xl md:text-3xl font-bold pt-2">{block.text}</h2>
+                    }
+
+                    if (block.type === 'heading3') {
+                      return <h3 key={`${block.text}-${index}`} className="text-xl md:text-2xl font-semibold pt-1">{block.text}</h3>
+                    }
+
+                    if (block.type === 'list') {
+                      return (
+                        <ul key={`list-${index}`} className="space-y-3 text-slate-200">
+                          {block.items.map((item) => (
+                            <li key={item} className="flex items-start gap-3">
                               <span className="mt-2 h-2.5 w-2.5 rounded-full bg-rolexGold shrink-0" />
-                              <span>{bullet}</span>
+                              <span>{item}</span>
                             </li>
                           ))}
                         </ul>
-                      ) : null}
+                      )
+                    }
+
+                    if (block.type === 'quote') {
+                      return (
+                        <blockquote
+                          key={`${block.text}-${index}`}
+                          className="rounded-2xl border border-rolexGold/20 bg-rolexGreen/10 p-5 text-slate-100 italic leading-8"
+                        >
+                          {block.text}
+                        </blockquote>
+                      )
+                    }
+
+                    return <p key={`${block.text}-${index}`} className="text-slate-300 leading-8">{block.text}</p>
+                  })}
+                </div>
+              </section>
+            ) : (
+              page.sections.map((section) => (
+                <section key={section.heading} className="card p-6 md:p-8">
+                  <h2 className="text-2xl md:text-3xl font-bold mb-6">{section.heading}</h2>
+                  <div className="space-y-6">
+                    {section.blocks.map((block) => (
+                      <div key={block.subheading || block.paragraphs?.[0]}>
+                        {block.subheading ? <h3 className="text-xl font-semibold mb-3">{block.subheading}</h3> : null}
+                        <div className="space-y-4 text-slate-300 leading-8">
+                          {block.paragraphs?.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+                        </div>
+                        {block.bullets?.length ? (
+                          <ul className="mt-4 space-y-3 text-slate-200">
+                            {block.bullets.map((bullet) => (
+                              <li key={bullet} className="flex items-start gap-3">
+                                <span className="mt-2 h-2.5 w-2.5 rounded-full bg-rolexGold shrink-0" />
+                                <span>{bullet}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        ) : null}
+                      </div>
+                    ))}
+                  </div>
+                </section>
+              ))
+            )}
+
+            {page.ctaSections?.length ? (
+              <div className="space-y-6">
+                {page.ctaSections.map((section) => (
+                  <section
+                    key={section.heading}
+                    className={`rounded-[2rem] border p-6 md:p-8 ${
+                      section.tone === 'gold'
+                        ? 'border-rolexGold/30 bg-rolexGold/10'
+                        : 'border-rolexGreen/40 bg-rolexGreen/15'
+                    }`}
+                  >
+                    <h2 className="text-2xl md:text-3xl font-bold mb-4">{section.heading}</h2>
+                    <p className="text-slate-200 leading-8 mb-6">{section.text}</p>
+                    <div className="flex flex-wrap gap-3">
+                      {section.buttons.map((button, index) => (
+                        <Link
+                          key={`${button.href}-${button.label}`}
+                          to={button.href}
+                          className={index === 0 ? 'btn-primary' : 'btn-outline'}
+                        >
+                          {button.label}
+                        </Link>
+                      ))}
                     </div>
+                  </section>
+                ))}
+              </div>
+            ) : null}
+
+            {relatedReadingPages.length ? (
+              <section className="card p-6 md:p-8">
+                <h2 className="text-2xl md:text-3xl font-bold mb-6">{page.relatedReadingTitle || 'À lire aussi'}</h2>
+                <div className="grid gap-4 md:grid-cols-2">
+                  {relatedReadingPages.map((related) => (
+                    <Link
+                      key={related.url}
+                      to={related.url}
+                      className="rounded-2xl border border-rolexGold/20 bg-rolexGreen/10 p-5 hover:bg-rolexGreen/20 transition"
+                    >
+                      <div className="text-sm uppercase tracking-[0.16em] text-rolexGold">{related.badge || 'Lecture conseillée'}</div>
+                      <div className="font-semibold text-lg mt-2">{related.menuLabel || related.h1}</div>
+                      <div className="text-sm text-slate-300 mt-2">{related.menuDescription || related.metaDescription}</div>
+                    </Link>
                   ))}
                 </div>
               </section>
-            ))}
+            ) : null}
 
             <section className="card p-6 md:p-8">
               <h2 className="text-2xl md:text-3xl font-bold mb-6">FAQ</h2>
@@ -220,12 +369,9 @@ export default function SeoContentPage({ page, type = 'service' }) {
             <section className="rounded-[2rem] border border-rolexGold/30 bg-rolexGold/10 p-6 md:p-8">
               <h2 className="text-2xl md:text-3xl font-bold mb-4">{page.ctaTitle}</h2>
               <p className="text-slate-200 leading-8 mb-6">{page.ctaText}</p>
-              <a
-                href="https://www.doctolib.fr/dentiste/sete/abdessamed-abdessadok-levallois-perret/booking/motives?specialityId=1&telehealth=false&placeId=practice-518332&bookingFunnelSource=profile"
-                className="btn-primary"
-              >
+              <Link to={page.ctaHref || '/contact'} className="btn-primary">
                 {page.ctaLabel}
-              </a>
+              </Link>
             </section>
           </div>
 

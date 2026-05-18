@@ -5,6 +5,22 @@ import { useTranslation } from 'react-i18next'
 import logo from '../assets/Favicon/android-chrome-192x192.png'
 import { blogPages, servicePages } from '../data/seoContent'
 
+const curatedBlogLinks = [
+  { label: 'Hub blog', url: '/blog', description: 'Tous les articles et le cluster éditorial.' },
+  { label: 'Orthodontie à Sète', url: '/orthodontie-sete', description: 'La page pilier générale sur l’alignement dentaire.' },
+  { label: 'Orthodontie invisible à Sète', url: '/orthodontie-invisible-sete', description: 'La page pilier sur les aligneurs transparents.' },
+]
+
+const curatedGuideLinks = [
+  { label: 'Quand consulter ?', url: '/blog/orthodontie-sete-quand-consulter-alignement-dentaire' },
+  { label: 'Orthodontie adulte', url: '/blog/orthodontie-adulte-sete-questions-avant-traitement' },
+  { label: 'Avant un bilan invisible', url: '/blog/orthodontie-invisible-sete-questions-avant-bilan' },
+  { label: 'Invisalign ou aligneurs ?', url: '/blog/invisalign-aligneurs-transparents-gouttieres-differences' },
+  { label: 'Premier bilan invisible', url: '/blog/premier-bilan-orthodontie-invisible-sete' },
+]
+
+const curatedBlogMenuLinks = [...curatedBlogLinks, ...curatedGuideLinks]
+
 const NavItem = ({ to, children }) => (
   <NavLink
     to={to}
@@ -38,6 +54,20 @@ export default function Navbar() {
   const changeLang = (code) => { i18n.changeLanguage(code); localStorage.setItem('lang', code); setLangOpen(false) }
   const servicePillars = servicePages.filter((page) => page.menuGroup === 'pillars')
   const serviceLocals = servicePages.filter((page) => page.menuGroup === 'locals')
+  const curatedBlogEntries = curatedBlogLinks
+    .map((item) => {
+      const servicePage = servicePages.find((page) => page.url === item.url)
+      const blogPage = blogPages.find((page) => page.url === item.url)
+      const page = servicePage || blogPage
+      return page ? { ...item, page } : null
+    })
+    .filter(Boolean)
+  const curatedGuideEntries = curatedGuideLinks
+    .map((item) => {
+      const page = blogPages.find((entry) => entry.url === item.url)
+      return page ? { ...item, page } : null
+    })
+    .filter(Boolean)
 
   useEffect(() => {
     setOpen(false)
@@ -140,21 +170,49 @@ export default function Navbar() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 8 }}
                   transition={{ duration: 0.18 }}
-                  className="absolute left-1/2 top-full mt-3 w-[620px] -translate-x-1/2 rounded-[2rem] border border-rolexGold/20 bg-surface/95 p-6 shadow-soft backdrop-blur"
+                  className="absolute right-0 top-full mt-3 w-[680px] max-w-[calc(100vw-2rem)] rounded-[2rem] border border-rolexGold/20 bg-surface/95 p-5 shadow-soft backdrop-blur"
                 >
-                  <div className="grid grid-cols-2 gap-6">
-                    <Link to="/blog" className="rounded-2xl border border-rolexGold/20 bg-rolexGreen/10 p-5 hover:bg-rolexGreen/20 transition" onClick={closeAllMenus}>
-                      <div className="text-xs uppercase tracking-[0.2em] text-rolexGold mb-2">Hub blog</div>
-                      <div className="font-semibold">Tous les articles</div>
-                      <div className="text-sm text-slate-300 mt-2">Guides patients sur Invisalign, le prix et la rehabilitation du sourire.</div>
-                    </Link>
-                    <div className="space-y-3">
-                      {blogPages.map((page) => (
-                        <Link key={page.url} to={page.url} className="block rounded-2xl border border-rolexGold/20 bg-rolexGreen/10 p-4 hover:bg-rolexGreen/20 transition" onClick={closeAllMenus}>
-                          <div className="font-semibold">{page.menuLabel}</div>
-                          <div className="text-sm text-slate-300 mt-1">{page.menuDescription}</div>
+                  <div className="grid grid-cols-2 gap-5">
+                    <div className="rounded-2xl border border-rolexGold/20 bg-rolexGreen/10 p-4">
+                      <div className="text-xs uppercase tracking-[0.16em] text-rolexGold mb-3">Pages essentielles</div>
+                      <div className="space-y-3">
+                        {curatedBlogEntries.map(({ url, label, description, page }) => (
+                          <Link
+                            key={url}
+                            to={url}
+                            className="block rounded-2xl border border-rolexGold/20 bg-background/20 p-4 hover:bg-rolexGreen/20 transition"
+                            onClick={closeAllMenus}
+                          >
+                            <div className="font-semibold">{label}</div>
+                            <div className="text-sm text-slate-300 mt-1">{description || page.menuDescription || page.metaDescription}</div>
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                    <div className="rounded-2xl border border-rolexGold/20 bg-rolexGreen/10 p-4">
+                      <div className="text-xs uppercase tracking-[0.16em] text-rolexGold mb-3">Guides clés</div>
+                      <div className="space-y-3">
+                        {curatedGuideEntries.map(({ url, label, page }) => (
+                          <Link
+                            key={url}
+                            to={url}
+                            className="block rounded-2xl border border-rolexGold/20 bg-background/20 p-4 hover:bg-rolexGreen/20 transition"
+                            onClick={closeAllMenus}
+                          >
+                            <div className="font-semibold">{label}</div>
+                            <div className="text-sm text-slate-300 mt-1">{page.menuDescription}</div>
+                          </Link>
+                        ))}
+                      </div>
+                      <div className="mt-4 pt-4 border-t border-rolexGold/15">
+                        <Link
+                          to="/blog"
+                          className="inline-flex items-center text-sm font-semibold text-rolexGold hover:text-rolexGold/80 transition"
+                          onClick={closeAllMenus}
+                        >
+                          Voir tous les articles
                         </Link>
-                      ))}
+                      </div>
                     </div>
                   </div>
                 </motion.div>
@@ -226,7 +284,7 @@ export default function Navbar() {
               <motion.svg width="24" height="24" viewBox="0 0 24 24" className="text-foreground">
                 <motion.path d="M12 2c-3.5 0-6 2.8-6 6.2 0 2.1.5 4.2 1.4 6 .6 1.2 1.7 3.3 2.6 3.3.9 0 1.3-1.5 2-3 .7 1.5 1.1 3 2 3 .9 0 2-2.1 2.6-3.3.9-1.8 1.4-3.9 1.4-6C18 4.8 15.5 2 12 2z" fill="currentColor" initial={{ x: 0, rotate: 0 }} animate={{ x: -2, rotate: -3 }} transition={{ type: 'spring', stiffness: 300, damping: 20 }} />
                 <motion.path d="M12 2c-3.5 0-6 2.8-6 6.2 0 2.1.5 4.2 1.4 6 .6 1.2 1.7 3.3 2.6 3.3.9 0 1.3-1.5 2-3 .7 1.5 1.1 3 2 3 .9 0 2-2.1 2.6-3.3.9-1.8 1.4-3.9 1.4-6C18 4.8 15.5 2 12 2z" fill="currentColor" initial={{ x: 0, rotate: 0 }} animate={{ x: 2, rotate: 3 }} transition={{ type: 'spring', stiffness: 300, damping: 20 }} />
-                <motion.path d="M10 6l2 3-1 2 3-3-1-2 2-2" stroke="currentColor" stroke-width="1.5" fill="none" initial={{ opacity: 0 }} animate={{ opacity: 1 }} />
+                <motion.path d="M10 6l2 3-1 2 3-3-1-2 2-2" stroke="currentColor" strokeWidth="1.5" fill="none" initial={{ opacity: 0 }} animate={{ opacity: 1 }} />
               </motion.svg>
             )}
           </button>
@@ -284,12 +342,22 @@ export default function Navbar() {
                   {mobileBlogOpen && (
                     <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="px-3 pb-3 overflow-hidden">
                       <div className="space-y-2">
-                        <Link onClick={closeAllMenus} to="/blog" className="block rounded-xl px-3 py-2 hover:bg-rolexGreen/20">Hub blog</Link>
-                        {blogPages.map((page) => (
-                          <Link key={page.url} onClick={closeAllMenus} to={page.url} className="block rounded-xl px-3 py-2 hover:bg-rolexGreen/20">
-                            {page.menuLabel}
+                        {curatedBlogEntries.map(({ url, label }) => (
+                          <Link key={url} onClick={closeAllMenus} to={url} className="block rounded-xl px-3 py-2 hover:bg-rolexGreen/20 font-semibold">
+                            {label}
                           </Link>
                         ))}
+                        <div className="pt-2">
+                          <div className="px-3 py-1 text-xs uppercase tracking-[0.16em] text-rolexGold">Guides clés</div>
+                          {curatedGuideEntries.map(({ url, label }) => (
+                            <Link key={url} onClick={closeAllMenus} to={url} className="block rounded-xl px-3 py-2 hover:bg-rolexGreen/20">
+                              {label}
+                            </Link>
+                          ))}
+                        </div>
+                        <Link onClick={closeAllMenus} to="/blog" className="block rounded-xl px-3 py-2 text-rolexGold hover:bg-rolexGreen/20 font-semibold">
+                          Voir tous les articles
+                        </Link>
                       </div>
                     </motion.div>
                   )}

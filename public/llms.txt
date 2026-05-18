@@ -1,0 +1,33 @@
+# Cabinet Dentaire Dr. Abdessadok
+
+Cabinet Dentaire Dr. Abdessadok is a dental clinic in Sète, France. The website focuses on patient information and appointment discovery for care in Sète and across the Bassin de Thau.
+
+## Main topics
+
+- Orthodontie à Sète
+- Orthodontie invisible à Sète
+- Invisalign et aligneurs transparents
+- Soins dentaires
+- Implantologie
+- Information locale pour Sète et le Bassin de Thau
+
+## Key public pages
+
+- Homepage: https://cabinetdentairesete.fr/
+- Contact: https://cabinetdentairesete.fr/contact
+- About: https://cabinetdentairesete.fr/about
+- Services: https://cabinetdentairesete.fr/services
+- Orthodontie à Sète: https://cabinetdentairesete.fr/orthodontie-sete
+- Orthodontie invisible à Sète: https://cabinetdentairesete.fr/orthodontie-invisible-sete
+- Prix orthodontie invisible à Sète: https://cabinetdentairesete.fr/prix-orthodontie-invisible-sete
+- Invisalign: https://cabinetdentairesete.fr/invisalign
+- Implantologie: https://cabinetdentairesete.fr/implantologie
+- Blog: https://cabinetdentairesete.fr/blog
+
+## Orthodontie article cluster
+
+- https://cabinetdentairesete.fr/blog/orthodontie-sete-quand-consulter-alignement-dentaire
+- https://cabinetdentairesete.fr/blog/orthodontie-adulte-sete-questions-avant-traitement
+- https://cabinetdentairesete.fr/blog/orthodontie-invisible-sete-questions-avant-bilan
+- https://cabinetdentairesete.fr/blog/duree-orthodontie-invisible-sete
+- https://cabinetdentairesete.fr/blog/premier-bilan-orthodontie-invisible-sete

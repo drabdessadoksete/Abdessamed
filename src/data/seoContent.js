@@ -1,4 +1,7 @@
-export const servicePages = [
+import { generatedOrthodontieArticles } from './generatedOrthodontieArticles.js'
+import { generatedOrthodontiePillars } from './generatedOrthodontiePillars.js'
+
+const baseServicePages = [
   {
     url: '/invisalign',
     path: 'invisalign',
@@ -115,6 +118,9 @@ export const servicePages = [
       '/orthodontie-adulte-balaruc-les-bains',
       '/implantologie',
       '/blog/verite-invisalign-taquets-temps-port-gene',
+      '/blog/orthodontie-invisible-sete-questions-avant-bilan',
+      '/blog/duree-orthodontie-invisible-sete',
+      '/blog/premier-bilan-orthodontie-invisible-sete',
     ],
     keywords: [
       'invisalign sete',
@@ -223,6 +229,8 @@ export const servicePages = [
       '/orthodontie-invisible-meze',
       '/blog/prix-orthodontie-invisible-sete',
       '/blog/verite-invisalign-taquets-temps-port-gene',
+      '/blog/orthodontie-adulte-sete-questions-avant-traitement',
+      '/blog/duree-orthodontie-invisible-sete',
     ],
     keywords: [
       'prix invisalign sete',
@@ -417,6 +425,9 @@ export const servicePages = [
       '/orthodontie-invisible-meze',
       '/invisalign-frontignan',
       '/blog/prix-orthodontie-invisible-sete',
+      '/blog/orthodontie-sete-quand-consulter-alignement-dentaire',
+      '/blog/orthodontie-invisible-sete-questions-avant-bilan',
+      '/blog/premier-bilan-orthodontie-invisible-sete',
     ],
     keywords: [
       'orthodontie invisible sete',
@@ -965,7 +976,17 @@ export const servicePages = [
   },
 ]
 
+const replacedPillarUrls = new Set(['/orthodontie-invisible-sete'])
+const leadPillarUrls = new Set(['/invisalign', '/prix-orthodontie-invisible-sete', '/implantologie'])
+
+export const servicePages = [
+  ...baseServicePages.filter((page) => leadPillarUrls.has(page.url)),
+  ...generatedOrthodontiePillars,
+  ...baseServicePages.filter((page) => !leadPillarUrls.has(page.url) && !replacedPillarUrls.has(page.url)),
+]
+
 export const blogPages = [
+  ...generatedOrthodontieArticles,
   {
     url: '/blog/verite-invisalign-taquets-temps-port-gene',
     path: 'blog/verite-invisalign-taquets-temps-port-gene',

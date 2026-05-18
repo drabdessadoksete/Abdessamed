@@ -26,6 +26,24 @@ export default function Home(){
       </Helmet>
       <Hero />
       <section className="section pt-0">
+        <div className="container-max grid gap-6 md:grid-cols-2">
+          <Link to="/orthodontie-sete" className="card p-6 hover:-translate-y-1 transition">
+            <div className="badge mb-4">Page pilier orthodontie</div>
+            <h2 className="text-2xl md:text-3xl font-bold mb-3">Orthodontie à Sète</h2>
+            <p className="text-slate-300 leading-7">
+              Quand consulter, comment réfléchir à l’alignement dentaire et quelles questions poser avant un premier bilan au cabinet.
+            </p>
+          </Link>
+          <Link to="/orthodontie-invisible-sete" className="card p-6 hover:-translate-y-1 transition">
+            <div className="badge mb-4">Page pilier orthodontie invisible</div>
+            <h2 className="text-2xl md:text-3xl font-bold mb-3">Orthodontie invisible à Sète</h2>
+            <p className="text-slate-300 leading-7">
+              Aligneurs transparents, quotidien, durée, suivi local et bilan : la page essentielle avant d’envisager une solution discrète.
+            </p>
+          </Link>
+        </div>
+      </section>
+      <section className="section pt-0">
         <div className="container-max grid md:grid-cols-2 gap-5 md:gap-10">
           <div className="rounded-2xl shadow-soft overflow-hidden border border-rolexGreen/40 bg-rolexGreen/45 backdrop-blur">
             <div className="p-6 md:p-8 h-full flex flex-col">

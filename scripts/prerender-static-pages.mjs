@@ -1,6 +1,7 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import { blogPages, servicePages } from '../src/data/seoContent.js'
+import { buildArticleBodyBlocks } from '../src/utils/seoArticleContent.js'
 
 const distDir = path.resolve('dist')
 const siteUrl = 'https://cabinetdentairesete.fr'
@@ -27,6 +28,20 @@ function normalizeAssetPaths(html) {
 }
 
 function getPrimaryImage(page) {
+  if (page.heroImage?.src) {
+    return {
+      src: page.heroImage.src,
+      alt: page.heroImage.alt || 'Illustration de la page du Cabinet Dentaire Dr. Abdessadok à Sète',
+    }
+  }
+
+  if (page.image?.src) {
+    return {
+      src: page.image.src,
+      alt: page.image.alt || 'Illustration de la page du Cabinet Dentaire Dr. Abdessadok à Sète',
+    }
+  }
+
   if (page.url.includes('implant') || page.url.includes('aligner-dents-avant-implant')) {
     return {
       src: '/seo-images/implantologie-biotech-sete.png',
@@ -36,15 +51,15 @@ function getPrimaryImage(page) {
 
   if (page.url.includes('prix')) {
     return {
-      src: '/seo-images/sourire-esthetique-sete.jpg',
-      alt: "Sourire harmonieux illustre pour une page sur le prix de l'orthodontie invisible a Sete",
+      src: '/seo-images/logo-hero-section.png',
+      alt: 'Identité visuelle du Cabinet Dentaire Dr. Abdessadok à Sète',
     }
   }
 
   if (page.url.includes('bassin-de-thau') || page.url.includes('balaruc') || page.url === '/blog') {
     return {
-      src: '/seo-images/dr-abdessadok-sete.jpg',
-      alt: 'Portrait du Dr Abdessadok au cabinet dentaire de Sete',
+      src: '/seo-images/logo-hero-section.png',
+      alt: 'Identité visuelle du Cabinet Dentaire Dr. Abdessadok à Sète',
     }
   }
 
@@ -115,6 +130,152 @@ function renderRelatedLinks(urls = []) {
   `
 }
 
+function renderBreadcrumbs(page, type) {
+  const items = [
+    { label: 'Accueil', href: '/' },
+    { label: type === 'blog' ? 'Blog' : 'Services', href: type === 'blog' ? '/blog' : '/services' },
+    { label: page.h1, href: page.url },
+  ]
+
+  return `
+    <nav aria-label="Fil d ariane" class="mb-5 text-sm text-slate-300">
+      <ol class="flex flex-wrap items-center gap-2">
+        ${items
+          .map(
+            (item, index) => `
+              <li class="flex items-center gap-2">
+                ${
+                  index < items.length - 1
+                    ? `<a href="${item.href}" class="hover:text-rolexGold transition">${escapeHtml(item.label)}</a>`
+                    : `<span class="text-slate-100">${escapeHtml(item.label)}</span>`
+                }
+                ${index < items.length - 1 ? '<span class="text-slate-500">/</span>' : ''}
+              </li>
+            `,
+          )
+          .join('')}
+      </ol>
+    </nav>
+  `
+}
+
+function renderArticleBody(page) {
+  if (!page.articleBody) return ''
+
+  const blocks = buildArticleBodyBlocks(page.articleBody)
+
+  return `
+    <section class="card p-6 md:p-8">
+      <div class="space-y-5">
+        ${blocks
+          .map((block) => {
+            if (block.type === 'heading2') {
+              return `<h2 class="text-2xl md:text-3xl font-bold pt-2">${escapeHtml(block.text)}</h2>`
+            }
+
+            if (block.type === 'heading3') {
+              return `<h3 class="text-xl md:text-2xl font-semibold pt-1">${escapeHtml(block.text)}</h3>`
+            }
+
+            if (block.type === 'list') {
+              return `
+                <ul class="space-y-3 text-slate-200">
+                  ${block.items
+                    .map(
+                      (item) => `
+                        <li class="flex items-start gap-3">
+                          <span class="mt-2 h-2.5 w-2.5 rounded-full bg-rolexGold shrink-0"></span>
+                          <span>${escapeHtml(item)}</span>
+                        </li>
+                      `,
+                    )
+                    .join('')}
+                </ul>
+              `
+            }
+
+            if (block.type === 'quote') {
+              return `<blockquote class="rounded-2xl border border-rolexGold/20 bg-rolexGreen/10 p-5 text-slate-100 italic leading-8">${escapeHtml(block.text)}</blockquote>`
+            }
+
+            return `<p class="text-slate-300 leading-8">${escapeHtml(block.text)}</p>`
+          })
+          .join('')}
+      </div>
+    </section>
+  `
+}
+
+function renderSectionCards(page) {
+  return page.sections
+    .map(
+      (section) => `
+        <section class="card p-6 md:p-8">
+          <h2 class="text-2xl md:text-3xl font-bold mb-6">${escapeHtml(section.heading)}</h2>
+          <div class="space-y-6">
+            ${section.blocks
+              .map(
+                (block) => `
+                  <div>
+                    ${block.subheading ? `<h3 class="text-xl font-semibold mb-3">${escapeHtml(block.subheading)}</h3>` : ''}
+                    <div class="space-y-4 text-slate-300 leading-8">
+                      ${(block.paragraphs || []).map((paragraph) => `<p>${escapeHtml(paragraph)}</p>`).join('')}
+                    </div>
+                    ${
+                      block.bullets?.length
+                        ? `
+                          <ul class="mt-4 space-y-3 text-slate-200">
+                            ${block.bullets
+                              .map(
+                                (bullet) => `
+                                  <li class="flex items-start gap-3">
+                                    <span class="mt-2 h-2.5 w-2.5 rounded-full bg-rolexGold shrink-0"></span>
+                                    <span>${escapeHtml(bullet)}</span>
+                                  </li>
+                                `,
+                              )
+                              .join('')}
+                          </ul>
+                        `
+                        : ''
+                    }
+                  </div>
+                `,
+              )
+              .join('')}
+          </div>
+        </section>
+      `,
+    )
+    .join('')
+}
+
+function renderRelatedReading(page) {
+  const lookup = new Map([...servicePages, ...blogPages].map((item) => [item.url, item]))
+  const related = (page.relatedReadingLinks || []).map((url) => lookup.get(url)).filter(Boolean)
+
+  if (!related.length) return ''
+
+  return `
+    <section class="card p-6 md:p-8">
+      <h2 class="text-2xl md:text-3xl font-bold mb-6">${escapeHtml(page.relatedReadingTitle || 'À lire aussi')}</h2>
+      <div class="grid gap-4 md:grid-cols-2">
+        ${related
+          .map(
+            (item) => `
+              <a href="${item.url}" class="rounded-2xl border border-rolexGold/20 bg-rolexGreen/10 p-5 hover:bg-rolexGreen/20 transition">
+                <div class="text-sm uppercase tracking-[0.16em] text-rolexGold">${escapeHtml(item.badge || 'Lecture conseillée')}</div>
+                <div class="font-semibold text-lg mt-2">${escapeHtml(item.menuLabel || item.h1)}</div>
+                <div class="text-sm text-slate-300 mt-2">${escapeHtml(item.menuDescription || item.metaDescription)}</div>
+              </a>
+            `,
+          )
+          .join('')}
+      </div>
+    </section>
+  `
+}
+
 function renderFaq(page) {
   return `
     <section class="card p-6 md:p-8 mt-8">
@@ -135,85 +296,105 @@ function renderFaq(page) {
   `
 }
 
+function renderCtaSections(page) {
+  if (!page.ctaSections?.length) return ''
+
+  return `
+    <div class="space-y-6">
+      ${page.ctaSections
+        .map(
+          (section) => `
+            <section class="rounded-[2rem] border p-6 md:p-8 ${
+              section.tone === 'gold'
+                ? 'border-rolexGold/30 bg-rolexGold/10'
+                : 'border-rolexGreen/40 bg-rolexGreen/15'
+            }">
+              <h2 class="text-2xl md:text-3xl font-bold mb-4">${escapeHtml(section.heading)}</h2>
+              <p class="text-slate-200 leading-8 mb-6">${escapeHtml(section.text)}</p>
+              <div class="flex flex-wrap gap-3">
+                ${section.buttons
+                  .map(
+                    (button, index) => `
+                      <a href="${button.href}" class="${index === 0 ? 'btn-primary' : 'btn-outline'}">${escapeHtml(button.label)}</a>
+                    `,
+                  )
+                  .join('')}
+              </div>
+            </section>
+          `,
+        )
+        .join('')}
+    </div>
+  `
+}
+
 function renderPage(page) {
   const image = getPrimaryImage(page)
-  const firstSections = page.sections.slice(0, 3)
+  const type = page.url.startsWith('/blog/') ? 'blog' : 'service'
 
   return `
     ${renderHeader()}
     <main class="overflow-x-hidden">
       <section class="section">
         <div class="container-max">
+          ${renderBreadcrumbs(page, type)}
           <div class="rounded-[2rem] border border-rolexGold/30 bg-gradient-to-br from-rolexGreen/35 via-surface to-background p-8 md:p-12 shadow-soft">
             <div class="badge mb-4">${escapeHtml(page.badge)}</div>
             <h1 class="text-4xl md:text-5xl font-extrabold mb-6 max-w-5xl">${escapeHtml(page.h1)}</h1>
             <p class="text-lg text-slate-200 max-w-4xl leading-8">${escapeHtml(page.intro)}</p>
+            ${
+              page.heroActions?.length
+                ? `
+                  <div class="mt-6 flex flex-wrap gap-3">
+                    ${page.heroActions
+                      .map((action) => {
+                        const className =
+                          action.variant === 'secondary'
+                            ? 'btn-outline'
+                            : action.variant === 'ghost'
+                              ? 'inline-flex items-center justify-center rounded-2xl border border-rolexGold/20 bg-rolexGreen/10 px-5 py-3 text-sm font-semibold text-slate-100 hover:bg-rolexGreen/20 transition'
+                              : 'btn-primary'
+
+                        return `<a href="${action.href}" class="${className}">${escapeHtml(action.label)}</a>`
+                      })
+                      .join('')}
+                  </div>
+                `
+                : ''
+            }
             <figure class="mt-8 overflow-hidden rounded-[2rem] border border-rolexGold/20 bg-rolexGreen/10">
               <img src="${image.src}" alt="${escapeHtml(image.alt)}" class="w-full h-[260px] md:h-[380px] object-cover" />
             </figure>
-            <div class="grid md:grid-cols-3 gap-4 mt-8">
-              ${page.highlights
-                .map(
-                  (item) => `
-                    <div class="card p-5 bg-rolexGreen/20 border-rolexGold/20">
-                      <div class="text-sm leading-7">${escapeHtml(item)}</div>
-                    </div>
-                  `,
-                )
-                .join('')}
-            </div>
+            ${
+              page.highlights?.length
+                ? `
+                  <div class="grid md:grid-cols-3 gap-4 mt-8">
+                    ${page.highlights
+                      .map(
+                        (item) => `
+                          <div class="card p-5 bg-rolexGreen/20 border-rolexGold/20">
+                            <div class="text-sm leading-7">${escapeHtml(item)}</div>
+                          </div>
+                        `,
+                      )
+                      .join('')}
+                  </div>
+                `
+                : ''
+            }
           </div>
 
           <div class="grid lg:grid-cols-[minmax(0,1fr)_320px] gap-8 mt-10 items-start">
             <div class="space-y-8">
-              ${firstSections
-                .map(
-                  (section) => `
-                    <section class="card p-6 md:p-8">
-                      <h2 class="text-2xl md:text-3xl font-bold mb-6">${escapeHtml(section.heading)}</h2>
-                      <div class="space-y-6">
-                        ${section.blocks
-                          .map(
-                            (block) => `
-                              <div>
-                                ${block.subheading ? `<h3 class="text-xl font-semibold mb-3">${escapeHtml(block.subheading)}</h3>` : ''}
-                                <div class="space-y-4 text-slate-300 leading-8">
-                                  ${(block.paragraphs || []).map((paragraph) => `<p>${escapeHtml(paragraph)}</p>`).join('')}
-                                </div>
-                                ${
-                                  block.bullets?.length
-                                    ? `
-                                      <ul class="mt-4 space-y-3 text-slate-200">
-                                        ${block.bullets
-                                          .map(
-                                            (bullet) => `
-                                              <li class="flex items-start gap-3">
-                                                <span class="mt-2 h-2.5 w-2.5 rounded-full bg-rolexGold shrink-0"></span>
-                                                <span>${escapeHtml(bullet)}</span>
-                                              </li>
-                                            `,
-                                          )
-                                          .join('')}
-                                      </ul>
-                                    `
-                                    : ''
-                                }
-                              </div>
-                            `,
-                          )
-                          .join('')}
-                      </div>
-                    </section>
-                  `,
-                )
-                .join('')}
-
+              ${page.articleBody ? renderArticleBody(page) : renderSectionCards(page)}
+              ${renderCtaSections(page)}
+              ${renderRelatedReading(page)}
               ${renderFaq(page)}
 
               <section class="rounded-[2rem] border border-rolexGold/30 bg-rolexGold/10 p-6 md:p-8">
                 <h2 class="text-2xl md:text-3xl font-bold mb-4">${escapeHtml(page.ctaTitle)}</h2>
                 <p class="text-slate-200 leading-8 mb-6">${escapeHtml(page.ctaText)}</p>
-                <a href="/contact" class="btn-primary">${escapeHtml(page.ctaLabel)}</a>
+                <a href="${page.ctaHref || '/contact'}" class="btn-primary">${escapeHtml(page.ctaLabel)}</a>
               </section>
             </div>
 
@@ -228,6 +409,14 @@ function renderPage(page) {
 }
 
 function renderBlogHub() {
+  const featuredOrthodontiePages = blogPages.filter((page) => page.cluster === 'orthodontie').slice(0, 6)
+  const groupedPages = [
+    ['Orthodontie', blogPages.filter((page) => page.category === 'Orthodontie')],
+    ['Orthodontie invisible', blogPages.filter((page) => page.category === 'Orthodontie invisible')],
+    ['Bassin de Thau / Suivi local', blogPages.filter((page) => page.category === 'Bassin de Thau / Suivi local')],
+    ['Autres articles', blogPages.filter((page) => !page.category)],
+  ].filter(([, pages]) => pages.length)
+
   return `
     ${renderHeader()}
     <main class="overflow-x-hidden">
@@ -235,26 +424,90 @@ function renderBlogHub() {
         <div class="container-max">
           <div class="rounded-[2rem] border border-rolexGold/30 bg-gradient-to-br from-rolexGreen/35 via-surface to-background p-8 md:p-12 shadow-soft">
             <div class="badge mb-4">Blog d'autorite</div>
-            <h1 class="text-4xl md:text-5xl font-extrabold mb-6">Blog dentaire a Sete : orthodontie invisible, prix et implantologie</h1>
+            <h1 class="text-4xl md:text-5xl font-extrabold mb-6">Blog dentaire a Sete : orthodontie, orthodontie invisible et implantologie</h1>
             <p class="text-lg text-slate-200 max-w-4xl leading-8">
-              Cette rubrique rassemble les contenus publies pour accompagner les recherches des patients autour d'Invisalign,
-              de l'orthodontie invisible, du prix du traitement et du lien entre alignement dentaire et implantologie.
+              Cette rubrique met en avant un cluster complet sur l'orthodontie a Sete, l'orthodontie invisible,
+              les aligneurs transparents et le suivi des patients du Bassin de Thau, avec des contenus complementaires
+              sur le prix du traitement et l'implantologie.
             </p>
             <figure class="mt-8 overflow-hidden rounded-[2rem] border border-rolexGold/20 bg-rolexGreen/10">
-              <img src="/seo-images/dr-abdessadok-sete.jpg" alt="Portrait du Dr Abdessadok au cabinet dentaire de Sete" class="w-full h-[260px] md:h-[380px] object-cover" />
+              <img src="/seo-images/logo-hero-section.png" alt="Identité visuelle du Cabinet Dentaire Dr. Abdessadok à Sète" class="w-full h-[260px] md:h-[380px] object-contain bg-white p-6" />
             </figure>
           </div>
 
-          <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-6 mt-10">
-            ${blogPages
+          <section class="grid gap-6 md:grid-cols-2 mt-10">
+            <a href="/orthodontie-sete" class="card p-6 hover:-translate-y-1 transition">
+              <div class="badge mb-4">Page pilier orthodontie</div>
+              <h2 class="text-2xl font-bold mb-3">Orthodontie à Sète</h2>
+              <p class="text-slate-300 leading-7">Page essentielle pour comprendre quand consulter, comment réfléchir à l alignement dentaire et quelles questions poser avant un bilan.</p>
+            </a>
+            <a href="/orthodontie-invisible-sete" class="card p-6 hover:-translate-y-1 transition">
+              <div class="badge mb-4">Page pilier orthodontie invisible</div>
+              <h2 class="text-2xl font-bold mb-3">Orthodontie invisible à Sète</h2>
+              <p class="text-slate-300 leading-7">Page essentielle sur les aligneurs transparents, le bilan, le quotidien, la durée et les questions utiles avant de prendre rendez-vous.</p>
+            </a>
+          </section>
+
+          <section class="mt-10">
+            <div class="flex items-end justify-between gap-4 mb-6">
+              <div>
+                <div class="badge mb-3">Cluster prioritaire</div>
+                <h2 class="text-3xl md:text-4xl font-bold">Orthodontie et alignement dentaire a Sete</h2>
+              </div>
+              <p class="text-slate-300 max-w-2xl leading-7">
+                Les contenus les plus strategiques sur l'orthodontie, l'orthodontie invisible et les premieres questions a se poser avant un bilan.
+              </p>
+            </div>
+            <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
+              ${featuredOrthodontiePages
+                .map(
+                  (page) => `
+                    <a href="${page.url}" class="card p-6 hover:-translate-y-1 transition">
+                      <div class="badge mb-4">${escapeHtml(page.badge)}</div>
+                      ${
+                        page.image?.src
+                          ? `<img src="${page.image.src}" alt="${escapeHtml(page.image.alt || page.h1)}" class="h-20 w-20 rounded-2xl object-contain border border-rolexGold/20 bg-white/90 p-3 mb-5" />`
+                          : ''
+                      }
+                      <h3 class="text-2xl font-bold mb-3">${escapeHtml(page.h1)}</h3>
+                      <p class="text-slate-300 leading-7 mb-6">${escapeHtml(page.excerpt || page.intro)}</p>
+                      <span class="text-rolexGold font-semibold">Lire l'article</span>
+                    </a>
+                  `,
+                )
+                .join('')}
+            </div>
+          </section>
+
+          <div class="space-y-10 mt-12">
+            ${groupedPages
               .map(
-                (page) => `
-                  <a href="${page.url}" class="card p-6 hover:-translate-y-1 transition">
-                    <div class="badge mb-4">${escapeHtml(page.badge)}</div>
-                    <h2 class="text-2xl font-bold mb-3">${escapeHtml(page.h1)}</h2>
-                    <p class="text-slate-300 leading-7 mb-6">${escapeHtml(page.intro)}</p>
-                    <span class="text-rolexGold font-semibold">Lire l'article</span>
-                  </a>
+                ([category, pages]) => `
+                  <section>
+                    <div class="flex items-end justify-between gap-4 mb-5">
+                      <h2 class="text-2xl md:text-3xl font-bold">${escapeHtml(category)}</h2>
+                      <div class="text-sm text-slate-400">${pages.length} article${pages.length > 1 ? 's' : ''}</div>
+                    </div>
+                    <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
+                      ${pages
+                        .map(
+                          (page) => `
+                            <a href="${page.url}" class="card p-6 hover:-translate-y-1 transition">
+                              <div class="badge mb-4">${escapeHtml(page.badge)}</div>
+                              ${
+                                page.cardImage?.src || page.image?.src
+                                  ? `<img src="${(page.cardImage?.src || page.image.src)}" alt="${escapeHtml(page.cardImage?.alt || page.image?.alt || page.h1)}" class="h-20 w-20 rounded-2xl object-contain border border-rolexGold/20 bg-white/90 p-3 mb-5" />`
+                                  : ''
+                              }
+                              <h3 class="text-2xl font-bold mb-3">${escapeHtml(page.h1)}</h3>
+                              <p class="text-slate-300 leading-7 mb-6">${escapeHtml(page.excerpt || page.intro)}</p>
+                              <span class="text-rolexGold font-semibold">Lire l'article</span>
+                            </a>
+                          `,
+                        )
+                        .join('')}
+                    </div>
+                  </section>
                 `,
               )
               .join('')}
@@ -372,7 +625,7 @@ async function main() {
       description:
         "Cabinet dentaire a Sete : Invisalign, implantologie BioTech et pages d'information pour les patients du Bassin de Thau.",
       url: `${siteUrl}/`,
-      image: `${siteUrl}/seo-images/dr-abdessadok-sete.jpg`,
+      image: `${siteUrl}/seo-images/logo-hero-section.png`,
     },
     renderHomeFallback(),
   )
@@ -383,9 +636,9 @@ async function main() {
     {
       title: 'Blog dentaire Sete : orthodontie invisible, prix et implantologie',
       description:
-        "Blog dentaire du cabinet a Sete : taquets Invisalign, prix de l'orthodontie invisible et relation entre alignement dentaire et implantologie.",
+        "Blog dentaire du cabinet a Sete : orthodontie, orthodontie invisible, aligneurs transparents et implantologie.",
       url: `${siteUrl}/blog`,
-      image: `${siteUrl}/seo-images/dr-abdessadok-sete.jpg`,
+      image: `${siteUrl}/seo-images/logo-hero-section.png`,
     },
     renderBlogHub(),
   )

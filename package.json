@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && node scripts/prerender-static-pages.mjs",
+    "build": "node scripts/generate-orthodontie-articles.mjs && node scripts/generate-orthodontie-pillars.mjs && node scripts/generate-sitemap.mjs && vite build && node scripts/prerender-static-pages.mjs",
     "preview": "vite preview",
     "server": "node server/index.js"
   },
