@@ -1,155 +1,138 @@
 import { NavLink, Link, useLocation } from 'react-router-dom'
-import { motion, AnimatePresence } from 'framer-motion'
-import { useEffect, useState } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
+import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import logo from '../assets/Favicon/android-chrome-192x192.png'
 import { blogPages, servicePages } from '../data/seoContent'
 
 const curatedBlogLinks = [
-  { label: 'Hub blog', url: '/blog', description: 'Tous les articles et le cluster éditorial.' },
-  { label: 'Orthodontie à Sète', url: '/orthodontie-sete', description: 'La page pilier générale sur l’alignement dentaire.' },
-  { label: 'Orthodontie invisible à Sète', url: '/orthodontie-invisible-sete', description: 'La page pilier sur les aligneurs transparents.' },
+  { label: 'Tous les articles', url: '/blog', description: 'Guides et conseils du cabinet.' },
+  { label: 'Orthodontie à Sète', url: '/orthodontie-sete', description: 'Comprendre quand consulter et comment préparer son bilan.' },
+  { label: 'Orthodontie invisible', url: '/orthodontie-invisible-sete', description: 'Les réponses essentielles avant un traitement discret.' },
 ]
 
 const curatedGuideLinks = [
   { label: 'Quand consulter ?', url: '/blog/orthodontie-sete-quand-consulter-alignement-dentaire' },
   { label: 'Orthodontie adulte', url: '/blog/orthodontie-adulte-sete-questions-avant-traitement' },
-  { label: 'Avant un bilan invisible', url: '/blog/orthodontie-invisible-sete-questions-avant-bilan' },
   { label: 'Invisalign ou aligneurs ?', url: '/blog/invisalign-aligneurs-transparents-gouttieres-differences' },
-  { label: 'Premier bilan invisible', url: '/blog/premier-bilan-orthodontie-invisible-sete' },
 ]
 
-const curatedBlogMenuLinks = [...curatedBlogLinks, ...curatedGuideLinks]
+const navLinkClass = ({ isActive }) => `nav-link relative rounded-full px-3 py-2 text-sm font-bold transition ${isActive ? 'is-active' : ''}`
 
-const NavItem = ({ to, children }) => (
-  <NavLink
-    to={to}
-    className={({ isActive }) =>
-      `px-3 py-2 rounded-xl transition focus:outline-none focus:ring-2 focus:ring-rolexGreen/40 ${
-        isActive
-          ? 'text-foreground border border-rolexGreen/40 bg-rolexGreen/45 backdrop-blur-sm'
-          : 'hover:bg-rolexGreen/10'
-      }`}
-  >
-    {children}
-  </NavLink>
-)
+function CalendarIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M7 3v3M17 3v3M4.5 9h15M6 5h12a2 2 0 0 1 2 2v12H4V7a2 2 0 0 1 2-2Z" />
+      <path d="m9 14 2 2 4-4" />
+    </svg>
+  )
+}
+
+function GlobeIcon() {
+  return (
+    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true">
+      <circle cx="12" cy="12" r="9" /><path d="M3 12h18M12 3c2.2 2.5 3.2 5.5 3.2 9s-1 6.5-3.2 9c-2.2-2.5-3.2-5.5-3.2-9S9.8 5.5 12 3Z" />
+    </svg>
+  )
+}
 
 export default function Navbar() {
   const { t, i18n } = useTranslation()
   const location = useLocation()
-  const [open, setOpen] = useState(false)
-  const [langOpen, setLangOpen] = useState(false)
+  const [mobileOpen, setMobileOpen] = useState(false)
+  const [mobileSection, setMobileSection] = useState(null)
   const [desktopMenu, setDesktopMenu] = useState(null)
-  const [mobileServicesOpen, setMobileServicesOpen] = useState(false)
-  const [mobileBlogOpen, setMobileBlogOpen] = useState(false)
-  const closeMenu = () => setOpen(false)
-  const closeAllMenus = () => {
-    setOpen(false)
-    setLangOpen(false)
-    setDesktopMenu(null)
-    setMobileServicesOpen(false)
-    setMobileBlogOpen(false)
-  }
-  const changeLang = (code) => { i18n.changeLanguage(code); localStorage.setItem('lang', code); setLangOpen(false) }
+  const [langOpen, setLangOpen] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
+  const [hidden, setHidden] = useState(false)
+  const lastScrollY = useRef(0)
+  const isHome = location.pathname === '/'
+  const transparent = isHome && !scrolled && !mobileOpen && !desktopMenu && !langOpen
+
   const servicePillars = servicePages.filter((page) => page.menuGroup === 'pillars')
   const serviceLocals = servicePages.filter((page) => page.menuGroup === 'locals')
-  const curatedBlogEntries = curatedBlogLinks
-    .map((item) => {
-      if (item.url === '/blog') {
-        return {
-          ...item,
-          page: {
-            url: '/blog',
-            menuDescription: item.description,
-            metaDescription: item.description,
-          },
-        }
-      }
-      const servicePage = servicePages.find((page) => page.url === item.url)
-      const blogPage = blogPages.find((page) => page.url === item.url)
-      const page = servicePage || blogPage
-      return page ? { ...item, page } : null
-    })
-    .filter(Boolean)
-  const curatedGuideEntries = curatedGuideLinks
-    .map((item) => {
-      const page = blogPages.find((entry) => entry.url === item.url)
-      return page ? { ...item, page } : null
-    })
-    .filter(Boolean)
+  const guides = curatedGuideLinks.filter((item) => blogPages.some((page) => page.url === item.url))
+  const servicesActive = location.pathname === '/services' || servicePages.some((page) => page.url === location.pathname)
+  const blogActive = location.pathname === '/blog' || blogPages.some((page) => page.url === location.pathname)
 
-  useEffect(() => {
-    setOpen(false)
+  const closeAll = () => {
+    setMobileOpen(false)
+    setMobileSection(null)
     setDesktopMenu(null)
     setLangOpen(false)
-  }, [location.pathname])
+  }
 
-  const isServicesActive = location.pathname === '/services' || servicePages.some((page) => page.url === location.pathname)
-  const isBlogActive = location.pathname === '/blog' || blogPages.some((page) => page.url === location.pathname)
+  const changeLanguage = (code) => {
+    i18n.changeLanguage(code)
+    localStorage.setItem('lang', code)
+    setLangOpen(false)
+  }
+
+  useEffect(() => { closeAll() }, [location.pathname])
+
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') closeAll()
+    }
+    document.addEventListener('keydown', handleKeyDown)
+    return () => document.removeEventListener('keydown', handleKeyDown)
+  }, [])
+
+  useEffect(() => {
+    if (!mobileOpen) return undefined
+    const previousOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => { document.body.style.overflow = previousOverflow }
+  }, [mobileOpen])
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const current = window.scrollY
+      setScrolled(current > 30)
+      setHidden(current > 180 && current > lastScrollY.current + 8 && !mobileOpen && !desktopMenu)
+      if (current < lastScrollY.current - 5 || current < 80) setHidden(false)
+      lastScrollY.current = current
+    }
+    handleScroll()
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [mobileOpen, desktopMenu])
 
   return (
-    <header className="sticky top-0 z-50 backdrop-blur navbar-gold border-b border-slate-800">
-      <div className="container-max flex items-center justify-between h-14 md:h-16">
-        <Link to="/" className="flex items-center gap-2 min-w-0" onClick={closeAllMenus}>
-          <img src={logo} alt="Logo Cabinet Dentaire Dr Abdessadok" className="h-8 w-8 rounded-full object-cover" />
-          <span className="font-bold text-sm sm:text-base truncate">Dr. Abdessadok</span>
+    <header className={`site-navbar ${transparent ? 'site-navbar--hero' : 'site-navbar--solid'} ${hidden ? 'site-navbar--hidden' : ''}`}>
+      <div className="container-max flex h-16 items-center justify-between lg:h-[4.5rem]">
+        <Link to="/" className="nav-wordmark flex min-w-0 items-center gap-3" onClick={closeAll}>
+          <span className="navbar-logo-orbit"><img src={logo} alt="" aria-hidden="true" /></span>
+          <span className="truncate text-sm font-black tracking-[-0.01em] sm:text-base">Dr. Abdessadok</span>
         </Link>
 
-        {/* Desktop nav */}
-        <nav className="hidden md:flex items-center gap-1 relative">
-          <NavItem to="/">{t('nav.home')}</NavItem>
-          <NavItem to="/about">{t('nav.about')}</NavItem>
-          <div
-            className="relative"
-            onMouseEnter={() => setDesktopMenu('services')}
-            onMouseLeave={() => setDesktopMenu((current) => (current === 'services' ? null : current))}
-          >
-            <button
-              type="button"
-              className={`px-3 py-2 rounded-xl transition focus:outline-none focus:ring-2 focus:ring-rolexGreen/40 ${
-                isServicesActive || desktopMenu === 'services'
-                  ? 'text-foreground border border-rolexGreen/40 bg-rolexGreen/45 backdrop-blur-sm'
-                  : 'hover:bg-rolexGreen/10'
-              }`}
-              onClick={() => setDesktopMenu((current) => (current === 'services' ? null : 'services'))}
-            >
-              {t('nav.services')}
+        <nav className="relative hidden items-center gap-1 lg:flex" aria-label="Navigation principale">
+          <NavLink to="/" className={navLinkClass}>Accueil</NavLink>
+          <NavLink to="/about" className={navLinkClass}>{t('nav.about')}</NavLink>
+
+          <div className="relative" onMouseEnter={() => setDesktopMenu('services')} onMouseLeave={() => setDesktopMenu(null)}>
+            <button type="button" className={navLinkClass({ isActive: servicesActive || desktopMenu === 'services' })} aria-expanded={desktopMenu === 'services'} aria-controls="services-mega-menu" onClick={() => setDesktopMenu((value) => value === 'services' ? null : 'services')}>
+              {t('nav.services')} <span aria-hidden="true" className="ml-1">⌄</span>
             </button>
             <AnimatePresence>
               {desktopMenu === 'services' && (
-                <motion.div
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 8 }}
-                  transition={{ duration: 0.18 }}
-                  className="absolute left-1/2 top-full mt-3 w-[720px] -translate-x-1/2 rounded-[2rem] border border-rolexGold/20 bg-surface/95 p-6 shadow-soft backdrop-blur"
-                >
-                  <div className="grid grid-cols-2 gap-6">
+                <motion.div id="services-mega-menu" initial={{ opacity: 0, y: 10, scale: .985 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 8, scale: .985 }} className="absolute left-1/2 top-full mt-3 w-[760px] -translate-x-1/2 rounded-2xl border border-rolexGold/20 bg-surface/95 p-6 text-foreground shadow-soft backdrop-blur-xl">
+                  <div className="grid grid-cols-[0.8fr_1fr_1fr] gap-6">
+                    <div className="rounded-2xl bg-rolexGreen/20 p-5">
+                      <span className="text-xs font-bold uppercase tracking-[0.18em] text-rolexGold">Nos soins</span>
+                      <p className="mt-3 text-sm text-slate-300">Une approche globale, de la prévention à la réhabilitation du sourire.</p>
+                      <Link to="/services" onClick={closeAll} className="mt-5 inline-flex font-bold text-rolexGold">Vue d’ensemble →</Link>
+                    </div>
                     <div>
-                      <div className="text-xs uppercase tracking-[0.2em] text-rolexGold mb-3">Pages piliers</div>
-                      <div className="space-y-3">
-                        <Link to="/services" className="block rounded-2xl border border-rolexGold/20 bg-rolexGreen/10 p-4 hover:bg-rolexGreen/20 transition" onClick={closeAllMenus}>
-                          <div className="font-semibold">Vue d&apos;ensemble des services</div>
-                          <div className="text-sm text-slate-300 mt-1">Implantologie, Invisalign et soins du cabinet.</div>
-                        </Link>
-                        {servicePillars.map((page) => (
-                          <Link key={page.url} to={page.url} className="block rounded-2xl border border-rolexGold/20 bg-rolexGreen/10 p-4 hover:bg-rolexGreen/20 transition" onClick={closeAllMenus}>
-                            <div className="font-semibold">{page.menuLabel}</div>
-                            <div className="text-sm text-slate-300 mt-1">{page.menuDescription}</div>
-                          </Link>
-                        ))}
+                      <p className="mb-3 text-xs font-bold uppercase tracking-[0.16em] text-rolexGold">Expertises</p>
+                      <div className="space-y-1">
+                        {servicePillars.map((page) => <Link key={page.url} to={page.url} onClick={closeAll} className="block rounded-xl px-3 py-2 text-sm hover:bg-rolexGreen/5 hover:text-rolexGold">{page.menuLabel}</Link>)}
                       </div>
                     </div>
                     <div>
-                      <div className="text-xs uppercase tracking-[0.2em] text-rolexGold mb-3">Pages locales</div>
-                      <div className="space-y-3">
-                        {serviceLocals.map((page) => (
-                          <Link key={page.url} to={page.url} className="block rounded-2xl border border-rolexGold/20 bg-rolexGreen/10 p-4 hover:bg-rolexGreen/20 transition" onClick={closeAllMenus}>
-                            <div className="font-semibold">{page.menuLabel}</div>
-                            <div className="text-sm text-slate-300 mt-1">{page.menuDescription}</div>
-                          </Link>
-                        ))}
+                      <p className="mb-3 text-xs font-bold uppercase tracking-[0.16em] text-rolexGold">À proximité</p>
+                      <div className="space-y-1">
+                        {serviceLocals.slice(0, 6).map((page) => <Link key={page.url} to={page.url} onClick={closeAll} className="block rounded-xl px-3 py-2 text-sm hover:bg-rolexGreen/5 hover:text-rolexGold">{page.menuLabel}</Link>)}
                       </div>
                     </div>
                   </div>
@@ -157,264 +140,65 @@ export default function Navbar() {
               )}
             </AnimatePresence>
           </div>
-          <div
-            className="relative"
-            onMouseEnter={() => setDesktopMenu('blog')}
-            onMouseLeave={() => setDesktopMenu((current) => (current === 'blog' ? null : current))}
-          >
-            <button
-              type="button"
-              className={`px-3 py-2 rounded-xl transition focus:outline-none focus:ring-2 focus:ring-rolexGreen/40 ${
-                isBlogActive || desktopMenu === 'blog'
-                  ? 'text-foreground border border-rolexGreen/40 bg-rolexGreen/45 backdrop-blur-sm'
-                  : 'hover:bg-rolexGreen/10'
-              }`}
-              onClick={() => setDesktopMenu((current) => (current === 'blog' ? null : 'blog'))}
-            >
-              Blog
+
+          <div className="relative" onMouseEnter={() => setDesktopMenu('blog')} onMouseLeave={() => setDesktopMenu(null)}>
+            <button type="button" className={navLinkClass({ isActive: blogActive || desktopMenu === 'blog' })} aria-expanded={desktopMenu === 'blog'} aria-controls="blog-mega-menu" onClick={() => setDesktopMenu((value) => value === 'blog' ? null : 'blog')}>
+              Blog <span aria-hidden="true" className="ml-1">⌄</span>
             </button>
             <AnimatePresence>
               {desktopMenu === 'blog' && (
-                <motion.div
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 8 }}
-                  transition={{ duration: 0.18 }}
-                  className="absolute right-0 top-full mt-3 w-[680px] max-w-[calc(100vw-2rem)] rounded-[2rem] border border-rolexGold/20 bg-surface/95 p-5 shadow-soft backdrop-blur"
-                >
-                  <div className="grid grid-cols-2 gap-5">
-                    <div className="rounded-2xl border border-rolexGold/20 bg-rolexGreen/10 p-4">
-                      <div className="text-xs uppercase tracking-[0.16em] text-rolexGold mb-3">Pages essentielles</div>
-                      <div className="space-y-3">
-                        {curatedBlogEntries.map(({ url, label, description, page }) => (
-                          <Link
-                            key={url}
-                            to={url}
-                            className="block rounded-2xl border border-rolexGold/20 bg-background/20 p-4 hover:bg-rolexGreen/20 transition"
-                            onClick={closeAllMenus}
-                          >
-                            <div className="font-semibold">{label}</div>
-                            <div className="text-sm text-slate-300 mt-1">{description || page.menuDescription || page.metaDescription}</div>
-                          </Link>
-                        ))}
-                      </div>
-                    </div>
-                    <div className="rounded-2xl border border-rolexGold/20 bg-rolexGreen/10 p-4">
-                      <div className="text-xs uppercase tracking-[0.16em] text-rolexGold mb-3">Guides clés</div>
-                      <div className="space-y-3">
-                        {curatedGuideEntries.map(({ url, label, page }) => (
-                          <Link
-                            key={url}
-                            to={url}
-                            className="block rounded-2xl border border-rolexGold/20 bg-background/20 p-4 hover:bg-rolexGreen/20 transition"
-                            onClick={closeAllMenus}
-                          >
-                            <div className="font-semibold">{label}</div>
-                            <div className="text-sm text-slate-300 mt-1">{page.menuDescription}</div>
-                          </Link>
-                        ))}
-                      </div>
-                      <div className="mt-4 pt-4 border-t border-rolexGold/15">
-                        <Link
-                          to="/blog"
-                          className="inline-flex items-center text-sm font-semibold text-rolexGold hover:text-rolexGold/80 transition"
-                          onClick={closeAllMenus}
-                        >
-                          Voir tous les articles
-                        </Link>
-                      </div>
-                    </div>
+                <motion.div id="blog-mega-menu" initial={{ opacity: 0, y: 10, scale: .985 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 8, scale: .985 }} className="absolute right-0 top-full mt-3 w-[650px] rounded-2xl border border-rolexGold/20 bg-surface/95 p-6 text-foreground shadow-soft backdrop-blur-xl">
+                  <div className="grid grid-cols-2 gap-6">
+                    <div>{curatedBlogLinks.map((item) => <Link key={item.url} to={item.url} onClick={closeAll} className="mb-2 block rounded-xl p-3 hover:bg-rolexGreen/5"><span className="block font-bold">{item.label}</span><span className="mt-1 block text-xs text-muted">{item.description}</span></Link>)}</div>
+                    <div className="rounded-2xl bg-rolexGreen/10 p-4"><p className="mb-3 text-xs font-bold uppercase tracking-[0.16em] text-rolexGold">Guides clés</p>{guides.map((item) => <Link key={item.url} to={item.url} onClick={closeAll} className="block rounded-xl px-3 py-2 text-sm hover:bg-rolexGreen/5 hover:text-rolexGold">{item.label}</Link>)}</div>
                   </div>
                 </motion.div>
               )}
             </AnimatePresence>
           </div>
-          <NavItem to="/gallery">{t('nav.gallery')}</NavItem>
-          <NavItem to="/contact">{t('nav.contact')}</NavItem>
+
+          <NavLink to="/gallery" className={navLinkClass}>{t('nav.gallery')}</NavLink>
+          <NavLink to="/contact" className={navLinkClass}>{t('nav.contact')}</NavLink>
         </nav>
 
         <div className="flex items-center gap-2">
-          <Link
-            to="/login"
-            className="hidden md:inline-flex items-center justify-center h-10 px-3 rounded-xl border border-rolexGreen/40 bg-rolexGreen/45 hover:bg-rolexGreen/60 text-sm focus:outline-none focus:ring-2 focus:ring-rolexGreen/40"
-            onClick={closeAllMenus}
-          >
-            Se connecter
-          </Link>
-          {/* Desktop calendar CTA */}
-          <a
-            href="https://www.doctolib.fr/dentiste/sete/abdessamed-abdessadok-levallois-perret/booking/motives?specialityId=1&telehealth=false&placeId=practice-518332&bookingFunnelSource=profile"
-            aria-label={t('aria.book')}
-            className="hidden md:inline-flex items-center justify-center h-10 w-10 rounded-xl border border-rolexGreen/40 bg-rolexGreen/45 hover:bg-rolexGreen/60 focus:outline-none focus:ring-2 focus:ring-rolexGreen/40"
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" className="text-foreground">
-              <path d="M7 2a1 1 0 0 1 1 1v1h8V3a1 1 0 1 1 2 0v1h1a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1V3a1 1 0 0 1 1-1zm12 7H5v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9zM7 12h4v4H7v-4z"/>
-            </svg>
-          </a>
-          {/* Language switcher */}
+          <Link to="/login" className="hidden h-10 items-center rounded-full border border-current/20 bg-white/10 px-4 text-sm font-bold backdrop-blur hover:border-rolexGold/45 hover:text-rolexGold xl:inline-flex">Se connecter</Link>
+
           <div className="relative">
-            <button
-              aria-label={t('aria.language')}
-              aria-haspopup="menu"
-              aria-expanded={langOpen ? 'true' : 'false'}
-              className="inline-flex items-center justify-center h-10 w-10 rounded-xl border border-rolexGreen/40 bg-rolexGreen/45 hover:bg-rolexGreen/60 focus:outline-none focus:ring-2 focus:ring-rolexGreen/40"
-              onClick={() => setLangOpen((v) => !v)}
-            >
-              <svg width="20" height="20" viewBox="0 0 24 24" className="text-foreground" fill="currentColor"><path d="M12 3a9 9 0 1 0 0 18A9 9 0 0 0 12 3Zm0 2c1.7 0 3.3.6 4.5 1.6H7.5C8.7 5.6 10.3 5 12 5Zm-7 7c0-1 .2-2 .6-2.9h14.8c.4.9.6 1.9.6 2.9s-.2 2-.6 2.9H5.6A7.9 7.9 0 0 1 5 12Zm2.5 5.4h9c-1.2 1-2.8 1.6-4.5 1.6s-3.3-.6-4.5-1.6Z"/></svg>
-            </button>
-            {langOpen && (
-              <div role="menu" className="absolute right-0 mt-2 w-40 rounded-xl border border-slate-800 bg-surface/95 backdrop-blur shadow-soft z-50">
-                <button role="menuitem" className="w-full text-left px-3 py-2 rounded-xl hover:bg-rolexGreen/10" onClick={() => changeLang('fr')}>Français</button>
-                <button role="menuitem" className="w-full text-left px-3 py-2 rounded-xl hover:bg-rolexGreen/10" onClick={() => changeLang('en')}>English</button>
-                <button role="menuitem" className="w-full text-left px-3 py-2 rounded-xl hover:bg-rolexGreen/10" onClick={() => changeLang('es')}>Español</button>
-              </div>
-            )}
+            <button type="button" aria-label={t('aria.language')} aria-expanded={langOpen} className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-current/20 bg-white/10 backdrop-blur hover:border-rolexGold/45 hover:text-rolexGold" onClick={() => setLangOpen((value) => !value)}><GlobeIcon /></button>
+            {langOpen && <div className="absolute right-0 mt-2 w-40 rounded-xl border border-rolexGold/20 bg-surface p-1 text-foreground shadow-soft" role="menu"><button role="menuitem" className="w-full rounded-lg px-3 py-2 text-left hover:bg-rolexGreen/5" onClick={() => changeLanguage('fr')}>Français</button><button role="menuitem" className="w-full rounded-lg px-3 py-2 text-left hover:bg-rolexGreen/5" onClick={() => changeLanguage('en')}>English</button><button role="menuitem" className="w-full rounded-lg px-3 py-2 text-left hover:bg-rolexGreen/5" onClick={() => changeLanguage('es')}>Español</button></div>}
           </div>
-          {/* Mobile calendar CTA */}
-          <a
-            href="https://www.doctolib.fr/dentiste/sete/abdessamed-abdessadok-levallois-perret/booking/motives?specialityId=1&telehealth=false&placeId=practice-518332&bookingFunnelSource=profile"
-            aria-label={t('aria.book')}
-            className="md:hidden inline-flex items-center justify-center h-10 w-10 rounded-xl border border-rolexGreen/40 bg-rolexGreen/45 hover:bg-rolexGreen/60 focus:outline-none focus:ring-2 focus:ring-rolexGreen/40"
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" className="text-foreground">
-              <path d="M7 2a1 1 0 0 1 1 1v1h8V3a1 1 0 1 1 2 0v1h1a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1V3a1 1 0 0 1 1-1zm12 7H5v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9zM7 12h4v4H7v-4z"/>
-            </svg>
-          </a>
-          {/* Mobile burger */}
-          <button
-            aria-label={open ? t('aria.closeMenu') : t('aria.openMenu')}
-            className="md:hidden inline-flex items-center justify-center h-10 w-10 rounded-xl border border-rolexGreen/40 bg-rolexGreen/45 hover:bg-rolexGreen/60 transition"
-            onClick={() => setOpen((v) => !v)}
-          >
-            {!open ? (
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" className="text-foreground">
-                <path d="M12 2c-3.5 0-6 2.8-6 6.2 0 2.1.5 4.2 1.4 6 .6 1.2 1.7 3.3 2.6 3.3.9 0 1.3-1.5 2-3 .7 1.5 1.1 3 2 3 .9 0 2-2.1 2.6-3.3.9-1.8 1.4-3.9 1.4-6C18 4.8 15.5 2 12 2z"/>
-              </svg>
-            ) : (
-              <motion.svg width="24" height="24" viewBox="0 0 24 24" className="text-foreground">
-                <motion.path d="M12 2c-3.5 0-6 2.8-6 6.2 0 2.1.5 4.2 1.4 6 .6 1.2 1.7 3.3 2.6 3.3.9 0 1.3-1.5 2-3 .7 1.5 1.1 3 2 3 .9 0 2-2.1 2.6-3.3.9-1.8 1.4-3.9 1.4-6C18 4.8 15.5 2 12 2z" fill="currentColor" initial={{ x: 0, rotate: 0 }} animate={{ x: -2, rotate: -3 }} transition={{ type: 'spring', stiffness: 300, damping: 20 }} />
-                <motion.path d="M12 2c-3.5 0-6 2.8-6 6.2 0 2.1.5 4.2 1.4 6 .6 1.2 1.7 3.3 2.6 3.3.9 0 1.3-1.5 2-3 .7 1.5 1.1 3 2 3 .9 0 2-2.1 2.6-3.3.9-1.8 1.4-3.9 1.4-6C18 4.8 15.5 2 12 2z" fill="currentColor" initial={{ x: 0, rotate: 0 }} animate={{ x: 2, rotate: 3 }} transition={{ type: 'spring', stiffness: 300, damping: 20 }} />
-                <motion.path d="M10 6l2 3-1 2 3-3-1-2 2-2" stroke="currentColor" strokeWidth="1.5" fill="none" initial={{ opacity: 0 }} animate={{ opacity: 1 }} />
-              </motion.svg>
-            )}
+
+          <Link to="/pre-rendez-vous" aria-label="Demander un pré-rendez-vous" className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-rolexGold/40 bg-rolexGold/10 text-rolexGold transition hover:-translate-y-0.5 hover:bg-rolexGold hover:text-white"><CalendarIcon /></Link>
+
+          <button type="button" aria-label={mobileOpen ? t('aria.closeMenu') : t('aria.openMenu')} aria-expanded={mobileOpen} aria-controls="mobile-navigation" className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-current/20 bg-white/10 backdrop-blur hover:border-rolexGold/45 hover:text-rolexGold lg:hidden" onClick={() => setMobileOpen((value) => !value)}>
+            {mobileOpen ? <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" /></svg> : <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" /></svg>}
           </button>
         </div>
       </div>
 
-      {/* Mobile menu */}
       <AnimatePresence>
-        {open && (
-          <motion.div
-            key="mobile-menu"
-            initial={{ opacity: 0, y: -8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            transition={{ duration: 0.2 }}
-            className="md:hidden border-t border-slate-800 bg-surface/95 backdrop-blur"
-          >
-            <nav className="container-max py-3 flex flex-col">
-              <NavLink onClick={closeAllMenus} to="/" className={({ isActive }) => `px-3 py-3 rounded-xl transition ${isActive ? 'text-foreground border border-rolexGreen/40 bg-rolexGreen/45 backdrop-blur-sm' : 'hover:bg-rolexGreen/10'}`}>{t('nav.home')}</NavLink>
-              <NavLink onClick={closeAllMenus} to="/about" className={({ isActive }) => `px-3 py-3 rounded-xl transition ${isActive ? 'text-foreground border border-rolexGreen/40 bg-rolexGreen/45 backdrop-blur-sm' : 'hover:bg-rolexGreen/10'}`}>{t('nav.about')}</NavLink>
-              <div className="rounded-2xl border border-rolexGold/20 bg-rolexGreen/10 overflow-hidden">
-                <button
-                  type="button"
-                  className="w-full flex items-center justify-between px-3 py-3 text-left"
-                  onClick={() => setMobileServicesOpen((value) => !value)}
-                >
-                  <span className="font-semibold">{t('nav.services')}</span>
-                  <span>{mobileServicesOpen ? '−' : '+'}</span>
-                </button>
-                <AnimatePresence initial={false}>
-                  {mobileServicesOpen && (
-                    <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="px-3 pb-3 overflow-hidden">
-                      <div className="space-y-2">
-                        <Link onClick={closeAllMenus} to="/services" className="block rounded-xl px-3 py-2 hover:bg-rolexGreen/20">Vue d&apos;ensemble des services</Link>
-                        {[...servicePillars, ...serviceLocals].map((page) => (
-                          <Link key={page.url} onClick={closeAllMenus} to={page.url} className="block rounded-xl px-3 py-2 hover:bg-rolexGreen/20">
-                            {page.menuLabel}
-                          </Link>
-                        ))}
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+        {mobileOpen && (
+          <motion.div id="mobile-navigation" initial={{ opacity: 0, y: -14 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: .28, ease: [0.22,1,0.36,1] }} className="fixed inset-x-0 bottom-0 top-16 overflow-y-auto border-t border-rolexGold/15 bg-surface text-foreground lg:hidden">
+            <nav className="container-max flex min-h-full flex-col gap-2 py-6" aria-label="Navigation mobile">
+              <NavLink to="/" onClick={closeAll} className={navLinkClass}>Accueil</NavLink>
+              <NavLink to="/about" onClick={closeAll} className={navLinkClass}>{t('nav.about')}</NavLink>
+
+              <div className="overflow-hidden rounded-2xl border border-rolexGreen/10 bg-rolexGreen/5">
+                <button type="button" className="flex min-h-12 w-full items-center justify-between px-4 text-left font-bold" aria-expanded={mobileSection === 'services'} aria-controls="mobile-services" onClick={() => setMobileSection((value) => value === 'services' ? null : 'services')}><span>{t('nav.services')}</span><span aria-hidden="true">{mobileSection === 'services' ? '−' : '+'}</span></button>
+                {mobileSection === 'services' && <motion.div id="mobile-services" initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} className="space-y-1 border-t border-rolexGreen/10 px-3 py-3"><Link to="/services" onClick={closeAll} className="block rounded-xl px-3 py-2 font-bold text-rolexGold">Vue d’ensemble</Link>{[...servicePillars, ...serviceLocals].map((page) => <Link key={page.url} to={page.url} onClick={closeAll} className="block rounded-xl px-3 py-2 text-sm hover:bg-rolexGreen/5">{page.menuLabel}</Link>)}</motion.div>}
               </div>
-              <div className="rounded-2xl border border-rolexGold/20 bg-rolexGreen/10 overflow-hidden">
-                <button
-                  type="button"
-                  className="w-full flex items-center justify-between px-3 py-3 text-left"
-                  onClick={() => setMobileBlogOpen((value) => !value)}
-                >
-                  <span className="font-semibold">Blog</span>
-                  <span>{mobileBlogOpen ? '−' : '+'}</span>
-                </button>
-                <AnimatePresence initial={false}>
-                  {mobileBlogOpen && (
-                    <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="px-3 pb-3 overflow-hidden">
-                      <div className="space-y-2">
-                        {curatedBlogEntries.map(({ url, label }) => (
-                          <Link key={url} onClick={closeAllMenus} to={url} className="block rounded-xl px-3 py-2 hover:bg-rolexGreen/20 font-semibold">
-                            {label}
-                          </Link>
-                        ))}
-                        <div className="pt-2">
-                          <div className="px-3 py-1 text-xs uppercase tracking-[0.16em] text-rolexGold">Guides clés</div>
-                          {curatedGuideEntries.map(({ url, label }) => (
-                            <Link key={url} onClick={closeAllMenus} to={url} className="block rounded-xl px-3 py-2 hover:bg-rolexGreen/20">
-                              {label}
-                            </Link>
-                          ))}
-                        </div>
-                        <Link onClick={closeAllMenus} to="/blog" className="block rounded-xl px-3 py-2 text-rolexGold hover:bg-rolexGreen/20 font-semibold">
-                          Voir tous les articles
-                        </Link>
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+
+              <div className="overflow-hidden rounded-2xl border border-rolexGreen/10 bg-rolexGreen/5">
+                <button type="button" className="flex min-h-12 w-full items-center justify-between px-4 text-left font-bold" aria-expanded={mobileSection === 'blog'} aria-controls="mobile-blog" onClick={() => setMobileSection((value) => value === 'blog' ? null : 'blog')}><span>Blog</span><span aria-hidden="true">{mobileSection === 'blog' ? '−' : '+'}</span></button>
+                {mobileSection === 'blog' && <motion.div id="mobile-blog" initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} className="space-y-1 border-t border-rolexGreen/10 px-3 py-3">{[...curatedBlogLinks, ...guides].map((item) => <Link key={item.url} to={item.url} onClick={closeAll} className="block rounded-xl px-3 py-2 text-sm hover:bg-rolexGreen/5">{item.label}</Link>)}</motion.div>}
               </div>
-              <NavLink onClick={closeAllMenus} to="/gallery" className={({ isActive }) => `px-3 py-3 rounded-xl transition ${isActive ? 'text-foreground border border-rolexGreen/40 bg-rolexGreen/45 backdrop-blur-sm' : 'hover:bg-rolexGreen/10'}`}>{t('nav.gallery')}</NavLink>
-              <NavLink onClick={closeAllMenus} to="/contact" className={({ isActive }) => `px-3 py-3 rounded-xl transition ${isActive ? 'text-foreground border border-rolexGreen/40 bg-rolexGreen/45 backdrop-blur-sm' : 'hover:bg-rolexGreen/10'}`}>{t('nav.contact')}</NavLink>
-              <Link onClick={closeAllMenus} to="/login" className="px-3 py-3 rounded-xl text-left hover:bg-rolexGreen/10">Se connecter</Link>
-            <div className="mt-3 border-t border-slate-800 pt-3">
-              <div className="px-3 py-3 rounded-xl bg-rolexGreen/45 backdrop-blur border border-slate-800">
-                <div className="font-semibold">Dr. Abdessamed Abdessadok</div>
-                <a href={`tel:${import.meta.env.VITE_CLINIC_PHONE || '+33467000000'}`} className="text-sm text-muted block mt-1">
-                  {import.meta.env.VITE_CLINIC_PHONE || '04 67 00 00 00'}
-                  </a>
-                  <a
-                    href="https://www.doctolib.fr/dentiste/sete/abdessamed-abdessadok-levallois-perret/booking/motives?specialityId=1&telehealth=false&placeId=practice-518332&bookingFunnelSource=profile"
-                    target="_blank"
-                    rel="noopener"
-                    className="mt-2 inline-flex items-center gap-2 text-sm text-foreground"
-                  >
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" className="text-primary">
-                      <path d="M7 2a1 1 0 0 1 1 1v1h8V3a1 1 0 1 1 2 0v1h1a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1V3a1 1 0 0 1 1-1zm12 7H5v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9z"/>
-                    </svg>
-                    {t('aria.book')}
-                  </a>
-                  <div className="mt-2">
-                    <div className="inline-block relative">
-                      <button
-                        aria-label={t('aria.language')}
-                        aria-haspopup="menu"
-                        aria-expanded={langOpen ? 'true' : 'false'}
-                        className="inline-flex items-center justify-center h-9 w-9 rounded-xl border border-rolexGreen/40 bg-rolexGreen/45 hover:bg-rolexGreen/60 focus:outline-none focus:ring-2 focus:ring-rolexGreen/40"
-                        onClick={() => setLangOpen((v) => !v)}
-                      >
-                        <svg width="18" height="18" viewBox="0 0 24 24" className="text-foreground" fill="currentColor"><path d="M12 3a9 9 0 1 0 0 18A9 9 0 0 0 12 3Zm0 2c1.7 0 3.3.6 4.5 1.6H7.5C8.7 5.6 10.3 5 12 5Zm-7 7c0-1 .2-2 .6-2.9h14.8c.4.9.6 1.9.6 2.9s-.2 2-.6 2.9H5.6A7.9 7.9 0 0 1 5 12Zm2.5 5.4h9c-1.2 1-2.8 1.6-4.5 1.6s-3.3-.6-4.5-1.6Z"/></svg>
-                      </button>
-                      {langOpen && (
-                        <div role="menu" className="absolute right-0 mt-2 w-40 rounded-xl border border-slate-800 bg-surface/95 backdrop-blur shadow-soft z-50">
-                          <button role="menuitem" className="w-full text-left px-3 py-2 rounded-xl hover:bg-rolexGreen/10" onClick={() => changeLang('fr')}>Français</button>
-                          <button role="menuitem" className="w-full text-left px-3 py-2 rounded-xl hover:bg-rolexGreen/10" onClick={() => changeLang('en')}>English</button>
-                          <button role="menuitem" className="w-full text-left px-3 py-2 rounded-xl hover:bg-rolexGreen/10" onClick={() => changeLang('es')}>Español</button>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </div>
+
+              <NavLink to="/gallery" onClick={closeAll} className={navLinkClass}>{t('nav.gallery')}</NavLink>
+              <NavLink to="/contact" onClick={closeAll} className={navLinkClass}>{t('nav.contact')}</NavLink>
+              <Link to="/login" onClick={closeAll} className="rounded-full px-3 py-2 text-sm font-bold">Se connecter</Link>
+              <Link to="/pre-rendez-vous" onClick={closeAll} className="btn-primary mt-4">Demander un pré-rendez-vous <span aria-hidden="true">→</span></Link>
+              <div className="mt-auto border-t border-rolexGreen/10 pt-5 text-sm text-muted"><strong className="text-foreground">Dr. Abdessamed Abdessadok</strong><a href="tel:+33422910594" className="mt-1 block text-rolexGold">04 22 91 05 94</a><p className="mt-2">10 Bd Danièle Casanova, Sète</p></div>
             </nav>
           </motion.div>
         )}

@@ -10,25 +10,24 @@ export default {
         sans: ["Poppins", "Inter", "ui-sans-serif", "system-ui", "-apple-system", "Segoe UI", "Roboto", "Noto Sans", "Ubuntu", "Cantarell", "Helvetica Neue", "Arial", "sans-serif"],
       },
       colors: {
-        primary: "#2563eb",   // blue
-        secondary: "#06b6d4", // cyan
-        accent: "#22c55e",    // green
-        muted: "#64748b",
-        background: "#0b1220",
-        surface: "#0f172a",
-        foreground: "#e2e8f0",
-        card: "#111827",
-        // Tweaked Rolex-inspired tones
-        rolexGreen: "#0A5C2C",
-        rolexGold: "#C9B037",
+        primary: "#214E3E",
+        secondary: "#A28756",
+        accent: "#D8C59C",
+        muted: "#65726D",
+        background: "#F5F3ED",
+        surface: "#FFFEFA",
+        foreground: "#17231F",
+        card: "#FFFFFF",
+        rolexGreen: "#214E3E",
+        rolexGold: "#856938",
       },
       borderRadius: {
         'xl': '1rem',
         '2xl': '1.5rem'
       },
       boxShadow: {
-        'soft': '0 10px 25px rgba(0,0,0,0.25)',
-        'glow': '0 0 0 4px rgba(37, 99, 235, 0.2)'
+        'soft': '0 18px 55px rgba(28, 49, 42, 0.10)',
+        'glow': '0 0 0 4px rgba(155, 128, 80, 0.16)'
       }
     },
   },

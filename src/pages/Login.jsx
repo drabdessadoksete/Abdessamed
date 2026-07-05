@@ -1,10 +1,12 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import logo from '../assets/Favicon/android-chrome-192x192.png'
+import { loginAdmin } from '../services/api'
 
 export default function LoginPage() {
   const navigate = useNavigate()
+  const location = useLocation()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
@@ -15,18 +17,11 @@ export default function LoginPage() {
     setError('')
     setLoading(true)
     try {
-      // Hardcoded credentials for simple admin access
-      const expectedEmail = 'drabdessadoksete@gmail.com'
-      const expectedPassword = 'drabde.optimumtech'
-
-      if (email === expectedEmail && password === expectedPassword) {
-        localStorage.setItem('admin_token', 'hardcoded-admin-token')
-        navigate('/admin')
-      } else {
-        setError('Email ou mot de passe incorrect')
-      }
+      const result = await loginAdmin(email.trim(), password)
+      if (result.error) throw new Error(result.error)
+      navigate(location.state?.from || '/admin', { replace: true })
     } catch (err) {
-      setError(err.message || 'Erreur inconnue')
+      setError(err.message || 'Email ou mot de passe incorrect')
     } finally {
       setLoading(false)
     }

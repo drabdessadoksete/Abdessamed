@@ -1,1 +1,6 @@
 node_modules/
+
+# Local environment files (Cloudflare provides these at build time)
+.env
+.env.*
+!.env.example

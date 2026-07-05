@@ -2,22 +2,16 @@ import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import logo from '../assets/Favicon/android-chrome-192x192.png'
-import { getServices, createService, updateService, deleteService, getGallery, addGalleryItem, deleteGalleryItem, getMessages, deleteMessage } from '../services/api'
+import { getServices, createService, updateService, deleteService, getGallery, addGalleryItem, deleteGalleryItem, getMessages, deleteMessage, getAppointments, updateAppointmentStatus, deleteAppointment, logoutAdmin } from '../services/api'
 
-const handleLogout = () => {
-  localStorage.removeItem("admin_token"); // clear the login token
-  window.location.href = "/login"; // redirect directly to login page
+const handleLogout = async () => {
+  await logoutAdmin()
+  window.location.href = "/login"
 };
 
 export default function Admin(){
-  const [tab, setTab] = useState('services')
+  const [tab, setTab] = useState('appointments')
   const [open, setOpen] = useState(true)
-
-  // Check if user is logged in
-  if (!localStorage.getItem('admin_token')) {
-    window.location.href = '/login'
-    return null
-  }
 
   return (
     <div className="min-h-screen bg-background text-foreground relative">
@@ -56,6 +50,7 @@ export default function Admin(){
             </div>
             <div className="p-4 md:p-6">
               <nav className="space-y-2">
+                <button type="button" onClick={() => setTab('appointments')} className={`w-full text-left px-3 py-2 rounded-xl transition ${tab==='appointments' ? 'text-rolexGold border border-rolexGold/40 bg-rolexGold/10 backdrop-blur-sm' : 'hover:bg-rolexGold/10'}`}>Pré-rendez-vous</button>
                 <button type="button" onClick={() => setTab('services')} className={`w-full text-left px-3 py-2 rounded-xl transition ${tab==='services' ? 'text-rolexGold border border-rolexGold/40 bg-rolexGold/10 backdrop-blur-sm' : 'hover:bg-rolexGold/10'}`}>Services</button>
                 <button type="button" onClick={() => setTab('gallery')} className={`w-full text-left px-3 py-2 rounded-xl transition ${tab==='gallery' ? 'text-rolexGold border border-rolexGold/40 bg-rolexGold/10 backdrop-blur-sm' : 'hover:bg-rolexGold/10'}`}>Galerie</button>
                 <button type="button" onClick={() => setTab('messages')} className={`w-full text-left px-3 py-2 rounded-xl transition ${tab==='messages' ? 'text-rolexGold border border-rolexGold/40 bg-rolexGold/10 backdrop-blur-sm' : 'hover:bg-rolexGold/10'}`}>Messages</button>
@@ -78,11 +73,97 @@ export default function Admin(){
       </AnimatePresence>
       {open && <div className="fixed inset-0 bg-black/40 md:hidden z-0" onClick={() => setOpen(false)} />}
       <div className={`${open ? 'md:ml-[240px]' : ''} p-4 md:p-6 relative z-0`}> 
+        {tab === 'appointments' && <AppointmentsAdmin />}
         {tab === 'services' && <ServicesAdmin />}
         {tab === 'gallery' && <GalleryAdmin />}
         {tab === 'messages' && <MessagesAdmin />}
       </div>
     </div>
+  )
+}
+
+const appointmentStatuses = {
+  new: { label: 'Nouveau', className: 'border-amber-300/40 bg-amber-300/10 text-amber-200' },
+  contacted: { label: 'Contacté', className: 'border-sky-300/40 bg-sky-300/10 text-sky-200' },
+  scheduled: { label: 'Rendez-vous fixé', className: 'border-emerald-300/40 bg-emerald-300/10 text-emerald-200' },
+  closed: { label: 'Clôturé', className: 'border-slate-400/40 bg-slate-400/10 text-slate-300' },
+}
+
+function AppointmentsAdmin(){
+  const [items, setItems] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
+
+  const refresh = async () => {
+    setLoading(true)
+    setError('')
+    try { setItems(await getAppointments()) }
+    catch { setError('Impossible de charger les demandes de pré-rendez-vous.') }
+    finally { setLoading(false) }
+  }
+
+  useEffect(() => { refresh() }, [])
+
+  const changeStatus = async (id, status) => {
+    setError('')
+    try {
+      await updateAppointmentStatus(id, status)
+      setItems((current) => current.map((item) => item.id === id ? { ...item, status } : item))
+    } catch { setError('Le statut n\'a pas pu être mis à jour.') }
+  }
+
+  const remove = async (id) => {
+    if (!window.confirm('Supprimer définitivement cette demande ?')) return
+    try {
+      await deleteAppointment(id)
+      setItems((current) => current.filter((item) => item.id !== id))
+    } catch { setError('La demande n\'a pas pu être supprimée.') }
+  }
+
+  return (
+    <motion.div className="card p-6" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
+      <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h1 className="text-2xl font-semibold">Demandes de pré-rendez-vous</h1>
+          <p className="mt-1 text-sm text-muted">{items.length} demande{items.length > 1 ? 's' : ''}</p>
+        </div>
+        <button type="button" className="btn-outline" onClick={refresh}>Rafraîchir</button>
+      </div>
+      {error && <p className="mb-4 rounded-xl border border-red-400/30 bg-red-400/10 p-3 text-sm text-red-200">{error}</p>}
+      {loading ? <p className="text-muted">Chargement…</p> : items.length === 0 ? (
+        <div className="rounded-xl border border-dashed border-slate-700 p-8 text-center text-muted">Aucune demande pour le moment.</div>
+      ) : (
+        <div className="grid gap-4 xl:grid-cols-2">
+          {items.map((item) => {
+            const status = appointmentStatuses[item.status] || appointmentStatuses.new
+            return (
+              <article key={item.id} className="rounded-2xl border border-slate-700 bg-slate-800/40 p-5">
+                <div className="flex flex-wrap items-start justify-between gap-3">
+                  <div>
+                    <span className={`inline-flex rounded-full border px-2.5 py-1 text-xs font-bold ${status.className}`}>{status.label}</span>
+                    <h2 className="mt-3 text-lg font-semibold">{item.name}</h2>
+                    <p className="text-sm text-muted">{item.specialty === 'implantologie' ? 'Implantologie' : 'Orthodontie invisible'} • {new Date(item.created_at).toLocaleString('fr-FR')}</p>
+                  </div>
+                  <button type="button" className="text-sm text-red-300 hover:text-red-200" onClick={() => remove(item.id)}>Supprimer</button>
+                </div>
+                <dl className="mt-5 grid gap-3 text-sm sm:grid-cols-2">
+                  <div><dt className="text-muted">Téléphone</dt><dd><a className="font-semibold text-rolexGold" href={`tel:${item.phone}`}>{item.phone}</a></dd></div>
+                  <div><dt className="text-muted">E-mail</dt><dd>{item.email ? <a className="font-semibold text-rolexGold" href={`mailto:${item.email}`}>{item.email}</a> : '—'}</dd></div>
+                  <div><dt className="text-muted">Ville</dt><dd>{item.city || '—'}</dd></div>
+                  <div><dt className="text-muted">Rappel souhaité</dt><dd>{item.callback_window} • {item.contact_preference}</dd></div>
+                </dl>
+                {item.note && <div className="mt-4 rounded-xl bg-slate-900/40 p-3 text-sm whitespace-pre-wrap">{item.note}</div>}
+                <label className="mt-5 block text-sm font-semibold">Suivi
+                  <select className="form-control mt-2" value={item.status} onChange={(event) => changeStatus(item.id, event.target.value)}>
+                    {Object.entries(appointmentStatuses).map(([value, option]) => <option key={value} value={value}>{option.label}</option>)}
+                  </select>
+                </label>
+              </article>
+            )
+          })}
+        </div>
+      )}
+    </motion.div>
   )
 }
 
@@ -217,7 +298,10 @@ function MessagesAdmin(){
                 <td className="p-2 whitespace-nowrap">{m.name}</td>
                 <td className="p-2 whitespace-nowrap">{m.email}</td>
                 <td className="p-2 whitespace-nowrap">{m.phone}</td>
-                <td className="p-2">{m.message}</td>
+                <td className="p-2">
+                  {m.message?.startsWith('[PRÉ-RDV') ? <span className="mb-2 inline-flex rounded-full border border-rolexGold/30 bg-rolexGold/10 px-2 py-0.5 text-xs font-bold text-rolexGold">Pré-rendez-vous</span> : null}
+                  <span className="block whitespace-pre-line">{m.message}</span>
+                </td>
                 <td className="p-2 text-right">
                   <button type="button" className="btn-outline" onClick={() => remove(m.id)}>Supprimer</button>
                 </td>

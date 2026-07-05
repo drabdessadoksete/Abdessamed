@@ -5,13 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="apple-itunes-app" content="app-id=925339063, app-argument=doctolib://booking" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
     <meta name="cf-beacon" content="off" />
     <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline' https:; object-src 'none';" />
     <title>Orthodontie invisible à Sète : aligneurs et bilan | Dr. Abdessadok</title>
     <meta name="description" content="Découvrez l’orthodontie invisible à Sète : aligneurs transparents, bilan, suivi, durée, quotidien et questions utiles avant de prendre rendez-vous." data-rh="true">
     <meta name="keywords" content="dentiste Sète, implantologie Sète, implantologie Montpellier, orthodontie invisible, Invisalign Sète, Invisalign Hérault, dentiste Montpellier, cabinet dentaire Sète" />
-    <meta name="theme-color" content="#0d1b16" />
-    <meta name="msapplication-TileColor" content="#0d1b16" />
+    <meta name="theme-color" content="#F5F3ED" />
+    <meta name="msapplication-TileColor" content="#F5F3ED" />
     <meta name="msapplication-TileImage" content="/android-chrome-192x192.png" />
     <meta name="google-adsense-account" content="ca-pub-3033810778497063" />
     <meta property="og:locale" content="fr_FR" />
@@ -33,15 +34,23 @@
     <meta name="robots" content="index,follow,max-image-preview:large" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3033810778497063" crossorigin="anonymous"></script>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RPVFM7QQT6"></script>
     <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-RPVFM7QQT6');
+      if (window.location.hostname === 'cabinetdentairesete.fr' || window.location.hostname === 'www.cabinetdentairesete.fr') {
+        const ads = document.createElement('script');
+        ads.async = true;
+        ads.crossOrigin = 'anonymous';
+        ads.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3033810778497063';
+        document.head.appendChild(ads);
+
+        const analytics = document.createElement('script');
+        analytics.async = true;
+        analytics.src = 'https://www.googletagmanager.com/gtag/js?id=G-RPVFM7QQT6';
+        document.head.appendChild(analytics);
+        window.dataLayer = window.dataLayer || [];
+        window.gtag = function(){ window.dataLayer.push(arguments); };
+        window.gtag('js', new Date());
+        window.gtag('config', 'G-RPVFM7QQT6');
+      }
     </script>
     <script type="application/ld+json">
       {
@@ -147,30 +156,31 @@
         return origOpen.apply(this, arguments);
       };
     </script>
-    <script type="module" crossorigin src="/assets/index-DZSwsWlr.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-DMjOOXXt.css">
+    <script type="module" crossorigin src="/assets/index-RnaizEjM.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-BCT7Wvgm.css">
   </head>
   <body class="bg-background text-foreground font-sans">
     <div id="root">
     
-    <header class="sticky top-0 z-50 backdrop-blur navbar-gold border-b border-slate-800">
-      <div class="container-max flex items-center justify-between h-14 md:h-16">
-        <a href="/" class="flex items-center gap-2 min-w-0">
-          <img src="/android-chrome-192x192.png" alt="Logo Cabinet Dentaire Dr Abdessadok" class="h-8 w-8 rounded-full object-cover" />
-          <span class="font-bold text-sm sm:text-base truncate">Dr. Abdessadok</span>
+    <header class="site-navbar site-navbar--solid">
+      <div class="container-max flex h-16 items-center justify-between lg:h-[4.5rem]">
+        <a href="/" class="nav-wordmark flex items-center gap-3 min-w-0">
+          <span class="navbar-logo-orbit"><img src="/android-chrome-192x192.png" alt="" /></span>
+          <span class="font-black text-sm sm:text-base truncate">Dr. Abdessadok</span>
         </a>
-        <nav class="hidden md:flex items-center gap-4 text-sm">
+        <nav class="hidden lg:flex items-center gap-4 text-sm font-bold">
           <a href="/" class="hover:text-rolexGold transition">Accueil</a>
           <a href="/about" class="hover:text-rolexGold transition">A propos</a>
           <a href="/services" class="hover:text-rolexGold transition">Services</a>
           <a href="/blog" class="hover:text-rolexGold transition">Blog</a>
           <a href="/gallery" class="hover:text-rolexGold transition">Galerie</a>
           <a href="/contact" class="hover:text-rolexGold transition">Contact</a>
+          <a href="/pre-rendez-vous" class="btn-primary">Pré-rendez-vous</a>
         </nav>
       </div>
     </header>
   
-    <main class="overflow-x-hidden">
+    <main class="overflow-x-hidden pt-16 lg:pt-[4.5rem]">
       <section class="section">
         <div class="container-max">
           

@@ -85,19 +85,20 @@ function getPrimaryImage(page) {
 
 function renderHeader() {
   return `
-    <header class="sticky top-0 z-50 backdrop-blur navbar-gold border-b border-slate-800">
-      <div class="container-max flex items-center justify-between h-14 md:h-16">
-        <a href="/" class="flex items-center gap-2 min-w-0">
-          <img src="/android-chrome-192x192.png" alt="Logo Cabinet Dentaire Dr Abdessadok" class="h-8 w-8 rounded-full object-cover" />
-          <span class="font-bold text-sm sm:text-base truncate">Dr. Abdessadok</span>
+    <header class="site-navbar site-navbar--solid">
+      <div class="container-max flex h-16 items-center justify-between lg:h-[4.5rem]">
+        <a href="/" class="nav-wordmark flex items-center gap-3 min-w-0">
+          <span class="navbar-logo-orbit"><img src="/android-chrome-192x192.png" alt="" /></span>
+          <span class="font-black text-sm sm:text-base truncate">Dr. Abdessadok</span>
         </a>
-        <nav class="hidden md:flex items-center gap-4 text-sm">
+        <nav class="hidden lg:flex items-center gap-4 text-sm font-bold">
           <a href="/" class="hover:text-rolexGold transition">Accueil</a>
           <a href="/about" class="hover:text-rolexGold transition">A propos</a>
           <a href="/services" class="hover:text-rolexGold transition">Services</a>
           <a href="/blog" class="hover:text-rolexGold transition">Blog</a>
           <a href="/gallery" class="hover:text-rolexGold transition">Galerie</a>
           <a href="/contact" class="hover:text-rolexGold transition">Contact</a>
+          <a href="/pre-rendez-vous" class="btn-primary">Pré-rendez-vous</a>
         </nav>
       </div>
     </header>
@@ -334,7 +335,7 @@ function renderPage(page) {
 
   return `
     ${renderHeader()}
-    <main class="overflow-x-hidden">
+    <main class="overflow-x-hidden pt-16 lg:pt-[4.5rem]">
       <section class="section">
         <div class="container-max">
           ${renderBreadcrumbs(page, type)}
@@ -419,7 +420,7 @@ function renderBlogHub() {
 
   return `
     ${renderHeader()}
-    <main class="overflow-x-hidden">
+    <main class="overflow-x-hidden pt-16 lg:pt-[4.5rem]">
       <section class="section">
         <div class="container-max">
           <div class="rounded-[2rem] border border-rolexGold/30 bg-gradient-to-br from-rolexGreen/35 via-surface to-background p-8 md:p-12 shadow-soft">
@@ -521,7 +522,7 @@ function renderBlogHub() {
 function renderHomeFallback() {
   return `
     ${renderHeader()}
-    <main class="overflow-x-hidden">
+    <main class="overflow-x-hidden pt-16 lg:pt-[4.5rem]">
       <section class="section">
         <div class="container-max">
           <div class="rounded-[2rem] border border-rolexGold/30 bg-gradient-to-br from-rolexGreen/35 via-surface to-background p-8 md:p-12 shadow-soft">

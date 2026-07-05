@@ -1,7 +1,5 @@
 import * as supabaseApi from './supabase.js'
 
-const useSupabase = true;
-
 export async function getServices() {
   return supabaseApi.getServices()
 }
@@ -42,15 +40,48 @@ export async function submitMessage(payload) {
   return supabaseApi.createMessage(payload)
 }
 
+export async function submitPreAppointment(payload) {
+  return supabaseApi.createAppointment({
+    name: payload.name.trim(),
+    phone: payload.phone.trim(),
+    email: payload.email.trim(),
+    city: payload.city.trim(),
+    specialty: payload.specialty,
+    contact_preference: payload.contactPreference,
+    callback_window: payload.callbackWindow,
+    note: payload.note.trim(),
+  })
+}
+
+export async function getAppointments() {
+  return supabaseApi.getAppointments()
+}
+
+export async function updateAppointmentStatus(id, status) {
+  return supabaseApi.updateAppointment(id, { status })
+}
+
+export async function deleteAppointment(id) {
+  return supabaseApi.deleteAppointment(id)
+}
+
 export async function loginAdmin(email, password) {
   try {
     const data = await supabaseApi.signIn(email, password)
-    localStorage.setItem('admin_token', data.session.access_token)
-    return { token: data.session.access_token }
+    const user = await supabaseApi.getAdminUser()
+    if (!user) {
+      await supabaseApi.signOut()
+      return { error: 'Ce compte ne dispose pas des droits administrateur.' }
+    }
+    return { user, session: data.session }
   } catch (error) {
     return { error: error.message }
   }
 }
+
+export const logoutAdmin = () => supabaseApi.signOut()
+export const getAdminUser = () => supabaseApi.getAdminUser()
+export const onAuthStateChange = (callback) => supabaseApi.onAuthStateChange(callback)
 
 export async function uploadMedia(file) {
   return supabaseApi.uploadMedia(file)

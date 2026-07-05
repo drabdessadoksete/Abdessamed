@@ -2,6 +2,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Helmet } from 'react-helmet-async'
+import { Link } from 'react-router-dom'
 import doctorImg from '../assets/dantist.png'
 import alignTechLogo from "../assets/Align logo.png"
 import invisalignLogo from "../assets/Invisalign_logo.png"
@@ -11,7 +12,7 @@ import clinicVideo from "../assets/video/Cinematic_Motion_Logo_Sequence_Creation
 export default function About(){
   const { t } = useTranslation()
   const [openIndex, setOpenIndex] = useState(null)
-  const [isMuted, setIsMuted] = useState(false)
+  const [isMuted, setIsMuted] = useState(true)
   const videoRef = useRef(null)
   const faqData = t('about.faq.items', { returnObjects: true })
   return (
@@ -58,7 +59,7 @@ export default function About(){
               <span className="badge">{t('about.badges.emergency')}</span>
             </div>
             <div className="mt-6 flex flex-col sm:flex-row gap-3">
-              <a href="https://www.doctolib.fr/dentiste/sete/abdessamed-abdessadok-levallois-perret" target="_blank" rel="noopener" className="btn-primary">{t('about.ctaBooking')}</a>
+              <Link to="/pre-rendez-vous" className="btn-primary">Demander un pré-rendez-vous</Link>
               <a href={import.meta.env.VITE_GOOGLE_MAPS_LINK || 'https://maps.app.goo.gl/UALfaQYvaAV5otoq9'} target="_blank" rel="noopener" className="btn-outline">{t('about.ctaMaps')}</a>
             </div>
           </div>
@@ -122,8 +123,9 @@ export default function About(){
               <h3 className="font-semibold">{t('about.hours')}</h3>
             </div>
             <div className="text-sm text-muted space-y-1">
-              <div>Lundi – Vendredi : 09:00 – 18:00</div>
-              <div>Samedi : 09:00 – 13:00</div>
+              <div>Lun, mar, jeu, ven : 08:00 – 17:00</div>
+              <div>Mercredi : 08:00 – 12:00</div>
+              <div>Samedi – dimanche : Fermé</div>
             </div>
           </motion.div>
 
@@ -167,6 +169,9 @@ export default function About(){
             playsInline
             onClick={() => setIsMuted(!isMuted)}
           />
+          <button type="button" className="absolute bottom-4 right-4 rounded-full border border-white/25 bg-black/35 px-4 py-2 text-sm font-bold text-white backdrop-blur" onClick={() => setIsMuted((value) => !value)} aria-label={isMuted ? 'Activer le son de la vidéo' : 'Couper le son de la vidéo'}>
+            {isMuted ? 'Activer le son' : 'Couper le son'}
+          </button>
         </div>
 
         <div className="rounded-2xl border border-slate-800 bg-surface/60 backdrop-blur shadow-soft p-6">

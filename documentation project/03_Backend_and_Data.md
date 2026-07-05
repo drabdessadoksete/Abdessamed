@@ -116,10 +116,8 @@ High‑level login wrapper in `api.js`:
 
 - `loginAdmin(email, password)`:
   - Calls `signIn`.
-  - On success, stores `data.session.access_token` in `localStorage.admin_token`.
-  - Returns `{ token }` or `{ error }`.
-
-Note: the current `Login.jsx` page uses **hard‑coded credentials** and does not call `loginAdmin`. It sets `localStorage.admin_token` directly. Supabase auth is available but not yet wired to the UI.
+  - Verifies the signed-in account through the `is_admin()` database function.
+  - Returns the authenticated admin user or signs the account back out.
 
 ### 2.5 API Layer (`src/services/api.js`)
 
@@ -128,6 +126,7 @@ This file exposes simple async functions directly used by pages/components:
 - Services: `getServices`, `createService`, `updateService`, `deleteService`
 - Gallery: `getGallery`, `addGalleryItem`, `deleteGalleryItem`
 - Messages: `getMessages`, `submitMessage`, `deleteMessage`
+- Pre-appointments: `getAppointments`, `submitPreAppointment`, `updateAppointmentStatus`, `deleteAppointment`
 - Articles: `getArticles`, `getArticle`, `createArticle`, `updateArticle`, `deleteArticle`
 - Media: `uploadMedia`, `deleteMedia`, `listMedia`
 - Auth: `loginAdmin`
@@ -262,4 +261,3 @@ You can swap between them by changing `src/services/api.js` to call HTTP endpoin
    - Use the new API functions in pages or admin tools.
 
 By keeping `api.js` as the single integration layer for the frontend, switching or mixing backends remains straightforward.
-

@@ -74,9 +74,9 @@ The live application, as wired in `src/services/api.js`, currently uses **Supaba
 **Client (browser)**
 - Render all pages and admin interface
 - Call Supabase directly for:
-  - Fetching and mutating services, gallery images, messages, articles, and media
-  - Admin authentication (via `loginAdmin` in `src/services/api.js`, when used)
-- Handle local admin session via `localStorage` (`admin_token`)
+  - Fetching public content and submitting contact/pre-appointment requests
+  - Authenticated admin operations permitted by Supabase row-level security
+- Handle the admin session through Supabase Auth and `AdminGuard`
 - Perform Google Places API calls for live Google Reviews
 
 **Supabase**
@@ -209,4 +209,3 @@ When cloning or white‑labeling this app, you mostly:
 - Point the frontend to a different Supabase URL/keys.
 - Change Google Maps/Places identifiers.
 - Adjust branding and content (see `05_Rebuild_Template.md`).
-

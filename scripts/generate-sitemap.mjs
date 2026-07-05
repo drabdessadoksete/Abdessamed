@@ -14,6 +14,7 @@ const staticRoutes = [
   { url: '/blog', changefreq: 'weekly', priority: '0.85' },
   { url: '/actualities', changefreq: 'weekly', priority: '0.7' },
   { url: '/contact', changefreq: 'monthly', priority: '0.8' },
+  { url: '/pre-rendez-vous', changefreq: 'monthly', priority: '0.9' },
 ]
 
 function dedupeByUrl(entries) {

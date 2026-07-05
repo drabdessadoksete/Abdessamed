@@ -50,12 +50,12 @@ export default function Contact(){
         <meta name="keywords" content="Contact dentiste Sète, Rendez-vous Implantologie, Rendez-vous Invisalign, Adresse cabinet Sète, Téléphone dentiste 34" />
       </Helmet>
       <div className="container-max grid md:grid-cols-2 gap-10">
-        <form className="card p-6 space-y-4" onSubmit={async (e) => {
+        <form className="card space-y-5 p-6 md:p-8" onSubmit={async (e) => {
           e.preventDefault()
           setStatus('')
           try {
             const res = await submitMessage({ name, email, phone, message })
-            if (res && res.id) {
+            if (res?.success) {
               setStatus('Message envoyé')
               setName('')
               setEmail('')
@@ -68,17 +68,17 @@ export default function Contact(){
             setStatus('Erreur lors de l’envoi')
           }
         }}>
-          <h1 className="text-3xl font-bold">{t('contact.title')}</h1>
-          <input className="w-full rounded-xl bg-surface border border-slate-700 px-4 py-3" placeholder={t('contact.placeholders.name')} value={name} onChange={(e) => setName(e.target.value)} />
-          <input type="email" className="w-full rounded-xl bg-surface border border-slate-700 px-4 py-3" placeholder={t('contact.placeholders.email')} value={email} onChange={(e) => setEmail(e.target.value)} />
-          <input className="w-full rounded-xl bg-surface border border-slate-700 px-4 py-3" placeholder={t('contact.placeholders.phone')} value={phone} onChange={(e) => setPhone(e.target.value)} />
-          <textarea className="w-full rounded-xl bg-surface border border-slate-700 px-4 py-3 h-32" placeholder={t('contact.placeholders.message')} value={message} onChange={(e) => setMessage(e.target.value)}></textarea>
+          <div><span className="section-kicker mb-3">Écrivez-nous</span><h1 className="text-3xl font-bold md:text-4xl">{t('contact.title')}</h1></div>
+          <label><span className="mb-2 block text-sm font-bold">Nom</span><input className="form-control" autoComplete="name" placeholder={t('contact.placeholders.name')} value={name} onChange={(e) => setName(e.target.value)} required /></label>
+          <label><span className="mb-2 block text-sm font-bold">E-mail</span><input type="email" className="form-control" autoComplete="email" placeholder={t('contact.placeholders.email')} value={email} onChange={(e) => setEmail(e.target.value)} required /></label>
+          <label><span className="mb-2 block text-sm font-bold">Téléphone</span><input className="form-control" type="tel" autoComplete="tel" placeholder={t('contact.placeholders.phone')} value={phone} onChange={(e) => setPhone(e.target.value)} /></label>
+          <label><span className="mb-2 block text-sm font-bold">Message</span><textarea className="form-control h-32 resize-y" placeholder={t('contact.placeholders.message')} value={message} onChange={(e) => setMessage(e.target.value)} required /></label>
           <div className="flex items-center gap-3">
             <button type="submit" className="btn-primary">{t('contact.submit')}</button>
             {status && <span className="text-sm text-muted">{status === 'Message envoyé' ? t('contact.status.sent') : t('contact.status.error')}</span>}
           </div>
         </form>
-        <div className="card p-6">
+        <div className="card p-6 md:p-8">
           <h2 className="text-xl font-semibold mb-3">{t('contact.findUs')}</h2>
           <p className="text-muted mb-4">{import.meta.env.VITE_CLINIC_ADDRESS || 'RDC, 10 Bd Danièle Casanova, 34200 Sète, France'}</p>
           <div className="aspect-video rounded-2xl overflow-hidden border border-slate-800">
@@ -96,11 +96,11 @@ export default function Contact(){
       </div>
 
       <div className="container-max mt-10">
-        <div className="rounded-2xl border border-slate-800 bg-surface/60 backdrop-blur shadow-soft p-6">
+        <div className="card p-6 md:p-8">
           <h2 className="text-2xl font-bold mb-4">{t('contact.faq.title')}</h2>
           <div className="space-y-3">
             {faqData.map((item, idx) => (
-              <div key={idx} className="rounded-xl border border-slate-700 bg-slate-800/50">
+              <div key={idx} className="rounded-xl border border-rolexGreen/10 bg-rolexGreen/5">
                 <button
                   type="button"
                   onClick={() => setOpenIndex(openIndex === idx ? null : idx)}

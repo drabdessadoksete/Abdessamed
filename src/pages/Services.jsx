@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion'
 import { Helmet } from 'react-helmet-async'
+import { Link } from 'react-router-dom'
 import implantImg from "../assets/Gemini_Generated_Image_3b45m3b45m3b45m3.png"
 import alignerImg from "../assets/nvisalign® - L'Orthodontie Invisible.png"
 import implantIcon from "../assets/Favicon/android-chrome-192x192.png"
@@ -7,8 +8,6 @@ import alignerIcon from "../assets/nvisalign® - L'Orthodontie Invisible icon.pn
 import alignTechLogo from "../assets/Align logo.png"
 import invisalignLogo from "../assets/Invisalign_logo.png"
 import iteroLogo from "../assets/iTero logo.jpeg"
-
-const doctolibBooking = 'https://www.doctolib.fr/dentiste/sete/abdessamed-abdessadok-levallois-perret/booking/motives?specialityId=1&telehealth=false&placeId=practice-518332&bookingFunnelSource=profile'
 
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -50,7 +49,7 @@ export default function Services({ isSubPage = false }){
               ))}
             </ul>
             <div className="mt-6">
-              <a href={doctolibBooking} target="_blank" rel="noopener" className="btn-primary">{t('servicesPage.bookImplant')}</a>
+              <Link to="/pre-rendez-vous?specialite=implantologie" className="btn-primary">Demander un pré-rendez-vous</Link>
             </div>
           </motion.div>
         </div>
@@ -74,7 +73,7 @@ export default function Services({ isSubPage = false }){
             ))}
           </ul>
             <div className="mt-6">
-              <a href="https://www.doctolib.fr/dentiste/sete/abdessamed-abdessadok-levallois-perret/booking/availabilities?specialityId=1&telehealth=false&placeId=practice-518332&motiveCategoryIds%5B%5D=492540&motiveIds%5B%5D=15059876&bookingFunnelSource=deep_link" target="_blank" rel="noopener" className="btn-primary">{t('servicesPage.bookInvisalign')}</a>
+              <Link to="/pre-rendez-vous?specialite=orthodontie" className="btn-primary">Demander un pré-rendez-vous</Link>
             </div>
           <div className="mt-4 space-y-3">
             <button type="button" className="btn-primary" onClick={() => setShowInvisalignPortal((v) => !v)}>{showInvisalignPortal ? t('buttons.hideInPage') : t('buttons.selfie')}</button>

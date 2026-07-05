@@ -4,6 +4,7 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   plugins: [react()],
-  // Essential for correct asset loading on GitHub Pages and Cloudflare Pages
-  base: './',
+  assetsInclude: ['**/*.m4v'],
+  // Root-relative assets keep nested client routes working on Cloudflare Pages.
+  base: '/',
 })

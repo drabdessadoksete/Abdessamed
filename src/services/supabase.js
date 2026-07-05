@@ -2,9 +2,37 @@ import { createClient } from '@supabase/supabase-js'
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY
-const useSupabase = true // Hardcoded to ensure Supabase is used
 
-export const supabase = useSupabase && supabaseUrl && supabaseKey ? createClient(supabaseUrl, supabaseKey) : null
+export const supabase = supabaseUrl && supabaseKey
+  ? createClient(supabaseUrl, supabaseKey, {
+      auth: {
+        persistSession: true,
+        autoRefreshToken: true,
+        detectSessionInUrl: true,
+      },
+    })
+  : null
+
+const requireSupabase = () => {
+  if (!supabase) throw new Error('Supabase is not configured')
+  return supabase
+}
+
+const allowedImages = new Map([
+  ['image/jpeg', 'jpg'],
+  ['image/png', 'png'],
+  ['image/webp', 'webp'],
+  ['image/gif', 'gif'],
+  ['image/avif', 'avif'],
+])
+
+const storageFileName = (file) => {
+  const extension = allowedImages.get(file?.type)
+  if (!extension) throw new Error('Format non autorisé. Utilisez JPG, PNG, WebP, GIF ou AVIF.')
+  if (file.size > 5 * 1024 * 1024) throw new Error('Le fichier dépasse la limite de 5 Mo.')
+  const id = globalThis.crypto?.randomUUID?.() || `${Date.now()}-${Math.random().toString(36).slice(2)}`
+  return `${id}.${extension}`
+}
 
 const extractStoragePath = (url, bucket) => {
   if (!url) return null
@@ -12,19 +40,16 @@ const extractStoragePath = (url, bucket) => {
   try {
     const u = new URL(url)
     if (u.pathname.includes(marker)) return decodeURIComponent(u.pathname.split(marker)[1])
-    const parts = u.pathname.split('/')
-    return decodeURIComponent(parts[parts.length - 1])
+    return null
   } catch {
     if (url.includes(marker)) return decodeURIComponent(url.split(marker)[1])
-    const parts = url.split('/')
-    return decodeURIComponent(parts[parts.length - 1])
+    return null
   }
 }
 
 // Services
 export const getServices = async () => {
-  if (!supabase) return []
-  const { data, error } = await supabase.from('services').select('*').order('created_at', { ascending: false })
+  const { data, error } = await requireSupabase().from('services').select('*').order('created_at', { ascending: false })
   if (error) throw error
   return data
 }
@@ -63,8 +88,14 @@ export const getGallery = async () => {
 }
 
 export const uploadGalleryImage = async (category, file) => {
-  if (!supabase) return null
-  const fileName = `${Date.now()}-${Math.random().toString(36).slice(2)}${file.name}`
+  if (typeof file === 'string') {
+    const url = new URL(file)
+    if (url.protocol !== 'https:') throw new Error('L\'image doit utiliser une URL HTTPS.')
+    const { data, error } = await requireSupabase().from('gallery_images').insert({ url: url.toString(), category, thumb_url: url.toString() }).select().single()
+    if (error) throw error
+    return data
+  }
+  const fileName = storageFileName(file)
   const { data: uploadData, error: uploadError } = await supabase.storage.from('gallery').upload(fileName, file)
   if (uploadError) throw uploadError
   const { data: { publicUrl } } = supabase.storage.from('gallery').getPublicUrl(fileName)
@@ -76,6 +107,9 @@ export const uploadGalleryImage = async (category, file) => {
 
 export const deleteGalleryImage = async (category, id) => {
   if (!supabase) return null
+  const { data: item } = await supabase.from('gallery_images').select('url').eq('id', id).maybeSingle()
+  const path = extractStoragePath(item?.url, 'gallery')
+  if (path) await supabase.storage.from('gallery').remove([path])
   const { error } = await supabase.from('gallery_images').delete().eq('id', id)
   if (error) throw error
   return true
@@ -90,10 +124,37 @@ export const getMessages = async () => {
 }
 
 export const createMessage = async (message) => {
-  if (!supabase) return null
-  const { data, error } = await supabase.from('messages').insert(message).select().single()
+  const { error } = await requireSupabase().from('messages').insert(message)
+  if (error) throw error
+  return { success: true }
+}
+
+// Pre-appointments
+export const getAppointments = async () => {
+  const { data, error } = await requireSupabase()
+    .from('appointments')
+    .select('id, name, phone, email, city, specialty, contact_preference, callback_window, note, status, consent_at, created_at, updated_at')
+    .order('created_at', { ascending: false })
   if (error) throw error
   return data
+}
+
+export const createAppointment = async (appointment) => {
+  const { error } = await requireSupabase().from('appointments').insert(appointment)
+  if (error) throw error
+  return { success: true }
+}
+
+export const updateAppointment = async (id, updates) => {
+  const { data, error } = await requireSupabase().from('appointments').update(updates).eq('id', id).select().single()
+  if (error) throw error
+  return data
+}
+
+export const deleteAppointment = async (id) => {
+  const { error } = await requireSupabase().from('appointments').delete().eq('id', id)
+  if (error) throw error
+  return true
 }
 
 export const deleteMessage = async (id) => {
@@ -151,7 +212,7 @@ export const getMedia = async () => {
 
 export const uploadMedia = async (file) => {
   if (!supabase) return null
-  const fileName = `${Date.now()}-${Math.random().toString(36).slice(2)}${file.name}`
+  const fileName = storageFileName(file)
   const { data: uploadData, error: uploadError } = await supabase.storage.from('media').upload(fileName, file)
   if (uploadError) throw uploadError
   const { data: { publicUrl } } = supabase.storage.from('media').getPublicUrl(fileName)
@@ -193,6 +254,21 @@ export const signOut = async () => {
 
 export const getUser = async () => {
   if (!supabase) return null
-  const { data: { user } } = await supabase.auth.getUser()
+  const { data: { user }, error } = await supabase.auth.getUser()
+  if (error) return null
   return user
+}
+
+export const getAdminUser = async () => {
+  const user = await getUser()
+  if (!user) return null
+  const { data: isAdmin, error } = await supabase.rpc('is_admin')
+  if (error || !isAdmin) return null
+  return user
+}
+
+export const onAuthStateChange = (callback) => {
+  if (!supabase) return { unsubscribe: () => {} }
+  const { data } = supabase.auth.onAuthStateChange(callback)
+  return data.subscription
 }

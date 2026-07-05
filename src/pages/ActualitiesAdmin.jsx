@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
-import { loginAdmin, listMedia, uploadMedia, deleteMedia, createArticle, updateArticle, deleteArticle, getArticles } from '../services/api'
+import { listMedia, uploadMedia, deleteMedia, createArticle, updateArticle, deleteArticle, getArticles } from '../services/api'
 
 function Toolbar({ exec, insertHeading, insertList }){
   return (
@@ -68,8 +68,6 @@ function YouTubeEmbed({ onInsert }){
 }
 
 export default function ActualitiesAdmin(){
-  const [authed, setAuthed] = useState(true)
-  const [password, setPassword] = useState('')
   const [articles, setArticles] = useState([])
   const [editing, setEditing] = useState(null)
   const [title, setTitle] = useState('')
@@ -79,7 +77,7 @@ export default function ActualitiesAdmin(){
   const [preview, setPreview] = useState(false)
 
   const refresh = async () => { const list = await getArticles(); setArticles(list) }
-  useEffect(() => { if (authed) refresh() }, [authed])
+  useEffect(() => { refresh() }, [])
 
   const exec = (cmd) => document.execCommand(cmd, false)
   const insertHeading = (h) => document.execCommand('formatBlock', false, h)
@@ -115,20 +113,6 @@ export default function ActualitiesAdmin(){
     resetEdit(); refresh()
   }
   const remove = async (id) => { await deleteArticle(id); if (editing?.id === id) resetEdit(); refresh() }
-
-  if (!authed) {
-    return (
-      <section className="section">
-        <div className="container-max">
-          <div className="card p-6 max-w-md mx-auto">
-            <div className="text-xl font-semibold mb-3">Connexion Admin</div>
-            <input type="password" className="w-full rounded-xl bg-surface border border-slate-700 px-4 py-3 mb-3" placeholder="Mot de passe" value={password} onChange={(e) => setPassword(e.target.value)} />
-            <button type="button" className="btn-primary w-full" onClick={async () => { const r = await loginAdmin(password); if (r.token) setAuthed(true) }}>Se connecter</button>
-          </div>
-        </div>
-      </section>
-    )
-  }
 
   return (
     <section className="section">

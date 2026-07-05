@@ -102,8 +102,8 @@ State is handled via:
 - Translations via `react-i18next`
   - `useTranslation()` provides `t` and `i18n`.
   - Selected language is stored in `localStorage` in `Navbar.jsx` and read by `i18next`.
-- Admin “session” via `localStorage` token
-  - `admin_token` is set in `Login.jsx` after a successful login and checked in `Admin.jsx`.
+- Admin session via Supabase Auth
+  - `AdminGuard.jsx` validates both the live user and the database-backed admin role.
 
 Data fetching is done ad‑hoc within pages and admin components using async functions from `src/services/api.js`.
 
@@ -167,8 +167,8 @@ When adding new UI, reusing these existing utility classes keeps the design cons
 ### 6.4 Admin Modules
 
 - `Admin.jsx`:
-  - Sidebar with tabs for **Services**, **Gallery**, **Messages**, plus link to actualities admin.
-  - Checks `localStorage.admin_token` for minimal access control.
+  - Sidebar with tabs for **Pre-appointments**, **Services**, **Gallery**, **Messages**, plus link to actualities admin.
+  - Protected by `AdminGuard` and Supabase row-level security.
   - For each tab, fetches data using `getServices`, `getGallery`, `getMessages`, etc.
 - `ActualitiesAdmin.jsx`:
   - Article editor with toolbar (bold, italic, heading, lists).
@@ -239,4 +239,3 @@ When adding a new feature, follow these patterns:
   - Use React context or local state depending on scope.
 
 By conforming to these patterns, new code will integrate cleanly with existing routing, styling, and i18n infrastructure.
-

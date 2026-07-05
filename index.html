@@ -5,13 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="apple-itunes-app" content="app-id=925339063, app-argument=doctolib://booking" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
     <meta name="cf-beacon" content="off" />
     <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline' https:; object-src 'none';" />
     <title>Cabinet Dentaire Dr. Abdessadok</title>
     <meta name="description" content="Cabinet de chirurgiens-dentistes à Sète spécialisé en Invisalign, Implantologie et soins dentaires. Prenez rendez-vous avec le Dr Abdessadok." data-rh="true">
     <meta name="keywords" content="dentiste Sète, implantologie Sète, implantologie Montpellier, orthodontie invisible, Invisalign Sète, Invisalign Hérault, dentiste Montpellier, cabinet dentaire Sète" />
-    <meta name="theme-color" content="#0d1b16" />
-    <meta name="msapplication-TileColor" content="#0d1b16" />
+    <meta name="theme-color" content="#F5F3ED" />
+    <meta name="msapplication-TileColor" content="#F5F3ED" />
     <meta name="msapplication-TileImage" content="/android-chrome-192x192.png" />
     <meta name="google-adsense-account" content="ca-pub-3033810778497063" />
     <meta property="og:locale" content="fr_FR" />
@@ -30,15 +31,23 @@
     <link rel="manifest" href="/site.webmanifest" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3033810778497063" crossorigin="anonymous"></script>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RPVFM7QQT6"></script>
     <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-RPVFM7QQT6');
+      if (window.location.hostname === 'cabinetdentairesete.fr' || window.location.hostname === 'www.cabinetdentairesete.fr') {
+        const ads = document.createElement('script');
+        ads.async = true;
+        ads.crossOrigin = 'anonymous';
+        ads.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3033810778497063';
+        document.head.appendChild(ads);
+
+        const analytics = document.createElement('script');
+        analytics.async = true;
+        analytics.src = 'https://www.googletagmanager.com/gtag/js?id=G-RPVFM7QQT6';
+        document.head.appendChild(analytics);
+        window.dataLayer = window.dataLayer || [];
+        window.gtag = function(){ window.dataLayer.push(arguments); };
+        window.gtag('js', new Date());
+        window.gtag('config', 'G-RPVFM7QQT6');
+      }
     </script>
     <script type="application/ld+json">
       {

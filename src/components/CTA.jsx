@@ -1,28 +1,30 @@
 import { Link } from 'react-router-dom'
-import { motion } from 'framer-motion'
+import { motion, useReducedMotion } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
 
-export default function CTA(){
+export default function CTA() {
   const { t } = useTranslation()
+  const reduceMotion = useReducedMotion()
+
   return (
     <section className="section">
-      <motion.div className="container-max card p-8 text-center" initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-        <h3 className="text-2xl font-bold mb-3">{t('cta.title')}</h3>
-        <p className="text-muted mb-6">{t('cta.subtitle')}</p>
-        {/* Desktop text CTA */}
-        <motion.a id="booking" href="https://www.doctolib.fr/dentiste/sete/abdessamed-abdessadok-levallois-perret/booking/motives?specialityId=1&telehealth=false&placeId=practice-518332&bookingFunnelSource=profile" target="_blank" rel="noopener" className="btn-primary hidden md:inline-flex" whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.98 }}>{t('aria.book')}</motion.a>
-        {/* Mobile calendar icon CTA */}
-        <a
-          href="https://www.doctolib.fr/dentiste/sete/abdessamed-abdessadok-levallois-perret/booking/motives?specialityId=1&telehealth=false&placeId=practice-518332&bookingFunnelSource=profile"
-          aria-label={t('aria.book')}
-          className="md:hidden inline-flex items-center justify-center h-10 w-10 rounded-xl border border-slate-800 bg-surface hover:bg-slate-800/60 focus:outline-none focus:ring-2 focus:ring-rolexGold"
-        >
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" className="text-foreground">
-            <path d="M7 2a1 1 0 0 1 1 1v1h8V3a1 1 0 1 1 2 0v1h1a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1V3a1 1 0 0 1 1-1zm12 7H5v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9zM7 12h4v4H7v-4z"/>
-          </svg>
-        </a>
-        <span className="mx-3 text-muted">{t('cta.or')}</span>
-        <Link to="/contact" className="btn-outline">{t('cta.contact')}</Link>
+      <motion.div
+        className="container-max"
+        initial={reduceMotion ? false : { opacity: 0, y: 18 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.25 }}
+      >
+        <div className="dark-panel relative overflow-hidden rounded-[2rem] border border-rolexGold/20 px-6 py-14 text-center shadow-soft sm:px-10 md:py-20">
+          <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full border border-rolexGold/10" aria-hidden="true" />
+          <div className="absolute -right-10 -top-10 h-44 w-44 rounded-full border border-rolexGold/15" aria-hidden="true" />
+          <span className="section-kicker mb-5">Premier rendez-vous</span>
+          <h2 className="mx-auto max-w-3xl text-3xl font-bold text-white sm:text-4xl md:text-5xl">{t('cta.title')}</h2>
+          <p className="mx-auto mt-5 max-w-2xl text-white/70">Laissez vos coordonnées et le cabinet vous rappelle pour organiser un premier bilan en implantologie ou orthodontie.</p>
+          <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
+            <Link id="booking" to="/pre-rendez-vous" className="btn-accent">Demander un pré-rendez-vous <span aria-hidden="true">→</span></Link>
+            <Link to="/contact" className="btn-light">{t('cta.contact')}</Link>
+          </div>
+        </div>
       </motion.div>
     </section>
   )
