@@ -19,7 +19,7 @@ export default function CTA() {
           <div className="absolute -right-10 -top-10 h-44 w-44 rounded-full border border-rolexGold/15" aria-hidden="true" />
           <span className="section-kicker mb-5">Premier rendez-vous</span>
           <h2 className="mx-auto max-w-3xl text-3xl font-bold text-white sm:text-4xl md:text-5xl">{t('cta.title')}</h2>
-          <p className="mx-auto mt-5 max-w-2xl text-white/70">Laissez vos coordonnées et le cabinet vous rappelle pour organiser un premier bilan en implantologie ou orthodontie.</p>
+          <p className="mx-auto mt-5 max-w-2xl text-white/70">Laissez vos coordonnées et le cabinet vous rappelle pour déterminer votre besoin et organiser un rendez-vous adapté.</p>
           <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
             <Link id="booking" to="/pre-rendez-vous" className="btn-accent">Demander un pré-rendez-vous <span aria-hidden="true">→</span></Link>
             <Link to="/contact" className="btn-light">{t('cta.contact')}</Link>

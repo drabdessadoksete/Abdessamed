@@ -202,7 +202,7 @@ function OverviewAdmin({ onNavigate }) {
       <section className={`${panelClass} p-5 sm:p-7`}>
         <SectionHeading title="Demandes récentes" description="Les derniers patients à rappeler." action={<button type="button" className={secondaryButton} onClick={() => onNavigate('appointments')}>Tout afficher <Icon name="chevron" className="h-4 w-4" /></button>} />
         <div className="mt-6 space-y-3">
-          {state.loading ? <p className="py-10 text-center text-sm text-[#718079]">Chargement…</p> : state.appointments.length === 0 ? <EmptyState icon="appointments" title="Aucune demande" description="Les demandes envoyées depuis le site apparaîtront ici." /> : state.appointments.slice(0, 4).map((item) => <button type="button" key={item.id} onClick={() => onNavigate('appointments')} className="flex w-full items-center gap-3 rounded-2xl border border-[#e4eae6] p-4 text-left transition hover:border-[#c9d6cf] hover:bg-[#fafbf9]"><span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#eaf1ed] text-sm font-black text-[#214e3e]">{item.name?.charAt(0)?.toUpperCase()}</span><span className="min-w-0 flex-1"><strong className="block truncate text-sm">{item.name}</strong><span className="mt-0.5 block truncate text-xs text-[#718079]">{item.specialty === 'implantologie' ? 'Implantologie' : 'Orthodontie'} · {formatDate(item.created_at)}</span></span><StatusBadge status={item.status} compact /><Icon name="chevron" className="h-4 w-4 text-[#a8b4ae]" /></button>)}
+          {state.loading ? <p className="py-10 text-center text-sm text-[#718079]">Chargement…</p> : state.appointments.length === 0 ? <EmptyState icon="appointments" title="Aucune demande" description="Les demandes envoyées depuis le site apparaîtront ici." /> : state.appointments.slice(0, 4).map((item) => <button type="button" key={item.id} onClick={() => onNavigate('appointments')} className="flex w-full items-center gap-3 rounded-2xl border border-[#e4eae6] p-4 text-left transition hover:border-[#c9d6cf] hover:bg-[#fafbf9]"><span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#eaf1ed] text-sm font-black text-[#214e3e]">{item.name?.charAt(0)?.toUpperCase()}</span><span className="min-w-0 flex-1"><strong className="block truncate text-sm">{item.name}</strong><span className="mt-0.5 block truncate text-xs text-[#718079]">{getAppointmentSpecialtyLabel(item.specialty)} · {formatDate(item.created_at)}</span></span><StatusBadge status={item.status} compact /><Icon name="chevron" className="h-4 w-4 text-[#a8b4ae]" /></button>)}
         </div>
       </section>
 
@@ -222,6 +222,14 @@ const appointmentStatuses = {
   scheduled: { label: 'RDV fixé', className: 'border-emerald-200 bg-emerald-50 text-emerald-800' },
   closed: { label: 'Clôturé', className: 'border-slate-200 bg-slate-50 text-slate-600' },
 }
+
+const appointmentSpecialties = {
+  'pre-rendez-vous-telephonique': 'Pré-rendez-vous téléphonique',
+  implantologie: 'Implantologie',
+  orthodontie: 'Orthodontie invisible',
+}
+
+const getAppointmentSpecialtyLabel = (specialty) => appointmentSpecialties[specialty] || specialty || 'Besoin non renseigné'
 
 function StatusBadge({ status, compact = false }) {
   const option = appointmentStatuses[status] || appointmentStatuses.new
@@ -246,7 +254,7 @@ function AppointmentsAdmin({ onChanged }) {
   useEffect(() => { refresh() }, [])
   const filtered = useMemo(() => items.filter((item) => {
     const matchesStatus = filter === 'all' || item.status === filter
-    const haystack = `${item.name} ${item.phone} ${item.email} ${item.city}`.toLowerCase()
+    const haystack = `${item.name} ${item.phone} ${item.email} ${item.city} ${getAppointmentSpecialtyLabel(item.specialty)} ${item.callback_window} ${item.contact_preference}`.toLowerCase()
     return matchesStatus && haystack.includes(search.toLowerCase().trim())
   }), [items, filter, search])
 
@@ -269,20 +277,22 @@ function AppointmentsAdmin({ onChanged }) {
   }
 
   return <div className="space-y-6">
-    <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+    <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
+      <button type="button" onClick={() => setFilter('all')} aria-pressed={filter === 'all'} className={`${panelClass} flex items-center justify-between p-4 text-left transition ${filter === 'all' ? 'border-[#856938] ring-4 ring-[#856938]/10' : 'hover:border-[#c8d5ce]'}`}><span><span className="block text-2xl font-black">{items.length}</span><span className="text-xs font-bold text-[#718079]">Toutes</span></span><span className="rounded-full bg-[#edf3f0] px-2.5 py-1 text-[.68rem] font-black text-[#214e3e]">Total</span></button>
       {Object.entries(appointmentStatuses).map(([key, option]) => <button key={key} type="button" onClick={() => setFilter(filter === key ? 'all' : key)} className={`${panelClass} flex items-center justify-between p-4 text-left transition ${filter === key ? 'border-[#856938] ring-4 ring-[#856938]/10' : 'hover:border-[#c8d5ce]'}`}><span><span className="block text-2xl font-black">{items.filter((item) => item.status === key).length}</span><span className="text-xs font-bold text-[#718079]">{option.label}</span></span><StatusBadge status={key} compact /></button>)}
     </div>
     <section className={`${panelClass} p-4 sm:p-6`}>
       <div className="flex flex-col gap-4 border-b border-[#e5ebe7] pb-5 md:flex-row md:items-center md:justify-between">
         <div><h2 className="text-lg font-bold">Toutes les demandes</h2><p className="mt-1 text-xs text-[#718079]">{filtered.length} résultat{filtered.length !== 1 ? 's' : ''}</p></div>
         <div className="flex flex-col gap-2 sm:flex-row">
-          <label className="relative"><span className="sr-only">Rechercher</span><Icon name="search" className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#829088]" /><input className={`${inputClass} pl-10 sm:w-64`} value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Nom, téléphone, ville…" /></label>
+          <label className="relative"><span className="sr-only">Rechercher une demande</span><Icon name="search" className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#829088]" /><input type="search" className={`${inputClass} pl-10 sm:w-72`} value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Nom, téléphone, ville, besoin…" /></label>
           <button type="button" className={secondaryButton} onClick={refresh}><Icon name="refresh" className="h-4 w-4" />Rafraîchir</button>
         </div>
       </div>
+      {(filter !== 'all' || search) && <div className="mt-4 flex flex-wrap items-center gap-2 text-xs text-[#68766f]"><span>Filtres actifs :</span>{filter !== 'all' && <button type="button" className="rounded-full bg-[#edf3f0] px-3 py-1.5 font-bold text-[#214e3e]" onClick={() => setFilter('all')}>{appointmentStatuses[filter].label} ×</button>}{search && <button type="button" className="rounded-full bg-[#f5f0e5] px-3 py-1.5 font-bold text-[#856938]" onClick={() => setSearch('')}>« {search} » ×</button>}</div>}
       {error && <p className="mt-5 rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-700">{error}</p>}
-      <div className="mt-5">
-        {loading ? <p className="py-16 text-center text-sm text-[#718079]">Chargement des demandes…</p> : filtered.length === 0 ? <EmptyState icon="appointments" title="Aucune demande trouvée" description="Essayez un autre filtre ou attendez la prochaine demande du site." /> : <div className="grid gap-4 2xl:grid-cols-2">{filtered.map((item) => <AppointmentCard key={item.id} item={item} onStatus={changeStatus} onDelete={remove} />)}</div>}
+      <div className="mt-5" aria-live="polite">
+        {loading ? <div className="flex items-center justify-center gap-3 py-16 text-sm text-[#718079]"><span className="h-5 w-5 animate-spin rounded-full border-2 border-[#cbd8d1] border-t-[#214e3e]" aria-hidden="true" />Chargement des demandes…</div> : filtered.length === 0 ? <EmptyState icon="appointments" title="Aucune demande trouvée" description={items.length ? 'Modifiez ou supprimez les filtres pour retrouver une demande.' : 'Les prochaines demandes envoyées depuis le site apparaîtront ici.'} /> : <div className="grid gap-4 2xl:grid-cols-2">{filtered.map((item) => <AppointmentCard key={item.id} item={item} onStatus={changeStatus} onDelete={remove} />)}</div>}
       </div>
     </section>
   </div>
@@ -290,8 +300,8 @@ function AppointmentsAdmin({ onChanged }) {
 
 function AppointmentCard({ item, onStatus, onDelete }) {
   return <article className="rounded-2xl border border-[#e0e7e3] bg-[#fdfefc] p-5 transition hover:border-[#cbd7d1]">
-    <div className="flex items-start gap-3"><span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#eaf1ed] text-sm font-black text-[#214e3e]">{item.name?.charAt(0)?.toUpperCase()}</span><div className="min-w-0 flex-1"><div className="flex flex-wrap items-center gap-2"><h3 className="font-bold">{item.name}</h3><StatusBadge status={item.status} /></div><p className="mt-1 text-xs text-[#718079]">{item.specialty === 'implantologie' ? 'Implantologie' : 'Orthodontie invisible'} · {formatDate(item.created_at)}</p></div><button type="button" aria-label="Supprimer" className="rounded-lg p-2 text-[#9aa6a0] transition hover:bg-red-50 hover:text-red-600" onClick={() => onDelete(item.id)}><Icon name="trash" className="h-4 w-4" /></button></div>
-    <div className="mt-5 grid gap-2 sm:grid-cols-2"><a href={`tel:${item.phone}`} className="flex items-center gap-2 rounded-xl bg-[#f2f5f3] p-3 text-sm font-bold text-[#214e3e]"><Icon name="phone" className="h-4 w-4" />{item.phone}</a>{item.email ? <a href={`mailto:${item.email}`} className="flex min-w-0 items-center gap-2 rounded-xl bg-[#f2f5f3] p-3 text-sm font-bold text-[#214e3e]"><Icon name="mail" className="h-4 w-4 shrink-0" /><span className="truncate">{item.email}</span></a> : <div className="flex items-center gap-2 rounded-xl bg-[#f2f5f3] p-3 text-sm text-[#829088]"><Icon name="mail" className="h-4 w-4" />E-mail non renseigné</div>}</div>
+    <div className="flex items-start gap-3"><span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#eaf1ed] text-sm font-black text-[#214e3e]">{item.name?.charAt(0)?.toUpperCase()}</span><div className="min-w-0 flex-1"><div className="flex flex-wrap items-center gap-2"><h3 className="font-bold">{item.name}</h3><StatusBadge status={item.status} /></div><p className="mt-1 text-xs text-[#718079]">{getAppointmentSpecialtyLabel(item.specialty)} · {formatDate(item.created_at)}</p></div><button type="button" aria-label="Supprimer" className="rounded-lg p-2 text-[#9aa6a0] transition hover:bg-red-50 hover:text-red-600" onClick={() => onDelete(item.id)}><Icon name="trash" className="h-4 w-4" /></button></div>
+    <div className="mt-5 grid gap-2 sm:grid-cols-2"><a href={`tel:${item.phone}`} className="flex min-h-12 items-center gap-3 rounded-xl bg-[#214e3e] p-3 text-sm font-bold text-white transition hover:bg-[#173d30]" aria-label={`Appeler ${item.name} au ${item.phone}`}><span className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/10"><Icon name="phone" className="h-4 w-4" /></span><span><span className="block text-[.65rem] uppercase tracking-wider text-white/60">Appeler</span>{item.phone}</span></a>{item.email ? <a href={`mailto:${item.email}`} className="flex min-h-12 min-w-0 items-center gap-3 rounded-xl border border-[#dfe7e2] bg-white p-3 text-sm font-bold text-[#214e3e] transition hover:border-[#b7c8c0]" aria-label={`Envoyer un e-mail à ${item.name}`}><span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#edf3f0]"><Icon name="mail" className="h-4 w-4" /></span><span className="min-w-0"><span className="block text-[.65rem] uppercase tracking-wider text-[#829088]">E-mail</span><span className="block truncate">{item.email}</span></span></a> : <div className="flex min-h-12 items-center gap-3 rounded-xl border border-dashed border-[#dfe7e2] bg-[#fafbf9] p-3 text-sm text-[#829088]"><Icon name="mail" className="h-4 w-4" />E-mail non renseigné</div>}</div>
     <dl className="mt-4 grid gap-3 text-xs sm:grid-cols-2"><div><dt className="font-bold uppercase tracking-wider text-[#89958f]">Ville</dt><dd className="mt-1 font-semibold">{item.city || 'Non renseignée'}</dd></div><div><dt className="font-bold uppercase tracking-wider text-[#89958f]">Rappel souhaité</dt><dd className="mt-1 font-semibold">{item.callback_window} · {item.contact_preference}</dd></div></dl>
     {item.note && <div className="mt-4 rounded-xl border border-[#e3e9e5] bg-white p-3 text-sm leading-6 text-[#53625b] whitespace-pre-wrap">{item.note}</div>}
     <div className="mt-5 flex items-center gap-3 border-t border-[#e5ebe7] pt-4"><label className="text-xs font-bold text-[#718079]" htmlFor={`status-${item.id}`}>Faire évoluer le suivi</label><select id={`status-${item.id}`} className="ml-auto rounded-xl border border-[#d8e1dc] bg-white px-3 py-2 text-sm font-bold outline-none focus:border-[#856938]" value={item.status} onChange={(event) => onStatus(item.id, event.target.value)}>{Object.entries(appointmentStatuses).map(([value, option]) => <option key={value} value={value}>{option.label}</option>)}</select></div>

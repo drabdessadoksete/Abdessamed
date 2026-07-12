@@ -6,16 +6,10 @@ import { submitPreAppointment } from '../services/api'
 
 const specialties = [
   {
-    value: 'implantologie',
-    eyebrow: 'Implants dentaires',
-    title: 'Implantologie',
-    description: 'Pour un bilan lié à une dent absente, un implant ou une réhabilitation du sourire.',
-  },
-  {
-    value: 'orthodontie',
-    eyebrow: 'Aligneurs transparents',
-    title: 'Orthodontie invisible',
-    description: 'Pour étudier un alignement dentaire discret chez l’adulte ou l’adolescent.',
+    value: 'pre-rendez-vous-telephonique',
+    eyebrow: 'Pré-rendez-vous téléphonique',
+    title: 'Pré-rendez-vous téléphonique',
+    description: 'Pour déterminer votre besoin en santé bucco-dentaire et vous orienter vers un rendez-vous adapté au cabinet.',
   },
 ]
 
@@ -33,7 +27,7 @@ const initialForm = {
 export default function PreAppointment() {
   const [searchParams] = useSearchParams()
   const requestedSpecialty = searchParams.get('specialite')
-  const initialSpecialty = specialties.some((item) => item.value === requestedSpecialty) ? requestedSpecialty : 'implantologie'
+  const initialSpecialty = specialties.some((item) => item.value === requestedSpecialty) ? requestedSpecialty : 'pre-rendez-vous-telephonique'
   const [specialty, setSpecialty] = useState(initialSpecialty)
   const [form, setForm] = useState(initialForm)
   const [status, setStatus] = useState('idle')
@@ -74,7 +68,7 @@ export default function PreAppointment() {
             <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-rolexGreen text-2xl text-white shadow-soft" aria-hidden="true">✓</div>
             <span className="section-kicker mt-7">Demande reçue</span>
             <h1 className="mt-4 text-3xl font-bold sm:text-4xl">Merci, {form.name.split(' ')[0]}.</h1>
-            <p className="mx-auto mt-5 max-w-xl text-muted">Votre demande de pré-rendez-vous en {selectedSpecialty.title.toLowerCase()} a bien été transmise. Le cabinet vous recontactera pour échanger et proposer la suite adaptée.</p>
+            <p className="mx-auto mt-5 max-w-xl text-muted">Votre demande de {selectedSpecialty.title.toLowerCase()} a bien été transmise. Le cabinet vous recontactera pour échanger et vous orienter vers le rendez-vous le plus adapté.</p>
             <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
               <Link to="/" className="btn-primary">Retour à l’accueil</Link>
               <a href="tel:+33422910594" className="btn-outline">Appeler le cabinet</a>
@@ -88,8 +82,8 @@ export default function PreAppointment() {
   return (
     <section className="section min-h-screen">
       <Helmet>
-        <title>Pré-rendez-vous Implantologie ou Orthodontie à Sète</title>
-        <meta name="description" content="Demandez à être rappelé par le cabinet du Dr Abdessadok pour un premier bilan en implantologie ou en orthodontie invisible à Sète." />
+        <title>Pré-rendez-vous téléphonique à Sète | Dr Abdessadok</title>
+        <meta name="description" content="Demandez un pré-rendez-vous téléphonique avec le cabinet du Dr Abdessadok à Sète pour déterminer votre besoin en santé bucco-dentaire et être orienté vers un rendez-vous adapté." />
       </Helmet>
 
       <div className="container-max">
@@ -99,7 +93,7 @@ export default function PreAppointment() {
             <h1 className="text-4xl font-bold sm:text-5xl">Commençons par vous écouter.</h1>
             <p className="mt-5 text-lg text-muted">Cette demande ne confirme pas immédiatement un rendez-vous. Elle permet au cabinet de vous rappeler et d’organiser le premier bilan adapté.</p>
             <ol className="mt-8 space-y-5">
-              {['Choisissez votre spécialité', 'Laissez vos coordonnées', 'Le cabinet vous recontacte'].map((label, index) => (
+              {['Déterminez votre besoin', 'Laissez vos coordonnées', 'Le cabinet vous recontacte'].map((label, index) => (
                 <li key={label} className="flex items-center gap-4"><span className="number-chip shrink-0">0{index + 1}</span><span className="font-bold">{label}</span></li>
               ))}
             </ol>
@@ -112,16 +106,17 @@ export default function PreAppointment() {
           <form onSubmit={submit} className="card overflow-hidden" noValidate>
             <div className="border-b border-rolexGreen/10 bg-white px-5 py-6 sm:px-8">
               <p className="text-xs font-black uppercase tracking-[0.18em] text-rolexGold">1 · Votre besoin</p>
-              <fieldset className="mt-5 grid gap-3 sm:grid-cols-2">
-                <legend className="sr-only">Choisissez une spécialité</legend>
+              <fieldset className="mt-5">
+                <legend className="sr-only">Déterminez votre besoin</legend>
                 {specialties.map((item) => {
                   const selected = specialty === item.value
                   return (
-                    <label key={item.value} className={`cursor-pointer rounded-2xl border p-5 transition ${selected ? 'border-rolexGreen bg-rolexGreen/5 shadow-[0_0_0_3px_rgba(33,78,62,.08)]' : 'border-rolexGreen/10 bg-surface hover:border-rolexGold/35'}`}>
+                    <label key={item.value} className={`block w-full cursor-pointer rounded-2xl border p-5 transition ${selected ? 'border-rolexGreen bg-rolexGreen/5 shadow-[0_0_0_3px_rgba(33,78,62,.08)]' : 'border-rolexGreen/10 bg-surface hover:border-rolexGold/35'}`}>
                       <input type="radio" name="specialty" value={item.value} checked={selected} onChange={() => setSpecialty(item.value)} className="sr-only" />
                       <span className="text-[0.68rem] font-black uppercase tracking-[0.16em] text-rolexGold">{item.eyebrow}</span>
                       <span className="mt-2 block text-xl font-bold">{item.title}</span>
                       <span className="mt-2 block text-sm leading-6 text-muted">{item.description}</span>
+                      <span className="mt-3 block text-sm font-medium leading-6 text-muted">Ce pré-rendez-vous téléphonique gratuit de 5 minutes permet de mieux comprendre votre besoin et de vous orienter vers un rendez-vous adapté au cabinet.</span>
                       <span className={`mt-4 inline-flex h-6 w-6 items-center justify-center rounded-full border ${selected ? 'border-rolexGreen bg-rolexGreen text-white' : 'border-rolexGreen/20'}`} aria-hidden="true">{selected ? '✓' : ''}</span>
                     </label>
                   )
