@@ -1,663 +1,263 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
-import { blogPages, servicePages } from '../src/data/seoContent.js'
 import { buildArticleBodyBlocks } from '../src/utils/seoArticleContent.js'
+import { seoRoutes, routeUrl } from '../src/config/seoRoutes.js'
+import { getAlternatesForPageType, getLanguageNavigation } from '../src/config/multilingualRoutes.js'
+import { media } from '../src/config/media.js'
+import {
+  absoluteUrl,
+  dentistPersonSchema,
+  dentistSchema,
+  openingHoursSchema,
+  organizationSchema,
+  postalAddressSchema,
+  site,
+} from '../src/config/site.js'
 
 const distDir = path.resolve('dist')
-const siteUrl = 'https://cabinetdentairesete.fr'
 
-function escapeHtml(value = '') {
-  return value
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;')
-    .replaceAll("'", '&#39;')
+const escapeHtml = (value = '') => String(value)
+  .replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;')
+  .replaceAll('"', '&quot;').replaceAll("'", '&#39;')
+
+function routeAsset(route) {
+  if (route.path.includes('implant')) return media.implantConsultation
+  if (route.path.includes('orthodont') || route.path.includes('invisalign') || route.path.includes('align')) return media.intraoralScanner
+  if (route.type === 'contact' || route.type === 'gallery' || route.type === 'about') return media.logo
+  return media.homeConsultation
 }
 
-function normalizeAssetPaths(html) {
-  return html
-    .replaceAll('href="./assets/', 'href="/assets/')
-    .replaceAll('src="./assets/', 'src="/assets/')
-    .replaceAll('href="./favicon', 'href="/favicon')
-    .replaceAll('href="./android-chrome', 'href="/android-chrome')
-    .replaceAll('href="./apple-touch-icon', 'href="/apple-touch-icon')
-    .replaceAll('href="./site.webmanifest', 'href="/site.webmanifest')
-    .replaceAll('src="./seo-images/', 'src="/seo-images/')
-    .replaceAll('href="./seo-images/', 'href="/seo-images/')
+function routeBreadcrumbs(route) {
+  if (route.path === '/') return []
+  if (route.language && route.language !== 'fr') {
+    const nav = getLanguageNavigation(route.language)
+    return [
+      { name: nav.labels.home, url: absoluteUrl(nav.paths.home) },
+      { name: route.h1, url: routeUrl(route) },
+    ]
+  }
+  const parent = route.type === 'article' ? { name: 'Guides', url: absoluteUrl('/blog/') } : { name: 'Soins', url: absoluteUrl('/services/') }
+  if (['about', 'gallery', 'contact', 'preAppointment'].includes(route.type)) return [{ name: 'Accueil', url: absoluteUrl('/') }, { name: route.h1, url: routeUrl(route) }]
+  return [{ name: 'Accueil', url: absoluteUrl('/') }, parent, { name: route.h1, url: routeUrl(route) }]
 }
 
-function getPrimaryImage(page) {
-  if (page.heroImage?.src) {
-    return {
-      src: page.heroImage.src,
-      alt: page.heroImage.alt || 'Illustration de la page du Cabinet Dentaire Dr. Abdessadok à Sète',
-    }
-  }
-
-  if (page.image?.src) {
-    return {
-      src: page.image.src,
-      alt: page.image.alt || 'Illustration de la page du Cabinet Dentaire Dr. Abdessadok à Sète',
-    }
-  }
-
-  if (page.url.includes('implant') || page.url.includes('aligner-dents-avant-implant')) {
-    return {
-      src: '/seo-images/implantologie-biotech-sete.png',
-      alt: "Visuel d'implantologie dentaire BioTech a Sete pour illustrer la page du Dr Abdessadok",
-    }
-  }
-
-  if (page.url.includes('prix')) {
-    return {
-      src: '/seo-images/logo-hero-section.png',
-      alt: 'Identité visuelle du Cabinet Dentaire Dr. Abdessadok à Sète',
-    }
-  }
-
-  if (page.url.includes('bassin-de-thau') || page.url.includes('balaruc') || page.url === '/blog') {
-    return {
-      src: '/seo-images/logo-hero-section.png',
-      alt: 'Identité visuelle du Cabinet Dentaire Dr. Abdessadok à Sète',
-    }
-  }
-
-  if (page.url.includes('blog')) {
-    return {
-      src: '/seo-images/invisalign-sete.png',
-      alt: "Aligneurs transparents Invisalign pour illustrer un article d'orthodontie invisible a Sete",
-    }
-  }
-
-  if (page.url.includes('invisalign') || page.url.includes('orthodontie')) {
-    return {
-      src: '/seo-images/invisalign-sete.png',
-      alt: "Visuel d'orthodontie invisible Invisalign pour la page du cabinet dentaire a Sete",
-    }
-  }
-
+function breadcrumbSchema(route) {
+  const items = routeBreadcrumbs(route)
+  if (!items.length) return null
   return {
-    src: '/seo-images/logo-cabinet-dentaire-sete.png',
-    alt: 'Logo du cabinet dentaire Dr Abdessadok a Sete',
+    '@type': 'BreadcrumbList',
+    '@id': `${routeUrl(route)}#breadcrumb`,
+    itemListElement: items.map((item, index) => ({ '@type': 'ListItem', position: index + 1, name: item.name, item: item.url })),
   }
 }
 
-function renderHeader() {
-  return `
-    <header class="site-navbar site-navbar--solid">
-      <div class="container-max flex h-16 items-center justify-between lg:h-[4.5rem]">
-        <a href="/" class="nav-wordmark flex items-center gap-3 min-w-0">
-          <span class="navbar-logo-orbit"><img src="/android-chrome-192x192.png" alt="" /></span>
-          <span class="font-black text-sm sm:text-base truncate">Dr. Abdessadok</span>
-        </a>
-        <nav class="hidden lg:flex items-center gap-4 text-sm font-bold">
-          <a href="/" class="hover:text-rolexGold transition">Accueil</a>
-          <a href="/about" class="hover:text-rolexGold transition">A propos</a>
-          <a href="/services" class="hover:text-rolexGold transition">Services</a>
-          <a href="/blog" class="hover:text-rolexGold transition">Blog</a>
-          <a href="/gallery" class="hover:text-rolexGold transition">Galerie</a>
-          <a href="/contact" class="hover:text-rolexGold transition">Contact</a>
-          <a href="/pre-rendez-vous" class="btn-primary">Pré-rendez-vous</a>
-        </nav>
-      </div>
-    </header>
-  `
-}
+function schemasFor(route) {
+  const url = routeUrl(route)
+  const language = route.language || 'fr'
+  const webPage = { '@type': 'WebPage', '@id': `${url}#webpage`, url, name: route.title, description: route.description, inLanguage: language }
+  const breadcrumb = breadcrumbSchema(route)
 
-function renderRelatedLinks(urls = []) {
-  const lookup = new Map([...servicePages, ...blogPages].map((page) => [page.url, page]))
-  const items = urls
-    .map((url) => lookup.get(url))
-    .filter(Boolean)
-    .map(
-      (page) => `
-        <a href="${page.url}" class="block rounded-2xl border border-rolexGold/20 bg-rolexGreen/10 p-4 hover:bg-rolexGreen/20 transition">
-          <div class="font-semibold">${escapeHtml(page.menuLabel || page.h1)}</div>
-          <div class="text-sm text-slate-300 mt-1">${escapeHtml(page.menuDescription || page.metaDescription)}</div>
-        </a>
-      `,
-    )
-
-  if (!items.length) return ''
-
-  return `
-    <aside class="card p-6 mt-8">
-      <h2 class="text-xl font-bold mb-4">Pages a consulter</h2>
-      <div class="space-y-3">
-        ${items.join('')}
-      </div>
-    </aside>
-  `
-}
-
-function renderBreadcrumbs(page, type) {
-  const items = [
-    { label: 'Accueil', href: '/' },
-    { label: type === 'blog' ? 'Blog' : 'Services', href: type === 'blog' ? '/blog' : '/services' },
-    { label: page.h1, href: page.url },
+  if (route.type === 'home') return [
+    dentistSchema,
+    dentistPersonSchema,
+    organizationSchema,
+    { '@type': 'WebSite', '@id': `${url}#website`, url, name: site.practiceName, inLanguage: 'fr' },
+    webPage,
   ]
 
-  return `
-    <nav aria-label="Fil d ariane" class="mb-5 text-sm text-slate-300">
-      <ol class="flex flex-wrap items-center gap-2">
-        ${items
-          .map(
-            (item, index) => `
-              <li class="flex items-center gap-2">
-                ${
-                  index < items.length - 1
-                    ? `<a href="${item.href}" class="hover:text-rolexGold transition">${escapeHtml(item.label)}</a>`
-                    : `<span class="text-slate-100">${escapeHtml(item.label)}</span>`
-                }
-                ${index < items.length - 1 ? '<span class="text-slate-500">/</span>' : ''}
-              </li>
-            `,
-          )
-          .join('')}
-      </ol>
-    </nav>
-  `
+  if (route.type === 'localizedHome') return [webPage, breadcrumb].filter(Boolean)
+
+  if (route.type === 'treatment') return [
+    { '@type': 'Service', '@id': `${url}#service`, name: route.h1, description: route.description, url, provider: { '@id': dentistSchema['@id'] }, areaServed: 'Sète, France' },
+    webPage,
+    breadcrumb,
+  ].filter(Boolean)
+
+  if (route.type === 'article') return [
+    {
+      '@type': 'Article',
+      '@id': `${url}#article`,
+      headline: route.h1,
+      description: route.description,
+      mainEntityOfPage: { '@id': webPage['@id'] },
+      author: { '@id': organizationSchema['@id'] },
+      publisher: { '@id': organizationSchema['@id'] },
+      image: absoluteUrl(routeAsset(route).fallback),
+      datePublished: route.page.datePublished,
+      dateModified: route.page.dateModified,
+    },
+    dentistPersonSchema,
+    webPage,
+    breadcrumb,
+  ].filter(Boolean)
+
+  if (route.type === 'contact') return [
+    dentistSchema,
+    { ...webPage, '@type': 'ContactPage', mainEntity: { '@id': dentistSchema['@id'] } },
+    postalAddressSchema,
+    ...openingHoursSchema,
+    breadcrumb,
+  ].filter(Boolean)
+
+  if (route.type === 'about') return [dentistPersonSchema, webPage, breadcrumb].filter(Boolean)
+  if (route.type === 'blog' || route.type === 'gallery') return [{ ...webPage, '@type': 'CollectionPage' }, breadcrumb].filter(Boolean)
+  return [webPage, breadcrumb].filter(Boolean)
 }
 
-function renderArticleBody(page) {
-  if (!page.articleBody) return ''
-
-  const blocks = buildArticleBodyBlocks(page.articleBody)
-
-  return `
-    <section class="card p-6 md:p-8">
-      <div class="space-y-5">
-        ${blocks
-          .map((block) => {
-            if (block.type === 'heading2') {
-              return `<h2 class="text-2xl md:text-3xl font-bold pt-2">${escapeHtml(block.text)}</h2>`
-            }
-
-            if (block.type === 'heading3') {
-              return `<h3 class="text-xl md:text-2xl font-semibold pt-1">${escapeHtml(block.text)}</h3>`
-            }
-
-            if (block.type === 'list') {
-              return `
-                <ul class="space-y-3 text-slate-200">
-                  ${block.items
-                    .map(
-                      (item) => `
-                        <li class="flex items-start gap-3">
-                          <span class="mt-2 h-2.5 w-2.5 rounded-full bg-rolexGold shrink-0"></span>
-                          <span>${escapeHtml(item)}</span>
-                        </li>
-                      `,
-                    )
-                    .join('')}
-                </ul>
-              `
-            }
-
-            if (block.type === 'quote') {
-              return `<blockquote class="rounded-2xl border border-rolexGold/20 bg-rolexGreen/10 p-5 text-slate-100 italic leading-8">${escapeHtml(block.text)}</blockquote>`
-            }
-
-            return `<p class="text-slate-300 leading-8">${escapeHtml(block.text)}</p>`
-          })
-          .join('')}
-      </div>
-    </section>
-  `
+function navLinks(route) {
+  if (route.language && route.language !== 'fr') {
+    const nav = getLanguageNavigation(route.language)
+    return [
+      [nav.labels.home, nav.paths.home],
+      [nav.labels.ortho, nav.paths.ortho],
+      [nav.labels.implant, nav.paths.implant],
+      [nav.labels.contact, nav.paths.contact],
+    ]
+  }
+  return [['Accueil', '/'], ['À propos', '/about/'], ['Soins', '/services/'], ['Guides', '/blog/'], ['Galerie', '/gallery/'], ['Contact', '/contact/']]
 }
 
-function renderSectionCards(page) {
-  return page.sections
-    .map(
-      (section) => `
-        <section class="card p-6 md:p-8">
-          <h2 class="text-2xl md:text-3xl font-bold mb-6">${escapeHtml(section.heading)}</h2>
-          <div class="space-y-6">
-            ${section.blocks
-              .map(
-                (block) => `
-                  <div>
-                    ${block.subheading ? `<h3 class="text-xl font-semibold mb-3">${escapeHtml(block.subheading)}</h3>` : ''}
-                    <div class="space-y-4 text-slate-300 leading-8">
-                      ${(block.paragraphs || []).map((paragraph) => `<p>${escapeHtml(paragraph)}</p>`).join('')}
-                    </div>
-                    ${
-                      block.bullets?.length
-                        ? `
-                          <ul class="mt-4 space-y-3 text-slate-200">
-                            ${block.bullets
-                              .map(
-                                (bullet) => `
-                                  <li class="flex items-start gap-3">
-                                    <span class="mt-2 h-2.5 w-2.5 rounded-full bg-rolexGold shrink-0"></span>
-                                    <span>${escapeHtml(bullet)}</span>
-                                  </li>
-                                `,
-                              )
-                              .join('')}
-                          </ul>
-                        `
-                        : ''
-                    }
-                  </div>
-                `,
-              )
-              .join('')}
-          </div>
-        </section>
-      `,
-    )
-    .join('')
+function header(route) {
+  return `<header class="site-navbar site-navbar--solid authority-navbar"><div class="container-max authority-navbar__inner"><a href="${route.language && route.language !== 'fr' ? `/${route.language}/` : '/'}" class="authority-navbar__brand"><img src="${media.logo.fallback}" alt=""><span><strong>Dr. Abdessadok</strong><small>Chirurgien-dentiste · Sète</small></span></a><nav class="authority-navbar__desktop" aria-label="Navigation">${navLinks(route).map(([label, href]) => `<a href="${href}">${escapeHtml(label)}</a>`).join('')}</nav></div></header>`
 }
 
-function renderRelatedReading(page) {
-  const lookup = new Map([...servicePages, ...blogPages].map((item) => [item.url, item]))
-  const related = (page.relatedReadingLinks || []).map((url) => lookup.get(url)).filter(Boolean)
-
-  if (!related.length) return ''
-
-  return `
-    <section class="card p-6 md:p-8">
-      <h2 class="text-2xl md:text-3xl font-bold mb-6">${escapeHtml(page.relatedReadingTitle || 'À lire aussi')}</h2>
-      <div class="grid gap-4 md:grid-cols-2">
-        ${related
-          .map(
-            (item) => `
-              <a href="${item.url}" class="rounded-2xl border border-rolexGold/20 bg-rolexGreen/10 p-5 hover:bg-rolexGreen/20 transition">
-                <div class="text-sm uppercase tracking-[0.16em] text-rolexGold">${escapeHtml(item.badge || 'Lecture conseillée')}</div>
-                <div class="font-semibold text-lg mt-2">${escapeHtml(item.menuLabel || item.h1)}</div>
-                <div class="text-sm text-slate-300 mt-2">${escapeHtml(item.menuDescription || item.metaDescription)}</div>
-              </a>
-            `,
-          )
-          .join('')}
-      </div>
-    </section>
-  `
+function footer() {
+  return `<footer class="authority-footer"><div class="container-max authority-footer__grid"><div class="authority-footer__brand"><img src="${media.logo.fallback}" alt="${escapeHtml(media.logo.alt)}"><p>Informations générales : aucun contenu ne remplace un examen clinique.</p></div><div><h2>Contact</h2><address>${escapeHtml(site.address.streetAddress)}<br>${site.address.postalCode} ${site.address.addressLocality}<a href="tel:${site.telephone}">${site.telephoneDisplay}</a></address></div></div></footer>`
 }
 
-function renderFaq(page) {
-  return `
-    <section class="card p-6 md:p-8 mt-8">
-      <h2 class="text-2xl md:text-3xl font-bold mb-6">Questions frequentes</h2>
-      <div class="space-y-4">
-        ${page.faq
-          .map(
-            (item) => `
-              <details class="rounded-2xl border border-rolexGold/20 bg-rolexGreen/10 p-5">
-                <summary class="cursor-pointer font-semibold">${escapeHtml(item.question)}</summary>
-                <p class="mt-3 text-slate-300 leading-7">${escapeHtml(item.answer)}</p>
-              </details>
-            `,
-          )
-          .join('')}
-      </div>
-    </section>
-  `
+function breadcrumbsHtml(route) {
+  const items = routeBreadcrumbs(route)
+  if (!items.length) return ''
+  return `<nav aria-label="Fil d’Ariane" class="content-breadcrumb">${items.map((item, index) => `${index ? '<span>/</span>' : ''}${index < items.length - 1 ? `<a href="${new URL(item.url).pathname}">${escapeHtml(item.name)}</a>` : `<span aria-current="page">${escapeHtml(item.name)}</span>`}`).join('')}</nav>`
 }
 
-function renderCtaSections(page) {
-  if (!page.ctaSections?.length) return ''
-
-  return `
-    <div class="space-y-6">
-      ${page.ctaSections
-        .map(
-          (section) => `
-            <section class="rounded-[2rem] border p-6 md:p-8 ${
-              section.tone === 'gold'
-                ? 'border-rolexGold/30 bg-rolexGold/10'
-                : 'border-rolexGreen/40 bg-rolexGreen/15'
-            }">
-              <h2 class="text-2xl md:text-3xl font-bold mb-4">${escapeHtml(section.heading)}</h2>
-              <p class="text-slate-200 leading-8 mb-6">${escapeHtml(section.text)}</p>
-              <div class="flex flex-wrap gap-3">
-                ${section.buttons
-                  .map(
-                    (button, index) => `
-                      <a href="${button.href}" class="${index === 0 ? 'btn-primary' : 'btn-outline'}">${escapeHtml(button.label)}</a>
-                    `,
-                  )
-                  .join('')}
-              </div>
-            </section>
-          `,
-        )
-        .join('')}
-    </div>
-  `
+function responsiveImage(asset, eager = false) {
+  return `<figure><picture><source type="image/avif" srcset="${asset.sources.avif}" sizes="${asset.sizes || '100vw'}"><source type="image/webp" srcset="${asset.sources.webp}" sizes="${asset.sizes || '100vw'}"><img src="${asset.fallback}" alt="${escapeHtml(asset.alt)}" width="${asset.width}" height="${asset.height}" loading="${eager ? 'eager' : 'lazy'}" decoding="async"></picture>${asset.caption ? `<figcaption class="media-caption">${escapeHtml(asset.caption)}</figcaption>` : ''}</figure>`
 }
 
-function renderPage(page) {
-  const image = getPrimaryImage(page)
-  const type = page.url.startsWith('/blog/') ? 'blog' : 'service'
-
-  return `
-    ${renderHeader()}
-    <main class="overflow-x-hidden pt-16 lg:pt-[4.5rem]">
-      <section class="section">
-        <div class="container-max">
-          ${renderBreadcrumbs(page, type)}
-          <div class="rounded-[2rem] border border-rolexGold/30 bg-gradient-to-br from-rolexGreen/35 via-surface to-background p-8 md:p-12 shadow-soft">
-            <div class="badge mb-4">${escapeHtml(page.badge)}</div>
-            <h1 class="text-4xl md:text-5xl font-extrabold mb-6 max-w-5xl">${escapeHtml(page.h1)}</h1>
-            <p class="text-lg text-slate-200 max-w-4xl leading-8">${escapeHtml(page.intro)}</p>
-            ${
-              page.heroActions?.length
-                ? `
-                  <div class="mt-6 flex flex-wrap gap-3">
-                    ${page.heroActions
-                      .map((action) => {
-                        const className =
-                          action.variant === 'secondary'
-                            ? 'btn-outline'
-                            : action.variant === 'ghost'
-                              ? 'inline-flex items-center justify-center rounded-2xl border border-rolexGold/20 bg-rolexGreen/10 px-5 py-3 text-sm font-semibold text-slate-100 hover:bg-rolexGreen/20 transition'
-                              : 'btn-primary'
-
-                        return `<a href="${action.href}" class="${className}">${escapeHtml(action.label)}</a>`
-                      })
-                      .join('')}
-                  </div>
-                `
-                : ''
-            }
-            <figure class="mt-8 overflow-hidden rounded-[2rem] border border-rolexGold/20 bg-rolexGreen/10">
-              <img src="${image.src}" alt="${escapeHtml(image.alt)}" class="w-full h-[260px] md:h-[380px] object-cover" />
-            </figure>
-            ${
-              page.highlights?.length
-                ? `
-                  <div class="grid md:grid-cols-3 gap-4 mt-8">
-                    ${page.highlights
-                      .map(
-                        (item) => `
-                          <div class="card p-5 bg-rolexGreen/20 border-rolexGold/20">
-                            <div class="text-sm leading-7">${escapeHtml(item)}</div>
-                          </div>
-                        `,
-                      )
-                      .join('')}
-                  </div>
-                `
-                : ''
-            }
-          </div>
-
-          <div class="grid lg:grid-cols-[minmax(0,1fr)_320px] gap-8 mt-10 items-start">
-            <div class="space-y-8">
-              ${page.articleBody ? renderArticleBody(page) : renderSectionCards(page)}
-              ${renderCtaSections(page)}
-              ${renderRelatedReading(page)}
-              ${renderFaq(page)}
-
-              <section class="rounded-[2rem] border border-rolexGold/30 bg-rolexGold/10 p-6 md:p-8">
-                <h2 class="text-2xl md:text-3xl font-bold mb-4">${escapeHtml(page.ctaTitle)}</h2>
-                <p class="text-slate-200 leading-8 mb-6">${escapeHtml(page.ctaText)}</p>
-                <a href="${page.ctaHref || '/contact'}" class="btn-primary">${escapeHtml(page.ctaLabel)}</a>
-              </section>
-            </div>
-
-            <div class="lg:sticky lg:top-24">
-              ${renderRelatedLinks(page.internalLinks)}
-            </div>
-          </div>
-        </div>
-      </section>
-    </main>
-  `
+function shell(route, content) {
+  return `${header(route)}<main id="main-content" class="public-main--internal">${content}</main>${footer()}`
 }
 
-function renderBlogHub() {
-  const featuredOrthodontiePages = blogPages.filter((page) => page.cluster === 'orthodontie').slice(0, 6)
-  const groupedPages = [
-    ['Orthodontie', blogPages.filter((page) => page.category === 'Orthodontie')],
-    ['Orthodontie invisible', blogPages.filter((page) => page.category === 'Orthodontie invisible')],
-    ['Bassin de Thau / Suivi local', blogPages.filter((page) => page.category === 'Bassin de Thau / Suivi local')],
-    ['Autres articles', blogPages.filter((page) => !page.category)],
-  ].filter(([, pages]) => pages.length)
+function corePage(route) {
+  const details = {
+    home: {
+      eyebrow: 'Cabinet dentaire à Sète',
+      intro: 'Implantologie, orthodontie invisible et soins dentaires avec un bilan précis, des explications claires et un suivi au cabinet.',
+      sections: [
+        ['Retours publics Google', 'Des extraits courts de retours positifs visibles sur la fiche du cabinet sont présentés avec leur source.'],
+        ['Implantologie', 'Étudier une dent manquante, les alternatives, la chirurgie, la cicatrisation et la maintenance.'],
+        ['Orthodontie invisible', 'Examiner l’indication, le port des aligneurs, les limites et la contention.'],
+        ['Votre premier bilan', 'Écouter, examiner, expliquer les options et organiser le suivi.'],
+      ],
+    },
+    about: { eyebrow: 'Le praticien et le cabinet', intro: 'Parcours universitaire, qualifications déclarées et approche clinique du Dr Abdessamed Abdessadok.', sections: site.qualifications.map((item) => ['Qualification', item]) },
+    services: { eyebrow: 'Les soins du cabinet', intro: 'Chaque parcours commence par un bilan clinique et une discussion des alternatives.', sections: [['Implantologie', 'Évaluation d’une dent manquante et des solutions de remplacement.'], ['Orthodontie invisible', 'Étude de l’alignement, de l’occlusion et des aligneurs.'], ['Soins dentaires', 'Prévention, soins conservateurs, prothèses et urgences.']] },
+    gallery: { eyebrow: 'Parcours en images', intro: 'Une galerie éditoriale autour des consultations, de l’implantologie et des aligneurs. Chaque illustration est signalée et ne prétend pas représenter le cabinet réel.', sections: [['Consultation', 'Écouter et expliquer avant de proposer une option.'], ['Implantologie', 'Visualiser les solutions de remplacement et les étapes du parcours.'], ['Orthodontie invisible', 'Comprendre le scanner, le port des aligneurs et le suivi.'], ['Technologie', 'Présenter les outils numériques sans garantie de résultat.']] },
+    contact: { eyebrow: 'Nous joindre', intro: `${site.address.streetAddress}, ${site.address.postalCode} ${site.address.addressLocality}. Téléphone : ${site.telephoneDisplay}.`, sections: [['Adresse et accès', 'Rez-de-chaussée, au centre de Sète.'], ['Horaires', 'Lundi, mardi, jeudi et vendredi : 08:00–12:00 et 14:00–17:00. Mercredi : 08:00–12:00.'], ['Message non urgent', 'Ne transmettez pas de données médicales sensibles par le formulaire.']] },
+    preAppointment: { eyebrow: 'Pré-rendez-vous téléphonique', intro: 'Un échange gratuit de 5 minutes pour déterminer votre besoin en santé bucco-dentaire et vous orienter vers un rendez-vous adapté au cabinet.', sections: [['Déterminez votre besoin', 'Un seul parcours téléphonique, sans choix de spécialité préalable.'], ['Laissez vos coordonnées', 'Le cabinet utilise vos coordonnées uniquement pour répondre à la demande.']] },
+  }[route.type]
 
-  return `
-    ${renderHeader()}
-    <main class="overflow-x-hidden pt-16 lg:pt-[4.5rem]">
-      <section class="section">
-        <div class="container-max">
-          <div class="rounded-[2rem] border border-rolexGold/30 bg-gradient-to-br from-rolexGreen/35 via-surface to-background p-8 md:p-12 shadow-soft">
-            <div class="badge mb-4">Blog d'autorite</div>
-            <h1 class="text-4xl md:text-5xl font-extrabold mb-6">Blog dentaire a Sete : orthodontie, orthodontie invisible et implantologie</h1>
-            <p class="text-lg text-slate-200 max-w-4xl leading-8">
-              Cette rubrique met en avant un cluster complet sur l'orthodontie a Sete, l'orthodontie invisible,
-              les aligneurs transparents et le suivi des patients du Bassin de Thau, avec des contenus complementaires
-              sur le prix du traitement et l'implantologie.
-            </p>
-            <figure class="mt-8 overflow-hidden rounded-[2rem] border border-rolexGold/20 bg-rolexGreen/10">
-              <img src="/seo-images/logo-hero-section.png" alt="Identité visuelle du Cabinet Dentaire Dr. Abdessadok à Sète" class="w-full h-[260px] md:h-[380px] object-contain bg-white p-6" />
-            </figure>
-          </div>
-
-          <section class="grid gap-6 md:grid-cols-2 mt-10">
-            <a href="/orthodontie-sete" class="card p-6 hover:-translate-y-1 transition">
-              <div class="badge mb-4">Page pilier orthodontie</div>
-              <h2 class="text-2xl font-bold mb-3">Orthodontie à Sète</h2>
-              <p class="text-slate-300 leading-7">Page essentielle pour comprendre quand consulter, comment réfléchir à l alignement dentaire et quelles questions poser avant un bilan.</p>
-            </a>
-            <a href="/orthodontie-invisible-sete" class="card p-6 hover:-translate-y-1 transition">
-              <div class="badge mb-4">Page pilier orthodontie invisible</div>
-              <h2 class="text-2xl font-bold mb-3">Orthodontie invisible à Sète</h2>
-              <p class="text-slate-300 leading-7">Page essentielle sur les aligneurs transparents, le bilan, le quotidien, la durée et les questions utiles avant de prendre rendez-vous.</p>
-            </a>
-          </section>
-
-          <section class="mt-10">
-            <div class="flex items-end justify-between gap-4 mb-6">
-              <div>
-                <div class="badge mb-3">Cluster prioritaire</div>
-                <h2 class="text-3xl md:text-4xl font-bold">Orthodontie et alignement dentaire a Sete</h2>
-              </div>
-              <p class="text-slate-300 max-w-2xl leading-7">
-                Les contenus les plus strategiques sur l'orthodontie, l'orthodontie invisible et les premieres questions a se poser avant un bilan.
-              </p>
-            </div>
-            <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
-              ${featuredOrthodontiePages
-                .map(
-                  (page) => `
-                    <a href="${page.url}" class="card p-6 hover:-translate-y-1 transition">
-                      <div class="badge mb-4">${escapeHtml(page.badge)}</div>
-                      ${
-                        page.image?.src
-                          ? `<img src="${page.image.src}" alt="${escapeHtml(page.image.alt || page.h1)}" class="h-20 w-20 rounded-2xl object-contain border border-rolexGold/20 bg-white/90 p-3 mb-5" />`
-                          : ''
-                      }
-                      <h3 class="text-2xl font-bold mb-3">${escapeHtml(page.h1)}</h3>
-                      <p class="text-slate-300 leading-7 mb-6">${escapeHtml(page.excerpt || page.intro)}</p>
-                      <span class="text-rolexGold font-semibold">Lire l'article</span>
-                    </a>
-                  `,
-                )
-                .join('')}
-            </div>
-          </section>
-
-          <div class="space-y-10 mt-12">
-            ${groupedPages
-              .map(
-                ([category, pages]) => `
-                  <section>
-                    <div class="flex items-end justify-between gap-4 mb-5">
-                      <h2 class="text-2xl md:text-3xl font-bold">${escapeHtml(category)}</h2>
-                      <div class="text-sm text-slate-400">${pages.length} article${pages.length > 1 ? 's' : ''}</div>
-                    </div>
-                    <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
-                      ${pages
-                        .map(
-                          (page) => `
-                            <a href="${page.url}" class="card p-6 hover:-translate-y-1 transition">
-                              <div class="badge mb-4">${escapeHtml(page.badge)}</div>
-                              ${
-                                page.cardImage?.src || page.image?.src
-                                  ? `<img src="${(page.cardImage?.src || page.image.src)}" alt="${escapeHtml(page.cardImage?.alt || page.image?.alt || page.h1)}" class="h-20 w-20 rounded-2xl object-contain border border-rolexGold/20 bg-white/90 p-3 mb-5" />`
-                                  : ''
-                              }
-                              <h3 class="text-2xl font-bold mb-3">${escapeHtml(page.h1)}</h3>
-                              <p class="text-slate-300 leading-7 mb-6">${escapeHtml(page.excerpt || page.intro)}</p>
-                              <span class="text-rolexGold font-semibold">Lire l'article</span>
-                            </a>
-                          `,
-                        )
-                        .join('')}
-                    </div>
-                  </section>
-                `,
-              )
-              .join('')}
-          </div>
-        </div>
-      </section>
-    </main>
-  `
+  const hero = `<header class="page-hero"><div class="container-max page-hero__grid"><div><span class="section-kicker section-kicker--light">${escapeHtml(details.eyebrow)}</span><h1>${escapeHtml(route.h1)}</h1></div><p>${escapeHtml(details.intro)}</p></div></header>`
+  const sections = `<section class="authority-section"><div class="container-max editorial-grid"><div class="editorial-grid__intro"><h2>Informations essentielles</h2><p>${escapeHtml(route.description)}</p></div><div class="editorial-list">${details.sections.map(([title, text]) => `<article><h3>${escapeHtml(title)}</h3><p>${escapeHtml(text)}</p></article>`).join('')}</div></div></section>`
+  return shell(route, `${hero}${sections}`)
 }
 
-function renderHomeFallback() {
-  return `
-    ${renderHeader()}
-    <main class="overflow-x-hidden pt-16 lg:pt-[4.5rem]">
-      <section class="section">
-        <div class="container-max">
-          <div class="rounded-[2rem] border border-rolexGold/30 bg-gradient-to-br from-rolexGreen/35 via-surface to-background p-8 md:p-12 shadow-soft">
-            <div class="badge mb-4">Cabinet dentaire a Sete</div>
-            <h1 class="text-4xl md:text-5xl font-extrabold mb-6 max-w-5xl">Cabinet Dentaire Dr. Abdessadok : Invisalign, implantologie et soins a Sete</h1>
-            <p class="text-lg text-slate-200 max-w-4xl leading-8">
-              Cabinet dentaire a Sete proposant orthodontie invisible, implantologie BioTech et contenus d'information pour les patients de Sete, Meze, Frontignan, Agde, Marseillan, Balaruc-les-Bains et du Bassin de Thau.
-            </p>
-            <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-6 mt-10">
-              ${[
-                ...servicePages.slice(0, 9),
-                { url: '/blog', h1: 'Blog dentaire a Sete', intro: "Questions frequentes sur l'orthodontie invisible, le prix et la rehabilitation du sourire." },
-                { url: '/contact', h1: 'Contacter le cabinet', intro: 'Prendre rendez-vous ou demander un premier bilan au cabinet dentaire de Sete.' },
-              ]
-                .map(
-                  (page) => `
-                    <a href="${page.url}" class="card p-6 hover:-translate-y-1 transition">
-                      <h2 class="text-2xl font-bold mb-3">${escapeHtml(page.h1)}</h2>
-                      <p class="text-slate-300 leading-7">${escapeHtml(page.intro)}</p>
-                    </a>
-                  `,
-                )
-                .join('')}
-            </div>
-          </div>
-        </div>
-      </section>
-    </main>
-  `
+function localizedPage(route) {
+  const nav = getLanguageNavigation(route.language)
+  const asset = routeAsset(route)
+  const hero = `<header class="localized-hero"><div class="container-max localized-hero__grid"><div><span class="section-kicker section-kicker--light">${escapeHtml(route.eyebrow)}</span><h1>${escapeHtml(route.h1)}</h1><p>${escapeHtml(route.intro)}</p><a class="btn-accent" href="${nav.paths.contact}">${escapeHtml(nav.labels.cta)}</a></div><div class="localized-hero__visual">${responsiveImage(asset, true)}</div></div></header>`
+  const notice = `<aside class="language-disclosure"><div class="container-max"><strong>${escapeHtml(route.label)}</strong><p>${escapeHtml(route.notice)}</p></div></aside>`
+  const sections = `<section class="authority-section localized-content"><div class="container-max"><div class="localized-content__grid">${route.sections.map((section, index) => `<article><span>${String(index + 1).padStart(2, '0')}</span><h2>${escapeHtml(section.title)}</h2><p>${escapeHtml(section.text)}</p>${section.linkType ? `<a href="${nav.paths[section.linkType]}">${escapeHtml(nav.labels.learn)} →</a>` : ''}</article>`).join('')}</div></div></section>`
+  return shell(route, `${hero}${notice}${sections}`)
 }
 
-function replaceHead(template, metadata) {
+function contentPage(route) {
+  const page = route.page
+  const asset = routeAsset(route)
+  const blocks = page.articleBody ? buildArticleBodyBlocks(page.articleBody) : []
+  const hero = `<header class="content-hero"><div class="container-max">${breadcrumbsHtml(route)}<div class="content-hero__grid"><div class="content-hero__copy"><span class="section-kicker section-kicker--light">${escapeHtml(page.badge || 'Guide patient')}</span><h1>${escapeHtml(route.h1)}</h1><p>${escapeHtml(page.intro)}</p><div class="content-hero__actions"><a class="btn-accent" href="/pre-rendez-vous/">Demander un pré-rendez-vous</a><a class="btn-light" href="/contact/">Contacter le cabinet</a></div></div><div class="content-hero__visual">${responsiveImage(asset, true)}</div></div></div></header>`
+  const review = route.type === 'article' ? `<div class="article-byline"><div class="container-max"><span>Par ${escapeHtml(page.authorName)}</span><span>Publié le ${escapeHtml(page.datePublished)}</span><span>Mis à jour le ${escapeHtml(page.dateModified)}</span><strong>Relecture clinique : en attente</strong></div></div>` : ''
+  const sections = blocks.length
+    ? `<section class="article-section">${blocks.map((block) => block.type === 'heading2' ? `<h2>${escapeHtml(block.text)}</h2>` : block.type === 'heading3' ? `<h3>${escapeHtml(block.text)}</h3>` : block.type === 'list' ? `<ul>${block.items.map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ul>` : `<p>${escapeHtml(block.text)}</p>`).join('')}</section>`
+    : (page.sections || []).map((section) => `<section class="article-section"><h2>${escapeHtml(section.heading)}</h2>${section.blocks.map((block) => `<div class="article-section__block">${block.subheading ? `<h3>${escapeHtml(block.subheading)}</h3>` : ''}${(block.paragraphs || []).map((text) => `<p>${escapeHtml(text)}</p>`).join('')}${block.bullets?.length ? `<ul>${block.bullets.map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ul>` : ''}</div>`).join('')}</section>`).join('')
+  const faq = page.faq?.length ? `<section class="article-section faq-list"><h2>Questions fréquentes</h2>${page.faq.map((item) => `<details><summary>${escapeHtml(item.question)}</summary><p>${escapeHtml(item.answer)}</p></details>`).join('')}</section>` : ''
+  const disclosure = page.menuGroup === 'locals' ? '<aside class="content-disclosure"><strong>Le cabinet se situe à Sète.</strong><p>Cette page prépare le déplacement depuis la commune mentionnée et ne correspond pas à une adresse secondaire.</p></aside>' : ''
+  const body = `<section class="authority-section content-main"><div class="container-max">${disclosure}<div class="content-layout"><article class="content-article"><section class="content-summary"><h2>À retenir</h2><ul>${(page.highlights || []).map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ul></section>${sections}${faq}<section class="content-cta"><h2>${escapeHtml(page.ctaTitle)}</h2><p>${escapeHtml(page.ctaText)}</p><a class="btn-accent" href="${page.ctaHref || '/pre-rendez-vous/'}">${escapeHtml(page.ctaLabel)}</a></section></article></div></div></section>`
+  return shell(route, `${hero}${review}${body}`)
+}
+
+function blogPage(route) {
+  const articles = seoRoutes.filter((item) => item.type === 'article')
+  return shell(route, `<header class="content-hero"><div class="container-max content-hero__copy"><span class="section-kicker section-kicker--light">Guides pour les patients</span><h1>${escapeHtml(route.h1)}</h1><p>${escapeHtml(route.description)}</p></div></header><section class="authority-section"><div class="container-max blog-card-grid">${articles.map((article) => `<article class="blog-card"><h2><a href="${article.path}">${escapeHtml(article.h1)}</a></h2><p>${escapeHtml(article.description)}</p><a href="${article.path}">Lire le guide →</a></article>`).join('')}</div></section>`)
+}
+
+function alternatesFor(route) {
+  if (!route.pageType) return []
+  return getAlternatesForPageType(route.pageType)
+}
+
+function replaceHead(template, route, options = {}) {
+  const canonical = options.canonical === undefined ? routeUrl(route) : options.canonical
+  const robots = options.robots || (route.indexable === false ? 'noindex,follow' : 'index,follow,max-image-preview:large')
+  const schema = options.schema === undefined ? schemasFor(route) : options.schema
+  const asset = routeAsset(route)
   let html = template
-  html = html.replace(/<title>.*?<\/title>/s, `<title>${escapeHtml(metadata.title)}</title>`)
-  html = html.replace(
-    /<meta name="description" content="[^"]*" data-rh="true">/i,
-    `<meta name="description" content="${escapeHtml(metadata.description)}" data-rh="true">`,
-  )
-  html = html.replace(
-    /<meta property="og:title" content="[^"]*" \/>/i,
-    `<meta property="og:title" content="${escapeHtml(metadata.ogTitle || metadata.title)}" />`,
-  )
-  html = html.replace(
-    /<meta property="og:description" content="[^"]*" \/>/i,
-    `<meta property="og:description" content="${escapeHtml(metadata.description)}" />`,
-  )
-  html = html.replace(
-    /<meta property="og:url" content="[^"]*" \/>/i,
-    `<meta property="og:url" content="${metadata.url}" />`,
-  )
-
-  if (html.includes('<meta property="og:image"')) {
-    html = html.replace(/<meta property="og:image" content="[^"]*" \/>/i, `<meta property="og:image" content="${metadata.image}" />`)
-  } else {
-    html = html.replace('<meta property="og:site_name" content="cabinetdentairesete" />', `<meta property="og:site_name" content="cabinetdentairesete" />\n    <meta property="og:image" content="${metadata.image}" />`)
-  }
-
-  const canonicalTag = `<link rel="canonical" href="${metadata.url}" />`
-  if (html.includes('rel="canonical"')) {
-    html = html.replace(/<link rel="canonical" href="[^"]*" \/>/i, canonicalTag)
-  } else {
-    html = html.replace('<link rel="manifest" href="/site.webmanifest" />', `<link rel="manifest" href="/site.webmanifest" />\n    ${canonicalTag}`)
-  }
-
-  const robotsTag = '<meta name="robots" content="index,follow,max-image-preview:large" />'
-  if (html.includes('<meta name="robots"')) {
-    html = html.replace(/<meta name="robots" content="[^"]*" \/>/i, robotsTag)
-  } else {
-    html = html.replace(canonicalTag, `${canonicalTag}\n    ${robotsTag}`)
-  }
-
-  return html
+  html = html.replace(/<html([^>]*)lang=["'][^"']*["']/i, `<html$1lang="${route.language || 'fr'}"`)
+  html = html.replace(/<title>[\s\S]*?<\/title>/i, `<title>${escapeHtml(route.title)}</title>`)
+  html = html.replace(/<meta name="description"[^>]*>/i, `<meta name="description" content="${escapeHtml(route.description)}">`)
+  html = html.replace(/\s*<meta property="og:[^"]+"[^>]*>/gi, '')
+  html = html.replace(/\s*<meta name="twitter:[^"]+"[^>]*>/gi, '')
+  html = html.replace(/\s*<link rel="canonical"[^>]*>/gi, '')
+  html = html.replace(/\s*<link rel="alternate"[^>]*>/gi, '')
+  html = html.replace(/\s*<meta name="robots"[^>]*>/gi, '')
+  html = html.replace(/\s*<script type="application\/ld\+json">[\s\S]*?<\/script>/gi, '')
+  const alternates = alternatesFor(route)
+  const tags = [
+    canonical ? `<link rel="canonical" href="${canonical}">` : '',
+    `<meta name="robots" content="${robots}">`,
+    `<meta property="og:title" content="${escapeHtml(route.title)}">`,
+    `<meta property="og:description" content="${escapeHtml(route.description)}">`,
+    canonical ? `<meta property="og:url" content="${canonical}">` : '',
+    `<meta property="og:type" content="${route.type === 'article' ? 'article' : 'website'}">`,
+    `<meta property="og:image" content="${absoluteUrl(asset.fallback)}">`,
+    '<meta name="twitter:card" content="summary_large_image">',
+    ...alternates.map((alternate) => `<link rel="alternate" hreflang="${alternate.language}" href="${absoluteUrl(alternate.href)}">`),
+    alternates.length ? `<link rel="alternate" hreflang="x-default" href="${absoluteUrl('/')}">` : '',
+    schema.length ? `<script type="application/ld+json">${JSON.stringify({ '@context': 'https://schema.org', '@graph': schema })}</script>` : '',
+  ].join('')
+  return html.replace('</head>', `${tags}</head>`)
 }
 
-function injectBody(template, bodyHtml) {
-  return template.replace(
-    /<div id="root">.*?<\/div>/s,
-    `<div id="root">${bodyHtml}</div>`,
-  )
+function injectBody(template, body) {
+  return template.replace(/<div id="root">[\s\S]*?<\/div>/, `<div id="root">${body}</div>`)
 }
 
-async function writeRoute(template, routePath, metadata, bodyHtml) {
-  let html = normalizeAssetPaths(template)
-  html = replaceHead(html, metadata)
-  html = injectBody(html, bodyHtml)
+async function writeRoute(template, route) {
+  const body = route.type === 'blog' ? blogPage(route) : route.language && route.language !== 'fr' ? localizedPage(route) : route.page ? contentPage(route) : corePage(route)
+  const html = injectBody(replaceHead(template, route), body)
+  const outputDir = route.path === '/' ? distDir : path.join(distDir, route.path.replace(/^\/+|\/+$/g, ''))
+  await fs.mkdir(outputDir, { recursive: true })
+  await fs.writeFile(path.join(outputDir, 'index.html'), html)
+}
 
-  const outputDir = routePath === '/' ? distDir : path.join(distDir, routePath.replace(/^\/+/, ''))
+async function writePrivateShell(template, routePath) {
+  const route = { title: 'Espace privé', description: 'Espace privé du cabinet.', path: routePath, indexable: false, type: 'private', h1: 'Espace privé', language: 'fr' }
+  const html = injectBody(replaceHead(template, route, { canonical: null, robots: 'noindex,nofollow', schema: [] }), '')
+  const outputDir = path.join(distDir, routePath.replace(/^\/+|\/+$/g, ''))
   await fs.mkdir(outputDir, { recursive: true })
   await fs.writeFile(path.join(outputDir, 'index.html'), html)
 }
 
 async function main() {
   const template = await fs.readFile(path.join(distDir, 'index.html'), 'utf8')
-  const allPages = [...servicePages, ...blogPages]
+  for (const route of seoRoutes) await writeRoute(template, route)
+  for (const route of ['/login/', '/admin/', '/admin/actualities/', '/legacy-actuality/']) await writePrivateShell(template, route)
 
-  await writeRoute(
-    template,
-    '/',
-    {
-      title: 'Cabinet Dentaire Dr. Abdessadok | Invisalign, implantologie et soins a Sete',
-      description:
-        "Cabinet dentaire a Sete : Invisalign, implantologie BioTech et pages d'information pour les patients du Bassin de Thau.",
-      url: `${siteUrl}/`,
-      image: `${siteUrl}/seo-images/logo-hero-section.png`,
-    },
-    renderHomeFallback(),
-  )
-
-  await writeRoute(
-    template,
-    '/blog',
-    {
-      title: 'Blog dentaire Sete : orthodontie invisible, prix et implantologie',
-      description:
-        "Blog dentaire du cabinet a Sete : orthodontie, orthodontie invisible, aligneurs transparents et implantologie.",
-      url: `${siteUrl}/blog`,
-      image: `${siteUrl}/seo-images/logo-hero-section.png`,
-    },
-    renderBlogHub(),
-  )
-
-  for (const page of allPages) {
-    const image = getPrimaryImage(page)
-    await writeRoute(
-      template,
-      page.url,
-      {
-        title: page.title,
-        description: page.metaDescription,
-        url: `${siteUrl}${page.url}`,
-        image: `${siteUrl}${image.src}`,
-      },
-      renderPage(page),
-    )
-  }
+  const notFound = { title: 'Page introuvable | Dr. Abdessadok', description: 'Cette page n’existe pas ou n’est plus disponible.', path: '/404/', h1: 'Cette page est introuvable.', type: 'notFound', indexable: false, language: 'fr' }
+  const body = shell(notFound, '<section class="page-hero"><div class="container-max"><span class="section-kicker section-kicker--light">Erreur 404</span><h1>Cette page est introuvable.</h1><p>Retournez à l’accueil ou contactez le cabinet.</p><a href="/" class="btn-accent">Retour à l’accueil</a></div></section>')
+  const html = injectBody(replaceHead(template, notFound, { canonical: null, robots: 'noindex,nofollow', schema: [] }), body)
+  await fs.writeFile(path.join(distDir, '404.html'), html)
 }
 
 await main()

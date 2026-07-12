@@ -1,218 +1,95 @@
-import { motion, AnimatePresence } from 'framer-motion'
-import { useState, useRef } from 'react'
-import { useTranslation } from 'react-i18next'
 import { Helmet } from 'react-helmet-async'
 import { Link } from 'react-router-dom'
-import doctorImg from '../assets/dantist.png'
-import alignTechLogo from "../assets/Align logo.png"
-import invisalignLogo from "../assets/Invisalign_logo.png"
-import iteroLogo from "../assets/iTero logo.jpeg"
-import clinicVideo from "../assets/video/Cinematic_Motion_Logo_Sequence_Creation.mp4"
+import ResponsiveImage from '../components/ResponsiveImage'
+import { media } from '../config/media'
+import { dentistPersonSchema, site } from '../config/site'
 
-export default function About(){
-  const { t } = useTranslation()
-  const [openIndex, setOpenIndex] = useState(null)
-  const [isMuted, setIsMuted] = useState(true)
-  const videoRef = useRef(null)
-  const faqData = t('about.faq.items', { returnObjects: true })
+const approach = [
+  {
+    title: 'Écouter la demande',
+    text: 'La gêne ressentie, le contexte médical et les attentes sont distingués avant de parler de solution.',
+  },
+  {
+    title: 'Poser une indication',
+    text: 'Le bilan sert à vérifier ce qui est possible, utile ou à éviter dans votre situation.',
+  },
+  {
+    title: 'Présenter les choix',
+    text: 'Les étapes, les contraintes, les alternatives et le devis sont expliqués avant le consentement.',
+  },
+  {
+    title: 'Organiser le suivi',
+    text: 'Les contrôles et les consignes après le soin font partie du parcours dès sa planification.',
+  },
+]
+
+export default function About() {
   return (
-    <section className="section">
+    <>
       <Helmet>
-        <title>A propos du Dr Abdessadok | Cabinet Dentaire Sete</title>
-        <meta name="description" content="Parcours, diplomes et expertise du Dr Abdessadok a Sete : implantologie, orthodontie invisible, chirurgie orale et urgences." />
-        <meta property="og:type" content="website" />
-        {faqData && Array.isArray(faqData) && (
-          <script type="application/ld+json">
-            {JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "FAQPage",
-              "mainEntity": faqData.map(item => ({
-                "@type": "Question",
-                "name": item.question,
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": item.answer
-                }
-              }))
-            })}
-          </script>
-        )}
+        <title>À propos du Dr Abdessadok | Cabinet dentaire Sète</title>
+        <meta name="description" content="Parcours universitaire, qualifications et approche clinique du Dr Abdessamed Abdessadok, chirurgien-dentiste à Sète." />
+        <script type="application/ld+json">{JSON.stringify({ '@context': 'https://schema.org', ...dentistPersonSchema })}</script>
       </Helmet>
-      <div className="container-max space-y-10">
-        <motion.div
-          className="grid md:grid-cols-[1.1fr_0.9fr] gap-6 md:gap-10 items-center"
-          initial={{ opacity: 0, y: 12 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-        >
-          <div className="rounded-2xl border border-slate-800 bg-surface/60 backdrop-blur shadow-soft p-6 md:p-8">
-            <h1 className="text-3xl md:text-4xl font-extrabold mb-2">{t('about.title')}</h1>
-            <div className="text-primary font-semibold mb-4">{t('about.subtitle')}</div>
-            <p className="text-muted mb-6">{t('about.intro')}</p>
-            <div className="flex flex-wrap gap-2">
-              <span className="badge">{t('about.badges.implantology')}</span>
-              <span className="badge">{t('about.badges.invisalign')}</span>
-              <span className="badge">{t('about.badges.ortho')}</span>
-              <span className="badge">{t('about.badges.veneers')}</span>
-              <span className="badge">{t('about.badges.whitening')}</span>
-              <span className="badge">{t('about.badges.prosthetics')}</span>
-              <span className="badge">{t('about.badges.emergency')}</span>
-            </div>
-            <div className="mt-6 flex flex-col sm:flex-row gap-3">
-              <Link to="/pre-rendez-vous" className="btn-primary">Demander un pré-rendez-vous</Link>
-              <a href={import.meta.env.VITE_GOOGLE_MAPS_LINK || 'https://maps.app.goo.gl/UALfaQYvaAV5otoq9'} target="_blank" rel="noopener" className="btn-outline">{t('about.ctaMaps')}</a>
-            </div>
+
+      <header className="page-hero" aria-labelledby="about-title">
+        <div className="container-max page-hero__grid">
+          <div>
+            <span className="section-kicker section-kicker--light">Le praticien et le cabinet</span>
+            <h1 id="about-title">Dr Abdessamed Abdessadok</h1>
           </div>
-          <motion.img
-            src={doctorImg}
-            alt="Dr Abdessadok Chirurgien-Dentiste Sète"
-            className="rounded-2xl shadow-soft w-full h-auto object-cover"
-            loading="lazy"
-            initial={{ opacity: 0, y: 12 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          />
-        </motion.div>
-
-        <div className="grid md:grid-cols-2 gap-6">
-            <motion.div className="rounded-2xl border border-slate-800 bg-surface/60 backdrop-blur shadow-soft p-6" initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            <div className="flex items-center gap-3 mb-3">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" className="text-primary"><path d="M12 2l5 3v4c0 4.97-3.05 9.16-5 10-1.95-.84-5-5.03-5-10V5l5-3z"/></svg>
-              <h3 className="font-semibold">{t('about.journey')}</h3>
-            </div>
-            <div className="space-y-4 max-h-72 overflow-auto pr-2">
-              <div className="flex items-start gap-3">
-                <div className="text-rolexGold font-semibold">2021</div>
-                <div className="text-sm text-muted">D.U. Implantologie, Chirurgie et Réhabilitation Orale (Univ. Montpellier‑Nîmes)</div>
-              </div>
-              <div className="flex items-start gap-3">
-                <div className="text-rolexGold font-semibold">2019</div>
-                <div className="text-sm text-muted">A.E.U. Imagerie 3D (UFR Nice)</div>
-              </div>
-              <div className="flex items-start gap-3">
-                <div className="text-rolexGold font-semibold">2015</div>
-                <div className="text-sm text-muted">Docteur en Chirurgie Dentaire (UFR Toulouse)</div>
-              </div>
-              <div className="flex items-start gap-3">
-                <div className="text-rolexGold font-semibold">2022</div>
-                <div className="text-sm text-muted flex items-center gap-2">Aptitude à l’utilisation du MEOPA <span className="badge">MEOPA</span></div>
-              </div>
-              <div className="mt-4 flex items-center gap-2">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" className="text-primary"><path d="M6 7a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v11H6V7zm-2 13h16v2H4v-2z"/></svg>
-                <div className="text-sm text-foreground">Depuis 2018 : Installation au Cabinet de Sète</div>
-              </div>
-              <div className="flex items-center gap-2">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" className="text-primary"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm-4 11h8v2H8v-2z"/></svg>
-                <div className="text-sm text-foreground">Adhérent de l’UFSBD (Union Française pour la Santé Bucco‑Dentaire)</div>
-              </div>
-            </div>
-          </motion.div>
-          <div className="space-y-6">
-            <motion.div className="rounded-2xl border border-slate-800 bg-surface/60 backdrop-blur shadow-soft p-6" initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            <div className="flex items-center gap-3 mb-2">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" className="text-primary"><path d="M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7zm0 9.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z"/></svg>
-              <h3 className="font-semibold">{t('about.location')}</h3>
-            </div>
-            <div className="text-sm text-muted">10 Boulevard Danièle Casanova, 34200 Sète</div>
-            <div className="text-xs text-foreground mt-2">{t('about.floorNote')}</div>
-          </motion.div>
-
-            <motion.div className="rounded-2xl border border-slate-800 bg-surface/60 backdrop-blur shadow-soft p-6" initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            <div className="flex items-center gap-3 mb-2">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" className="text-primary"><path d="M12 8a1 1 0 0 1 1 1v3.27l2.4 1.39a1 1 0 1 1-1 1.73l-3.4-1.97A1 1 0 0 1 10.5 12V9a1 1 0 0 1 1-1z"/><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm0 2a8 8 0 1 1 0 16 8 8 0 0 1 0-16z"/></svg>
-              <h3 className="font-semibold">{t('about.hours')}</h3>
-            </div>
-            <div className="text-sm text-muted space-y-1">
-              <div>Lun, mar, jeu, ven : 08:00 – 17:00</div>
-              <div>Mercredi : 08:00 – 12:00</div>
-              <div>Samedi – dimanche : Fermé</div>
-            </div>
-          </motion.div>
-
-          <motion.div className="rounded-2xl border border-slate-800 bg-surface/60 backdrop-blur shadow-soft p-6" initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            <div className="flex items-center gap-3 mb-2">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" className="text-primary"><path d="M3 6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6zm2 0h14v2H5V6zm0 4h8v2H5v-2zm0 4h6v2H5v-2z"/></svg>
-              <h3 className="font-semibold">Paiement & Remboursement</h3>
-            </div>
-            <div className="text-sm text-muted">Carte Vitale acceptée</div>
-            <div className="text-sm text-muted">Carte bancaire, chèques, espèces</div>
-          </motion.div>
-
-            </div>
+          <p>Chirurgien-dentiste à Sète, le Dr Abdessadok inscrit l’implantologie, l’orthodontie invisible et les soins courants dans une même exigence : examiner, expliquer et suivre.</p>
         </div>
+      </header>
 
-        <div className="rounded-2xl border border-slate-800 bg-surface/60 backdrop-blur shadow-soft p-6">
-          <h2 className="text-2xl font-bold mb-4">{t('about.skills')}</h2>
-          <div className="flex flex-wrap gap-2">
-            <span className="badge">{t('about.badges.implantology')}</span>
-            <span className="badge">{t('about.badges.invisalign')}</span>
-            <span className="badge">{t('about.badges.ortho')}</span>
-            <span className="badge">{t('about.badges.veneers')}</span>
-            <span className="badge">{t('about.badges.whitening')}</span>
-            <span className="badge">{t('about.badges.prosthetics')}</span>
-            <span className="badge">{t('about.badges.emergency')}</span>
+      <section className="authority-section" aria-labelledby="about-approach-title">
+        <div className="container-max editorial-grid">
+          <div className="editorial-grid__intro">
+            <span className="section-kicker">Une approche clinique lisible</span>
+            <h2 id="about-approach-title">Comprendre le raisonnement avant d’accepter un soin.</h2>
+            <p>Une page de présentation ne remplace ni un échange ni un examen. Elle doit toutefois vous permettre d’identifier clairement le praticien, son parcours et sa manière d’accompagner les décisions.</p>
           </div>
-          <div className="mt-4 flex items-center gap-4">
-            <img src={invisalignLogo} alt="Invisalign" className="h-8 w-auto object-contain" />
-            <img src={alignTechLogo} alt="Align Technology" className="h-8 w-auto object-contain" />
-            <img src={iteroLogo} alt="iTero" className="h-8 w-auto object-contain" />
-          </div>
-        </div>
-        <div className="rounded-2xl border border-slate-800 bg-surface/60 backdrop-blur shadow-soft overflow-hidden relative group">
-          <video
-            ref={videoRef}
-            src={clinicVideo}
-            className="w-full h-full max-h-[520px] object-cover cursor-pointer"
-            autoPlay
-            muted={isMuted}
-            loop
-            playsInline
-            onClick={() => setIsMuted(!isMuted)}
-          />
-          <button type="button" className="absolute bottom-4 right-4 rounded-full border border-white/25 bg-black/35 px-4 py-2 text-sm font-bold text-white backdrop-blur" onClick={() => setIsMuted((value) => !value)} aria-label={isMuted ? 'Activer le son de la vidéo' : 'Couper le son de la vidéo'}>
-            {isMuted ? 'Activer le son' : 'Couper le son'}
-          </button>
-        </div>
-
-        <div className="rounded-2xl border border-slate-800 bg-surface/60 backdrop-blur shadow-soft p-6">
-          <h2 className="text-2xl font-bold mb-4">{t('about.faq.title')}</h2>
-          <div className="space-y-3">
-            {faqData.map((item, idx) => (
-              <div key={idx} className="rounded-xl border border-slate-700 bg-slate-800/50">
-                <button
-                  type="button"
-                  onClick={() => setOpenIndex(openIndex === idx ? null : idx)}
-                  className="w-full flex items-center justify-between text-left px-4 py-4"
-                >
-                  <span className="font-medium">{item.question}</span>
-                  <svg
-                    width="18"
-                    height="18"
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
-                    className={`text-muted transition-transform ${openIndex === idx ? 'rotate-180' : ''}`}
-                  >
-                    <path d="M12 15.5l-5-5 1.4-1.4L12 12.7l3.6-3.6 1.4 1.4-5 5z"/>
-                  </svg>
-                </button>
-                <AnimatePresence initial={false}>
-                  {openIndex === idx && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: 'auto', opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.25 }}
-                      className="px-4 pb-4 text-sm text-muted"
-                    >
-                      {item.answer}
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
+          <div className="editorial-list">
+            {approach.map((item, index) => (
+              <article key={item.title}>
+                <span className="badge">Étape {index + 1}</span>
+                <h3 className="mt-3">{item.title}</h3>
+                <p>{item.text}</p>
+              </article>
             ))}
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+
+      <section className="authority-section credentials-section" aria-labelledby="about-qualifications-title">
+        <div className="container-max credentials-grid">
+          <div className="credentials-intro">
+            <span className="section-kicker section-kicker--light">Formation</span>
+            <h2 id="about-qualifications-title">Qualifications déclarées par le cabinet.</h2>
+            <p>Les intitulés sont publiés sans employer les désignations réglementées de spécialiste en orthodontie ou en chirurgie orale.</p>
+          </div>
+          <ol className="credentials-list">
+            {site.qualifications.map((qualification, index) => (
+              <li key={qualification}><span>{String(index + 1).padStart(2, '0')}</span><p>{qualification}</p></li>
+            ))}
+          </ol>
+        </div>
+      </section>
+
+      <section className="authority-section authority-section--cream" aria-labelledby="about-identity-title">
+        <div className="container-max technology-grid">
+          <ResponsiveImage asset={media.logo} className="brand-document" imageClassName="w-full bg-white object-contain p-8" />
+          <div>
+            <span className="section-kicker">Identité du cabinet</span>
+            <h2 id="about-identity-title">Un cabinet de proximité au centre de Sète.</h2>
+            <p>Le cabinet se situe au rez-de-chaussée, au 10 boulevard Danièle Casanova. Les rendez-vous cliniques ont lieu sur place et le pré-rendez-vous téléphonique sert uniquement à orienter la première demande.</p>
+            <div className="mt-7 flex flex-wrap gap-3">
+              <Link to="/contact/" className="btn-primary">Adresse et horaires</Link>
+              <Link to="/pre-rendez-vous/" className="btn-outline">Demander un pré-rendez-vous</Link>
+            </div>
+          </div>
+        </div>
+      </section>
+    </>
   )
 }

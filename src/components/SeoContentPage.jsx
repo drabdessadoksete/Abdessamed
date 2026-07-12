@@ -1,73 +1,18 @@
 import { Helmet } from 'react-helmet-async'
 import { Link } from 'react-router-dom'
+import ResponsiveImage from './ResponsiveImage'
 import { getPagesByUrls } from '../data/seoContent'
 import { buildArticleBodyBlocks } from '../utils/seoArticleContent'
+import { media } from '../config/media'
+import { absoluteUrl, dentistPersonSchema, dentistSchema, organizationSchema } from '../config/site'
 
-function getPrimaryImage(page, type) {
-  if (page.heroImage?.src) {
-    return {
-      src: page.heroImage.src,
-      ogSrc: page.heroImage.ogSrc || `https://cabinetdentairesete.fr${page.heroImage.src}`,
-      alt: page.heroImage.alt || 'Illustration de la page du Cabinet Dentaire Dr. Abdessadok à Sète',
-    }
-  }
-
-  if (page.image?.src) {
-    return {
-      src: page.image.src,
-      ogSrc: page.image.ogSrc || `https://cabinetdentairesete.fr${page.image.src}`,
-      alt: page.image.alt || 'Illustration de la page du Cabinet Dentaire Dr. Abdessadok à Sète',
-    }
-  }
-
-  if (page.url.includes('implant') || page.url.includes('aligner-dents-avant-implant')) {
-    return {
-      src: '/seo-images/implantologie-biotech-sete.png',
-      ogSrc: 'https://cabinetdentairesete.fr/seo-images/implantologie-biotech-sete.png',
-      alt: "Visuel d'implantologie dentaire BioTech a Sete pour illustrer la page du Dr Abdessadok",
-    }
-  }
-
-  if (page.url.includes('prix')) {
-    return {
-      src: '/seo-images/logo-hero-section.png',
-      ogSrc: 'https://cabinetdentairesete.fr/seo-images/logo-hero-section.png',
-      alt: 'Identité visuelle du Cabinet Dentaire Dr. Abdessadok à Sète',
-    }
-  }
-
-  if (page.url.includes('bassin-de-thau') || page.url.includes('balaruc') || page.url === '/blog') {
-    return {
-      src: '/seo-images/logo-hero-section.png',
-      ogSrc: 'https://cabinetdentairesete.fr/seo-images/logo-hero-section.png',
-      alt: 'Identité visuelle du Cabinet Dentaire Dr. Abdessadok à Sète',
-    }
-  }
-
-  if (page.url.includes('blog')) {
-    return {
-      src: '/seo-images/invisalign-sete.png',
-      ogSrc: 'https://cabinetdentairesete.fr/seo-images/invisalign-sete.png',
-      alt: "Aligneurs transparents Invisalign pour illustrer un article d'orthodontie invisible a Sete",
-    }
-  }
-
-  if (page.url.includes('invisalign') || page.url.includes('orthodontie')) {
-    return {
-      src: '/seo-images/invisalign-sete.png',
-      ogSrc: 'https://cabinetdentairesete.fr/seo-images/invisalign-sete.png',
-      alt: "Visuel d'orthodontie invisible Invisalign pour la page du cabinet dentaire a Sete",
-    }
-  }
-
-  return {
-    src: '/seo-images/logo-cabinet-dentaire-sete.png',
-    ogSrc: 'https://cabinetdentairesete.fr/seo-images/logo-cabinet-dentaire-sete.png',
-    alt: 'Logo du cabinet dentaire Dr Abdessadok a Sete',
-  }
+function primaryAsset(page) {
+  if (page.url.includes('implant')) return media.implantConsultation
+  if (page.url.includes('orthodontie') || page.url.includes('invisalign')) return media.alignerExplanation
+  return media.logo
 }
 
-function buildFaqSchema(page) {
+function faqSchema(page) {
   if (!page.faq?.length) return null
   return {
     '@context': 'https://schema.org',
@@ -75,336 +20,228 @@ function buildFaqSchema(page) {
     mainEntity: page.faq.map((item) => ({
       '@type': 'Question',
       name: item.question,
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: item.answer,
-      },
+      acceptedAnswer: { '@type': 'Answer', text: item.answer },
     })),
   }
 }
 
-function buildBreadcrumbSchema(page, type) {
+function breadcrumbSchema(page, type) {
   return {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'Accueil', item: 'https://cabinetdentairesete.fr/' },
-      {
-        '@type': 'ListItem',
-        position: 2,
-        name: type === 'blog' ? 'Blog' : 'Services',
-        item: `https://cabinetdentairesete.fr/${type === 'blog' ? 'blog' : 'services'}`,
-      },
-      {
-        '@type': 'ListItem',
-        position: 3,
-        name: page.h1,
-        item: `https://cabinetdentairesete.fr${page.url}`,
-      },
+      { '@type': 'ListItem', position: 1, name: 'Accueil', item: absoluteUrl('/') },
+      { '@type': 'ListItem', position: 2, name: type === 'blog' ? 'Blog' : 'Services', item: absoluteUrl(type === 'blog' ? '/blog/' : '/services/') },
+      { '@type': 'ListItem', position: 3, name: page.h1, item: absoluteUrl(page.url) },
     ],
   }
 }
 
-function buildPrimarySchema(page, type) {
+function primarySchema(page, type, image) {
   if (type === 'blog') {
     return {
       '@context': 'https://schema.org',
-      '@type': 'BlogPosting',
+      '@type': 'Article',
       headline: page.h1,
       description: page.metaDescription,
-      mainEntityOfPage: `https://cabinetdentairesete.fr${page.url}`,
-      author: {
-        '@type': 'Person',
-        name: 'Dr. Abdessamed Abdessadok',
-      },
-      publisher: {
-        '@type': 'Dentist',
-        name: 'Cabinet Dentaire Dr Abdessadok',
-        url: 'https://cabinetdentairesete.fr/',
-      },
+      mainEntityOfPage: absoluteUrl(page.url),
+      datePublished: page.datePublished,
+      dateModified: page.dateModified,
+      author: { '@type': 'Organization', name: page.authorName, '@id': organizationSchema['@id'] },
+      publisher: { '@id': organizationSchema['@id'] },
+      image: absoluteUrl(image.fallback),
     }
   }
 
   return {
     '@context': 'https://schema.org',
-    '@type': 'MedicalWebPage',
+    '@type': 'Service',
     name: page.h1,
     description: page.metaDescription,
-    url: `https://cabinetdentairesete.fr${page.url}`,
-    about: {
-      '@type': 'Dentist',
-      name: 'Cabinet Dentaire Dr Abdessadok',
-      address: {
-        '@type': 'PostalAddress',
-        streetAddress: 'RDC, 10 Bd Daniele Casanova',
-        addressLocality: 'Sete',
-        postalCode: '34200',
-        addressCountry: 'FR',
-      },
-    },
+    url: absoluteUrl(page.url),
+    provider: { '@id': dentistSchema['@id'] },
+    areaServed: page.menuGroup === 'locals' ? 'Sète et commune mentionnée pour l’accès au cabinet' : 'Sète et Bassin de Thau',
   }
 }
 
+function LongFormContent({ page }) {
+  const blocks = buildArticleBodyBlocks(page.articleBody)
+
+  if (page.articleBody) {
+    return (
+      <section className="article-section">
+        {blocks.map((block, index) => {
+          if (block.type === 'heading2') return <h2 key={`${block.text}-${index}`}>{block.text}</h2>
+          if (block.type === 'heading3') return <h3 key={`${block.text}-${index}`}>{block.text}</h3>
+          if (block.type === 'list') return <ul key={`list-${index}`}>{block.items.map((item) => <li key={item}>{item}</li>)}</ul>
+          if (block.type === 'quote') return <blockquote key={`${block.text}-${index}`}>{block.text}</blockquote>
+          return <p key={`${block.text}-${index}`}>{block.text}</p>
+        })}
+      </section>
+    )
+  }
+
+  return (page.sections || []).map((section) => (
+    <section className="article-section" key={section.heading}>
+      <h2>{section.heading}</h2>
+      {section.blocks.map((block) => (
+        <div className="article-section__block" key={block.subheading || block.paragraphs?.[0]}>
+          {block.subheading ? <h3>{block.subheading}</h3> : null}
+          {(block.paragraphs || []).map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+          {block.bullets?.length ? <ul>{block.bullets.map((bullet) => <li key={bullet}>{bullet}</li>)}</ul> : null}
+        </div>
+      ))}
+    </section>
+  ))
+}
+
+function TreatmentEssentials({ page }) {
+  if (page.url === '/orthodontie-invisible-sete/') {
+    return (
+      <section className="treatment-essentials" aria-labelledby="ortho-essentials-title">
+        <h2 id="ortho-essentials-title">Ce que le bilan doit clarifier</h2>
+        <div>
+          <article><span>01</span><h3>Indication</h3><p>Les mouvements nécessaires, l’occlusion, les tissus et les alternatives possibles.</p></article>
+          <article><span>02</span><h3>Vie quotidienne</h3><p>Temps de port, retrait pendant les repas, hygiène, taquets éventuels et rendez-vous de contrôle.</p></article>
+          <article><span>03</span><h3>Limites</h3><p>Un aligneur est discret, pas totalement invisible, et il ne convient pas à toutes les corrections.</p></article>
+          <article><span>04</span><h3>Stabilisation</h3><p>La contention et le suivi à long terme font partie du traitement, même après l’alignement actif.</p></article>
+        </div>
+      </section>
+    )
+  }
+
+  if (page.url === '/implantologie/') {
+    return (
+      <section className="treatment-essentials" aria-labelledby="implant-essentials-title">
+        <h2 id="implant-essentials-title">Les décisions prises avant la chirurgie</h2>
+        <div>
+          <article><span>01</span><h3>Faisabilité</h3><p>État de santé, gencives, os disponible et structures anatomiques à respecter.</p></article>
+          <article><span>02</span><h3>Alternatives</h3><p>Implant, bridge, prothèse amovible ou abstention sont discutés selon la situation.</p></article>
+          <article><span>03</span><h3>Chronologie</h3><p>Soins préalables, chirurgie, cicatrisation et restauration peuvent nécessiter plusieurs rendez-vous.</p></article>
+          <article><span>04</span><h3>Maintenance</h3><p>Hygiène, contrôles et gestion des facteurs de risque contribuent au suivi sans garantie de durée.</p></article>
+        </div>
+      </section>
+    )
+  }
+
+  return null
+}
+
 export default function SeoContentPage({ page, type = 'service' }) {
-  const relatedPages = getPagesByUrls(page.internalLinks)
-  const relatedReadingPages = getPagesByUrls(page.relatedReadingLinks)
-  const primarySchema = buildPrimarySchema(page, type)
-  const breadcrumbSchema = buildBreadcrumbSchema(page, type)
-  const faqSchema = buildFaqSchema(page)
-  const primaryImage = getPrimaryImage(page, type)
-  const absoluteImageUrl = primaryImage.ogSrc
-  const articleBodyBlocks = buildArticleBodyBlocks(page.articleBody)
-  const breadcrumbItems = [
-    { label: 'Accueil', href: '/' },
-    { label: type === 'blog' ? 'Blog' : 'Services', href: type === 'blog' ? '/blog' : '/services' },
-    { label: page.h1, href: page.url },
-  ]
+  const relatedPages = getPagesByUrls(page.internalLinks).filter((related) => related.url !== page.url)
+  const asset = primaryAsset(page)
+  const isArticle = type === 'blog'
+  const isCityPage = page.menuGroup === 'locals'
+  const isInvisalignBrandPage = page.url === '/invisalign/'
+  const schemas = [primarySchema(page, type, asset), breadcrumbSchema(page, type), faqSchema(page)].filter(Boolean)
 
   return (
-    <section className="section">
+    <>
       <Helmet>
         <title>{page.title}</title>
         <meta name="description" content={page.metaDescription} />
         <meta property="og:title" content={page.title} />
         <meta property="og:description" content={page.metaDescription} />
-        <meta property="og:type" content={type === 'blog' ? 'article' : 'website'} />
-        <meta property="og:image" content={absoluteImageUrl} />
-        <meta property="og:image:alt" content={primaryImage.alt} />
+        <meta property="og:type" content={isArticle ? 'article' : 'website'} />
+        <meta property="og:image" content={absoluteUrl(asset.fallback)} />
+        <meta property="og:image:alt" content={asset.alt} />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={page.title} />
-        <meta name="twitter:description" content={page.metaDescription} />
-        <meta name="twitter:image" content={absoluteImageUrl} />
-        <script type="application/ld+json">{JSON.stringify(primarySchema)}</script>
-        <script type="application/ld+json">{JSON.stringify(breadcrumbSchema)}</script>
-        {faqSchema ? <script type="application/ld+json">{JSON.stringify(faqSchema)}</script> : null}
+        {isArticle ? <meta property="article:published_time" content={page.datePublished} /> : null}
+        {isArticle ? <meta property="article:modified_time" content={page.dateModified} /> : null}
+        {schemas.map((schema, index) => <script key={index} type="application/ld+json">{JSON.stringify(schema)}</script>)}
       </Helmet>
 
-      <div className="container-max">
-        <nav aria-label="Fil d'ariane" className="mb-5 text-sm text-slate-300">
-          <ol className="flex flex-wrap items-center gap-2">
-            {breadcrumbItems.map((item, index) => (
-              <li key={item.href} className="flex items-center gap-2">
-                {index < breadcrumbItems.length - 1 ? (
-                  <Link to={item.href} className="hover:text-rolexGold transition">{item.label}</Link>
-                ) : (
-                  <span className="text-slate-100">{item.label}</span>
-                )}
-                {index < breadcrumbItems.length - 1 ? <span className="text-slate-500">/</span> : null}
-              </li>
-            ))}
-          </ol>
-        </nav>
-
-        <div className="rounded-[2rem] border border-rolexGold/30 bg-gradient-to-br from-rolexGreen/35 via-surface to-background p-8 md:p-12 shadow-soft">
-          <div className="badge mb-4">{page.badge}</div>
-          <h1 className="text-4xl md:text-5xl font-extrabold mb-6 max-w-5xl">{page.h1}</h1>
-          <p className="text-lg text-slate-200 max-w-4xl leading-8">{page.intro}</p>
-          {page.heroActions?.length ? (
-            <div className="mt-6 flex flex-wrap gap-3">
-              {page.heroActions.map((action) => {
-                const baseClass =
-                  action.variant === 'secondary'
-                    ? 'btn-outline'
-                    : action.variant === 'ghost'
-                      ? 'inline-flex items-center justify-center rounded-2xl border border-rolexGold/20 bg-rolexGreen/10 px-5 py-3 text-sm font-semibold text-slate-100 hover:bg-rolexGreen/20 transition'
-                      : 'btn-primary'
-
-                return (
-                  <Link key={`${action.href}-${action.label}`} to={action.href} className={baseClass}>
-                    {action.label}
-                  </Link>
-                )
-              })}
-            </div>
-          ) : null}
-          <figure className="mt-8 overflow-hidden rounded-[2rem] border border-rolexGold/20 bg-rolexGreen/10">
-            <img
-              src={primaryImage.src}
-              alt={primaryImage.alt}
-              className="w-full h-[260px] md:h-[380px] object-cover"
-              loading="eager"
-            />
-          </figure>
-          {page.highlights?.length ? (
-            <div className="grid md:grid-cols-3 gap-4 mt-8">
-              {page.highlights.map((item) => (
-                <div key={item} className="card p-5 bg-rolexGreen/20 border-rolexGold/20">
-                  <div className="text-sm leading-7">{item}</div>
-                </div>
-              ))}
-            </div>
-          ) : null}
-        </div>
-
-        <div className="grid lg:grid-cols-[minmax(0,1fr)_320px] gap-8 mt-10 items-start">
-          <div className="space-y-8">
-            {page.articleBody ? (
-              <section className="card p-6 md:p-8">
-                <div className="space-y-5">
-                  {articleBodyBlocks.map((block, index) => {
-                    if (block.type === 'heading2') {
-                      return <h2 key={`${block.text}-${index}`} className="text-2xl md:text-3xl font-bold pt-2">{block.text}</h2>
-                    }
-
-                    if (block.type === 'heading3') {
-                      return <h3 key={`${block.text}-${index}`} className="text-xl md:text-2xl font-semibold pt-1">{block.text}</h3>
-                    }
-
-                    if (block.type === 'list') {
-                      return (
-                        <ul key={`list-${index}`} className="space-y-3 text-slate-200">
-                          {block.items.map((item) => (
-                            <li key={item} className="flex items-start gap-3">
-                              <span className="mt-2 h-2.5 w-2.5 rounded-full bg-rolexGold shrink-0" />
-                              <span>{item}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      )
-                    }
-
-                    if (block.type === 'quote') {
-                      return (
-                        <blockquote
-                          key={`${block.text}-${index}`}
-                          className="rounded-2xl border border-rolexGold/20 bg-rolexGreen/10 p-5 text-slate-100 italic leading-8"
-                        >
-                          {block.text}
-                        </blockquote>
-                      )
-                    }
-
-                    return <p key={`${block.text}-${index}`} className="text-slate-300 leading-8">{block.text}</p>
-                  })}
-                </div>
-              </section>
-            ) : (
-              page.sections.map((section) => (
-                <section key={section.heading} className="card p-6 md:p-8">
-                  <h2 className="text-2xl md:text-3xl font-bold mb-6">{section.heading}</h2>
-                  <div className="space-y-6">
-                    {section.blocks.map((block) => (
-                      <div key={block.subheading || block.paragraphs?.[0]}>
-                        {block.subheading ? <h3 className="text-xl font-semibold mb-3">{block.subheading}</h3> : null}
-                        <div className="space-y-4 text-slate-300 leading-8">
-                          {block.paragraphs?.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
-                        </div>
-                        {block.bullets?.length ? (
-                          <ul className="mt-4 space-y-3 text-slate-200">
-                            {block.bullets.map((bullet) => (
-                              <li key={bullet} className="flex items-start gap-3">
-                                <span className="mt-2 h-2.5 w-2.5 rounded-full bg-rolexGold shrink-0" />
-                                <span>{bullet}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        ) : null}
-                      </div>
-                    ))}
-                  </div>
-                </section>
-              ))
-            )}
-
-            {page.ctaSections?.length ? (
-              <div className="space-y-6">
-                {page.ctaSections.map((section) => (
-                  <section
-                    key={section.heading}
-                    className={`rounded-[2rem] border p-6 md:p-8 ${
-                      section.tone === 'gold'
-                        ? 'border-rolexGold/30 bg-rolexGold/10'
-                        : 'border-rolexGreen/40 bg-rolexGreen/15'
-                    }`}
-                  >
-                    <h2 className="text-2xl md:text-3xl font-bold mb-4">{section.heading}</h2>
-                    <p className="text-slate-200 leading-8 mb-6">{section.text}</p>
-                    <div className="flex flex-wrap gap-3">
-                      {section.buttons.map((button, index) => (
-                        <Link
-                          key={`${button.href}-${button.label}`}
-                          to={button.href}
-                          className={index === 0 ? 'btn-primary' : 'btn-outline'}
-                        >
-                          {button.label}
-                        </Link>
-                      ))}
-                    </div>
-                  </section>
-                ))}
+      <header className="content-hero">
+        <div className="container-max">
+          <nav aria-label="Fil d’Ariane" className="content-breadcrumb">
+            <Link to="/">Accueil</Link><span>/</span><Link to={isArticle ? '/blog/' : '/services/'}>{isArticle ? 'Guides' : 'Soins'}</Link><span>/</span><span aria-current="page">{page.menuLabel || page.h1}</span>
+          </nav>
+          <div className="content-hero__grid">
+            <div className="content-hero__copy">
+              <span className="section-kicker section-kicker--light">{page.badge || (isArticle ? 'Guide patient' : 'Parcours de soin')}</span>
+              <h1>{page.h1}</h1>
+              <p>{page.intro}</p>
+              <div className="content-hero__actions">
+                <Link to="/pre-rendez-vous/" className="btn-accent">Demander un pré-rendez-vous</Link>
+                <Link to="/contact/" className="btn-light">Contacter le cabinet</Link>
               </div>
-            ) : null}
-
-            {relatedReadingPages.length ? (
-              <section className="card p-6 md:p-8">
-                <h2 className="text-2xl md:text-3xl font-bold mb-6">{page.relatedReadingTitle || 'À lire aussi'}</h2>
-                <div className="grid gap-4 md:grid-cols-2">
-                  {relatedReadingPages.map((related) => (
-                    <Link
-                      key={related.url}
-                      to={related.url}
-                      className="rounded-2xl border border-rolexGold/20 bg-rolexGreen/10 p-5 hover:bg-rolexGreen/20 transition"
-                    >
-                      <div className="text-sm uppercase tracking-[0.16em] text-rolexGold">{related.badge || 'Lecture conseillée'}</div>
-                      <div className="font-semibold text-lg mt-2">{related.menuLabel || related.h1}</div>
-                      <div className="text-sm text-slate-300 mt-2">{related.menuDescription || related.metaDescription}</div>
-                    </Link>
-                  ))}
-                </div>
-              </section>
-            ) : null}
-
-            <section className="card p-6 md:p-8">
-              <h2 className="text-2xl md:text-3xl font-bold mb-6">FAQ</h2>
-              <div className="space-y-4">
-                {page.faq.map((item) => (
-                  <details key={item.question} className="rounded-2xl border border-rolexGold/20 bg-rolexGreen/10 p-5">
-                    <summary className="cursor-pointer font-semibold list-none pr-6">{item.question}</summary>
-                    <p className="mt-3 text-slate-300 leading-7">{item.answer}</p>
-                  </details>
-                ))}
-              </div>
-            </section>
-
-            <section className="rounded-[2rem] border border-rolexGold/30 bg-rolexGold/10 p-6 md:p-8">
-              <h2 className="text-2xl md:text-3xl font-bold mb-4">{page.ctaTitle}</h2>
-              <p className="text-slate-200 leading-8 mb-6">{page.ctaText}</p>
-              <Link to={page.ctaHref || '/contact'} className="btn-primary">
-                {page.ctaLabel}
-              </Link>
-            </section>
+            </div>
+            <ResponsiveImage asset={asset} eager showCaption className="content-hero__visual" imageClassName="content-hero__image" />
           </div>
-
-          <aside className="space-y-6 lg:sticky lg:top-24">
-            <div className="card p-6">
-              <h2 className="text-xl font-bold mb-4">Maillage interne recommande</h2>
-              <div className="space-y-3">
-                {relatedPages.map((related) => (
-                  <Link
-                    key={related.url}
-                    to={related.url}
-                    className="block rounded-2xl border border-rolexGold/20 bg-rolexGreen/10 p-4 hover:bg-rolexGreen/20 transition"
-                  >
-                    <div className="font-semibold">{related.menuLabel || related.h1}</div>
-                    <div className="text-sm text-slate-300 mt-1">{related.menuDescription || related.metaDescription}</div>
-                  </Link>
-                ))}
-              </div>
-            </div>
-
-            <div className="card p-6">
-              <h2 className="text-xl font-bold mb-4">Mots-cles travailles</h2>
-              <div className="flex flex-wrap gap-2">
-                {page.keywords.map((keyword) => (
-                  <span key={keyword} className="rounded-full border border-rolexGold/20 bg-rolexGreen/10 px-3 py-1 text-sm">
-                    {keyword}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </aside>
         </div>
-      </div>
-    </section>
+      </header>
+
+      {isArticle ? (
+        <div className="article-byline">
+          <div className="container-max">
+            <span>Par {page.authorName}</span>
+            <span>Publié le {new Date(page.datePublished).toLocaleDateString('fr-FR')}</span>
+            <span>Mis à jour le {new Date(page.dateModified).toLocaleDateString('fr-FR')}</span>
+            <strong>Relecture clinique : en attente</strong>
+          </div>
+        </div>
+      ) : null}
+
+      <section className="authority-section content-main" id="content-article">
+        <div className="container-max">
+          {isCityPage ? (
+            <aside className="content-disclosure">
+              <strong>Le cabinet se situe à Sète.</strong>
+              <p>Cette page aide à préparer le déplacement depuis la commune mentionnée. Elle ne correspond pas à une adresse secondaire du cabinet et reste en attente d’une comparaison Search Console avant toute décision de consolidation.</p>
+            </aside>
+          ) : null}
+
+          {isInvisalignBrandPage ? (
+            <aside className="content-disclosure">
+              <strong>Le rôle distinct de cette page</strong>
+              <p>Cette page décrit spécifiquement la solution de marque Invisalign et son protocole. La page <Link to="/orthodontie-invisible-sete/">orthodontie invisible à Sète</Link> traite plus largement de l’indication clinique des aligneurs, quelle que soit la marque retenue.</p>
+            </aside>
+          ) : null}
+
+          <TreatmentEssentials page={page} />
+
+          <div className="content-layout">
+            <article className="content-article">
+              {page.highlights?.length ? (
+                <section className="content-summary" aria-labelledby="summary-title">
+                  <h2 id="summary-title">À retenir</h2>
+                  <ul>{page.highlights.map((item) => <li key={item}>{item}</li>)}</ul>
+                </section>
+              ) : null}
+
+              <LongFormContent page={page} />
+
+              {page.faq?.length ? (
+                <section className="article-section faq-list" aria-labelledby="content-faq-title">
+                  <h2 id="content-faq-title">Questions fréquentes</h2>
+                  {page.faq.map((item) => <details key={item.question}><summary>{item.question}<span aria-hidden="true">+</span></summary><p>{item.answer}</p></details>)}
+                </section>
+              ) : null}
+
+              <section className="content-cta">
+                <span className="section-kicker section-kicker--light">Prochaine étape</span>
+                <h2>{page.ctaTitle}</h2>
+                <p>{page.ctaText}</p>
+                <Link to={page.ctaHref || '/pre-rendez-vous/'} className="btn-accent">{page.ctaLabel}</Link>
+              </section>
+            </article>
+
+            <aside className="content-aside" aria-label="Ressources associées">
+              <div>
+                <h2>Poursuivre votre lecture</h2>
+                {relatedPages.slice(0, 6).map((related) => (
+                  <Link key={related.url} to={related.url}><span>{related.badge || 'Guide'}</span><strong>{related.menuLabel || related.h1}</strong></Link>
+                ))}
+              </div>
+              <div className="content-aside__note">
+                <h2>À propos de ces informations</h2>
+                <p>Le contenu informe et prépare les questions. Il ne permet ni diagnostic à distance, ni garantie de résultat.</p>
+                <Link to="/about/">Parcours du praticien →</Link>
+              </div>
+            </aside>
+          </div>
+        </div>
+      </section>
+    </>
   )
 }

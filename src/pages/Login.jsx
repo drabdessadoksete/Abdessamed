@@ -19,7 +19,7 @@ export default function LoginPage() {
     try {
       const result = await loginAdmin(email.trim(), password)
       if (result.error) throw new Error(result.error)
-      navigate(location.state?.from || '/admin', { replace: true })
+      navigate(location.state?.from || '/admin/', { replace: true })
     } catch (err) {
       setError(err.message || 'Email ou mot de passe incorrect')
     } finally {

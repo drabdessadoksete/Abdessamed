@@ -1,176 +1,107 @@
-import { useEffect, useRef, useState } from 'react'
-import { useLocation } from 'react-router-dom'
-import { motion } from 'framer-motion'
-import { useState as useState2 } from 'react'
-import { getGallery } from '../services/api'
-import { useTranslation } from 'react-i18next'
+import { useEffect, useState } from 'react'
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { Helmet } from 'react-helmet-async'
-import implant1 from '../assets/Gemini_Generated_Image_1nvugv1nvugv1nvu.png'
-import implant2 from '../assets/Gemini_Generated_Image_3b45m3b45m3b45m3.png'
-import implant3 from '../assets/Gemini_Generated_Image_h8ew12h8ew12h8ew.png'
-import invis1 from "../assets/Invisalign® - L'Orthodontie Invisible galery 1.png"
-import invis2 from '../assets/Invisalign 2.png'
-import invis3 from '../assets/Invisalign 3.png'
-import invis4 from '../assets/Invisalign 4.png'
-import invis5 from '../assets/Invisalign 5.png'
-import invis6 from '../assets/Invisalign 6.png'
-import gen1 from '../assets/Soins généraux galery 1.png'
-import gen2 from '../assets/Soins généraux galery 2.png'
-import gen3 from '../assets/Soins généraux galery 3.png'
+import { Link } from 'react-router-dom'
+import ResponsiveImage from '../components/ResponsiveImage'
+import { media } from '../config/media'
+import { getGallery } from '../services/api'
 
-function SectionCarousel({ title, badge, images, imageFit = 'cover', perImageFit }){
-  const { t } = useTranslation()
-  const [idx, setIdx] = useState(0)
-  const startX = useRef(null)
-  const moved = useRef(false)
-  const containerRef = useRef(null)
-  const [containerRatio, setContainerRatio] = useState(16 / 9)
-  const [fits, setFits] = useState({})
-  useEffect(() => {
-    const updateRatio = () => {
-      if (containerRef.current) {
-        const { clientWidth, clientHeight } = containerRef.current
-        if (clientWidth && clientHeight) setContainerRatio(clientWidth / clientHeight)
-      }
-    }
-    updateRatio()
-    window.addEventListener('resize', updateRatio)
-    return () => window.removeEventListener('resize', updateRatio)
-  }, [])
-  useEffect(() => {
-    const t = setInterval(() => setIdx((v) => (v + 1) % (images.filter(Boolean).length || 1)), 4000)
-    return () => clearInterval(t)
-  }, [images])
-  useEffect(() => {
-    if (idx >= images.filter(Boolean).length) setIdx(0)
-  }, [images, idx])
-  useEffect(() => setFits({}), [images])
-  const prev = () => {
-    const len = images.filter(Boolean).length || 1
-    setIdx((v) => (v - 1 + len) % len)
-  }
-  const next = () => {
-    const len = images.filter(Boolean).length || 1
-    setIdx((v) => (v + 1) % len)
-  }
-  const onStart = (e) => { startX.current = e.touches ? e.touches[0].clientX : e.clientX; moved.current = false }
-  const onMove = (e) => { if (startX.current != null) { const x = e.touches ? e.touches[0].clientX : e.clientX; if (Math.abs(x - startX.current) > 10) moved.current = true } }
-  const onEnd = (e) => {
-    if (startX.current == null) return
-    const endX = e.changedTouches ? e.changedTouches[0].clientX : e.clientX
-    const delta = endX - startX.current
-    startX.current = null
-    if (!moved.current) return
-    if (delta > 40) prev()
-    else if (delta < -40) next()
-  }
-  return (
-    <div className="card p-6 mb-10">
-      <div className="mb-4">
-        <h2 className="text-2xl md:text-3xl font-bold leading-tight">{title}</h2>
-        {badge && <span className="badge mt-2 inline-block">{badge}</span>}
-      </div>
-      <div
-        className="rounded-2xl overflow-hidden border border-slate-800 aspect-video bg-surface/50 relative"
-        ref={containerRef}
-        onMouseDown={onStart}
-        onMouseMove={onMove}
-        onMouseUp={onEnd}
-        onTouchStart={onStart}
-        onTouchMove={onMove}
-        onTouchEnd={onEnd}
-      >
-        <div className="absolute inset-0 flex transition-transform duration-500" style={{ transform: `translateX(-${idx * 100}%)` }}>
-          {images.filter(Boolean).map((src, i) => (
-            <div key={i} className="min-w-full bg-surface flex items-center justify-center">
-              <img
-                src={src}
-                alt={title}
-                data-idx={i}
-                className={`w-full h-full ${
-                  (() => {
-                    const forced = perImageFit?.[i]
-                    if (forced) return forced === 'cover' || forced === 'object-cover' ? 'object-cover' : 'object-contain'
-                    if (imageFit === 'auto') return fits[i] || 'object-contain'
-                    return imageFit === 'contain' ? 'object-contain' : 'object-cover'
-                  })()
-                }`}
-                loading="eager"
-                onLoad={(e) => {
-                  if (imageFit !== 'auto' || perImageFit?.[i]) return
-                  const w = e.currentTarget.naturalWidth || 1
-                  const h = e.currentTarget.naturalHeight || 1
-                  const ratio = w / h
-                  const nextFit = Math.abs(ratio - containerRatio) < 0.2 ? 'object-cover' : 'object-contain'
-                  setFits((prev) => (prev[i] === nextFit ? prev : { ...prev, [i]: nextFit }))
-                }}
-              />
-            </div>
-          ))}
-        </div>
-        <button type="button" aria-label={t('gallery.prev')} onClick={prev} className="absolute left-2 top-1/2 -translate-y-1/2 bg-slate-900/60 hover:bg-slate-900/80 text-white rounded-full w-8 h-8 flex items-center justify-center">‹</button>
-        <button type="button" aria-label={t('gallery.next')} onClick={next} className="absolute right-2 top-1/2 -translate-y-1/2 bg-slate-900/60 hover:bg-slate-900/80 text-white rounded-full w-8 h-8 flex items-center justify-center">›</button>
-        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1">
-          {images.filter(Boolean).map((_, i) => (
-            <span key={i} className={`w-2 h-2 rounded-full ${i === idx ? 'bg-rolexGold' : 'bg-slate-500'}`}></span>
-          ))}
-        </div>
-      </div>
-    </div>
-  )
+const editorialImages = [
+  { id: 'consultation-orthodontie', category: 'Consultation', title: 'Écouter avant de proposer', text: 'Un échange pour préciser la gêne, les priorités et les questions du patient.', asset: media.homeConsultation },
+  { id: 'consultation-implantologie', category: 'Implantologie', title: 'Expliquer le remplacement d’une dent', text: 'Visualiser les solutions possibles avant de discuter le parcours clinique.', asset: media.implantConsultation },
+  { id: 'scanner-intraoral', category: 'Orthodontie invisible', title: 'Numériser lorsque le protocole l’indique', text: 'L’empreinte numérique peut soutenir l’étude de l’alignement et les explications.', asset: media.intraoralScanner },
+  { id: 'explication-aligneurs', category: 'Orthodontie invisible', title: 'Comprendre le rôle des aligneurs', text: 'Port quotidien, taquets, suivi et contention sont présentés avant la décision.', asset: media.alignerExplanation },
+  { id: 'environnement-clinique', category: 'Technologie', title: 'Des outils au service du soin', text: 'Une illustration de l’environnement numérique, sans prétendre représenter le cabinet réel.', asset: media.clinicalTechnology },
+]
+
+const categories = ['Tous', 'Consultation', 'Implantologie', 'Orthodontie invisible', 'Technologie']
+
+function verifiedImagesBySection(gallery) {
+  if (!gallery || typeof gallery !== 'object') return []
+  return Object.entries(gallery).flatMap(([section, images]) => (
+    Array.isArray(images)
+      ? images.filter((image) => image?.verified_documentary === true && image?.url).map((image) => ({ ...image, category: section, documentary: true }))
+      : []
+  ))
 }
 
-export default function Gallery(){
-  const { t } = useTranslation()
-  const { hash } = useLocation()
-  const [dynamic, setDynamic] = useState2(null)
+export default function Gallery() {
+  const [verifiedImages, setVerifiedImages] = useState([])
+  const [activeCategory, setActiveCategory] = useState('Tous')
+  const [featuredIndex, setFeaturedIndex] = useState(0)
+  const reduceMotion = useReducedMotion()
+  const visible = activeCategory === 'Tous' ? editorialImages : editorialImages.filter((image) => image.category === activeCategory)
+  const featured = editorialImages[featuredIndex]
+
   useEffect(() => {
-    if (hash) {
-      const el = document.getElementById(hash.slice(1))
-      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
-    }
-  }, [hash])
-  useEffect(() => {
-    getGallery().then((g) => setDynamic(g)).catch(() => setDynamic(null))
+    getGallery().then((gallery) => setVerifiedImages(verifiedImagesBySection(gallery))).catch(() => setVerifiedImages([]))
   }, [])
+
+  useEffect(() => {
+    if (reduceMotion) return undefined
+    const timer = setInterval(() => setFeaturedIndex((index) => (index + 1) % editorialImages.length), 4800)
+    return () => clearInterval(timer)
+  }, [reduceMotion])
+
   return (
-    <section className="section">
+    <>
       <Helmet>
-        <title>Galerie avant/après | Cabinet Dentaire Dr Abdessadok</title>
-        <meta name="description" content="Exemples de cas en implantologie, Invisalign et soins generaux realises au cabinet dentaire du Dr Abdessadok a Sete." />
+        <title>Galerie visuelle des parcours dentaires | Dr Abdessadok</title>
+        <meta name="description" content="Galerie visuelle du cabinet dentaire à Sète : illustrations signalées des parcours en implantologie, orthodontie invisible et technologie." />
       </Helmet>
-      <div className="container-max">
-        <motion.h1
-          className="text-3xl font-bold mb-8"
-          initial={{ opacity: 0, y: 12 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.4 }}
-        >
-          {t('gallery.title')}
-        </motion.h1>
 
-        <div id="implant">
-          <SectionCarousel
-            title={t('gallery.implant')}
-            images={dynamic?.implant?.map((i) => i.url) || [implant1, implant2, implant3]}
-          />
+      <header className="gallery-hero" aria-labelledby="gallery-title">
+        <div className="container-max gallery-hero__grid">
+          <motion.div initial={reduceMotion ? false : { opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+            <span className="section-kicker section-kicker--light">Parcours en images</span>
+            <h1 id="gallery-title">Voir pour mieux comprendre.</h1>
+            <p>Une galerie éditoriale autour des consultations, de l’implantologie et des aligneurs. Chaque image illustrative est clairement signalée et n’est jamais présentée comme une photographie réelle du cabinet.</p>
+          </motion.div>
+          <div className="gallery-hero__stack" aria-hidden="true">
+            {editorialImages.slice(0, 3).map((image, index) => <ResponsiveImage key={image.id} asset={image.asset} className={`gallery-hero__stack-item gallery-hero__stack-item--${index}`} imageClassName="w-full h-full object-cover" />)}
+          </div>
         </div>
+      </header>
 
-        <div id="invisalign">
-          <SectionCarousel
-            title={t('gallery.invisalign')}
-            badge={t('gallery.badge')}
-            images={dynamic?.invisalign?.map((i) => i.url) || [invis1, invis2, invis3, invis4, invis5, invis6]}
-            imageFit="contain"
-          />
+      <section className="gallery-feature" aria-labelledby="gallery-feature-title">
+        <div className="container-max">
+          <div className="gallery-feature__top"><div><span className="section-kicker">Focus automatique</span><h2 id="gallery-feature-title">Un détail à la fois.</h2></div><div><button type="button" onClick={() => setFeaturedIndex((featuredIndex - 1 + editorialImages.length) % editorialImages.length)} aria-label="Image précédente">←</button><span>{featuredIndex + 1} / {editorialImages.length}</span><button type="button" onClick={() => setFeaturedIndex((featuredIndex + 1) % editorialImages.length)} aria-label="Image suivante">→</button></div></div>
+          <AnimatePresence mode="wait">
+            <motion.article key={featured.id} className="gallery-feature__stage" initial={reduceMotion ? false : { opacity: 0, scale: 0.985 }} animate={{ opacity: 1, scale: 1 }} exit={reduceMotion ? undefined : { opacity: 0 }} transition={{ duration: 0.45 }}>
+              <ResponsiveImage asset={featured.asset} className="gallery-feature__visual" imageClassName="w-full h-full object-cover" />
+              <div className="gallery-feature__copy"><span>{featured.category}</span><h3>{featured.title}</h3><p>{featured.text}</p><small>{featured.asset.caption}</small></div>
+            </motion.article>
+          </AnimatePresence>
         </div>
+      </section>
 
-        <SectionCarousel
-          title={t('gallery.general')}
-          images={dynamic?.general?.map((i) => i.url) || [gen1, gen2, gen3]}
-        />
-      </div>
-    </section>
+      <section className="gallery-library" aria-labelledby="gallery-library-title">
+        <div className="container-max">
+          <div className="gallery-library__heading"><div><span className="section-kicker">Explorer</span><h2 id="gallery-library-title">Les univers du cabinet.</h2></div><p>Utilisez les filtres ou faites simplement défiler. Sur mobile, les visuels occupent davantage l’écran pour une lecture plus immersive.</p></div>
+          <div className="gallery-filters" role="group" aria-label="Filtrer la galerie">
+            {categories.map((category) => <button key={category} type="button" className={activeCategory === category ? 'is-active' : ''} aria-pressed={activeCategory === category} onClick={() => setActiveCategory(category)}>{category}</button>)}
+          </div>
+          <motion.div layout className="editorial-gallery">
+            <AnimatePresence mode="popLayout">
+              {visible.map((image, index) => (
+                <motion.article layout key={image.id} className={`gallery-tile gallery-tile--${index % 4}`} initial={reduceMotion ? false : { opacity: 0, y: 22 }} animate={{ opacity: 1, y: 0 }} exit={reduceMotion ? undefined : { opacity: 0, scale: 0.97 }}>
+                  <ResponsiveImage asset={image.asset} className="gallery-tile__visual" imageClassName="w-full h-full object-cover" />
+                  <div><span>{image.category}</span><h3>{image.title}</h3><p>{image.text}</p><small>Illustration éditoriale</small></div>
+                </motion.article>
+              ))}
+            </AnimatePresence>
+          </motion.div>
+
+          {verifiedImages.length ? (
+            <section className="verified-gallery" aria-labelledby="verified-gallery-title">
+              <h2 id="verified-gallery-title">Photographies vérifiées du cabinet</h2>
+              <div>{verifiedImages.map((image) => <figure key={image.id || image.url}><img src={image.url} alt={image.alt || 'Photographie vérifiée du cabinet dentaire à Sète'} loading="lazy" decoding="async" /><figcaption>{image.caption || 'Photographie du cabinet'}</figcaption></figure>)}</div>
+            </section>
+          ) : null}
+        </div>
+      </section>
+
+      <section className="gallery-cta"><div className="container-max"><div><span className="section-kicker section-kicker--light">Parler de votre besoin</span><h2>Les images expliquent. Le bilan décide.</h2><p>Le pré-rendez-vous téléphonique permet de vous orienter vers un rendez-vous adapté au cabinet.</p><Link to="/pre-rendez-vous/" className="btn-accent">Demander un pré-rendez-vous</Link></div></div></section>
+    </>
   )
 }

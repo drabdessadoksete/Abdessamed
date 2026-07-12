@@ -1,120 +1,83 @@
-import { motion } from 'framer-motion'
 import { Helmet } from 'react-helmet-async'
 import { Link } from 'react-router-dom'
-import implantImg from "../assets/Gemini_Generated_Image_3b45m3b45m3b45m3.png"
-import alignerImg from "../assets/nvisalign® - L'Orthodontie Invisible.png"
-import implantIcon from "../assets/Favicon/android-chrome-192x192.png"
-import alignerIcon from "../assets/nvisalign® - L'Orthodontie Invisible icon.png"
-import alignTechLogo from "../assets/Align logo.png"
-import invisalignLogo from "../assets/Invisalign_logo.png"
-import iteroLogo from "../assets/iTero logo.jpeg"
+import ResponsiveImage from '../components/ResponsiveImage'
+import { media } from '../config/media'
 
-import { useEffect, useState } from 'react'
-import { useTranslation } from 'react-i18next'
-import { getServices } from '../services/api'
+const generalCare = [
+  ['Prévention', 'Examens de contrôle, conseils d’hygiène et prise en charge précoce des problèmes identifiés.'],
+  ['Soins conservateurs', 'Traitement des lésions carieuses et restauration des dents lorsque la situation le permet.'],
+  ['Prothèses dentaires', 'Étude des solutions de restauration ou de remplacement selon les dents et les tissus présents.'],
+  ['Urgences', 'Évaluation des douleurs, traumatismes ou complications afin de déterminer la conduite adaptée.'],
+]
 
-export default function Services({ isSubPage = false }){
-  const { t } = useTranslation()
-  const [showInvisalignPortal, setShowInvisalignPortal] = useState(false)
+export default function Services() {
   return (
-    <section className="section">
-      <div className="container-max space-y-12">
-        {!isSubPage && (
-          <Helmet>
-            <title>Implantologie & Invisalign à Sète | Dr Abdessadok</title>
-            <meta name="description" content="Expertise en chirurgie implantaire (Made in France) et alignement dentaire invisible. Solutions esthétiques et durables à Sète." />
-          </Helmet>
-        )}
-        <motion.div initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-          {isSubPage ? (
-            <h2 className="text-3xl md:text-4xl font-extrabold mb-2">{t('servicesPage.title')}</h2>
-          ) : (
-            <h1 className="text-3xl md:text-4xl font-extrabold mb-2">{t('servicesPage.title')}</h1>
-          )}
-          <p className="text-muted">{t('servicesPage.subtitle')}</p>
-        </motion.div>
+    <>
+      <Helmet>
+        <title>Soins dentaires, implantologie et aligneurs à Sète</title>
+        <meta name="description" content="Découvrez les soins du cabinet à Sète : implantologie, orthodontie invisible, prévention, soins conservateurs et prothèses dentaires." />
+      </Helmet>
 
-        <div className="grid md:grid-cols-2 gap-8 items-center">
-          <motion.img src={implantImg} alt="Implant dentaire BioTech Made in France" className="rounded-2xl shadow-soft w-full h-auto object-cover" initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} />
-          <motion.div className="rounded-2xl border border-slate-800 bg-surface/60 backdrop-blur p-6 shadow-soft" initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            <div className="flex items-center gap-3 mb-2">
-              <img src={implantIcon} alt="Icone Implantologie Dentaire" className="h-10 w-10 rounded-md object-cover" />
-              <h2 className="text-2xl md:text-3xl font-bold">{t('servicesPage.implantTitle')}</h2>
-            </div>
-            <span className="badge mt-3 mb-4">{t('servicesPage.implantBadge')}</span>
-            <p className="text-sm text-muted mb-4">{t('servicesPage.implantDesc')}</p>
-            <ul className="space-y-2 text-sm">
-              {t('servicesPage.implantBullets', { returnObjects: true }).map((b, i) => (
-                <li key={i} className="flex items-start gap-2"><span className="text-primary">✔</span><span><strong>{b.title} :</strong> {b.text}</span></li>
-              ))}
-            </ul>
-            <div className="mt-6">
-              <Link to="/pre-rendez-vous?specialite=implantologie" className="btn-primary">Demander un pré-rendez-vous</Link>
-            </div>
-          </motion.div>
-        </div>
-
-        <div className="grid md:grid-cols-2 gap-8 items-center">
-          <motion.div className="rounded-2xl border border-slate-800 bg-surface/60 backdrop-blur p-6 shadow-soft order-2 md:order-1" initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            <div className="flex items-center gap-3 mb-2">
-              <img src={alignerIcon} alt="Icone Orthodontie Invisible" className="h-10 w-10 rounded-md object-cover" />
-              <h2 className="text-2xl md:text-3xl font-bold">{t('servicesPage.invisalignTitle')}</h2>
-            </div>
-            <div className="flex flex-wrap items-center gap-3 mb-3">
-              <img src={invisalignLogo} alt="Logo Invisalign" className="h-9 w-auto object-contain" />
-              <img src={alignTechLogo} alt="Logo Align Technology" className="h-9 w-auto object-contain" />
-              <img src={iteroLogo} alt="Logo iTero Scanner 3D" className="h-9 w-auto object-contain" />
-            </div>
-            <span className="badge mt-3 mb-4">{t('servicesPage.invisalignBadge')}</span>
-            <p className="text-sm text-muted mb-4">{t('servicesPage.invisalignDesc')}</p>
-          <ul className="space-y-2 text-sm">
-            {t('servicesPage.invisalignBullets', { returnObjects: true }).map((b, i) => (
-              <li key={i} className="flex items-start gap-2"><span className="text-primary">✔</span><span><strong>{b.title} :</strong> {b.text}</span></li>
-            ))}
-          </ul>
-            <div className="mt-6">
-              <Link to="/pre-rendez-vous?specialite=orthodontie" className="btn-primary">Demander un pré-rendez-vous</Link>
-            </div>
-          <div className="mt-4 space-y-3">
-            <button type="button" className="btn-primary" onClick={() => setShowInvisalignPortal((v) => !v)}>{showInvisalignPortal ? t('buttons.hideInPage') : t('buttons.selfie')}</button>
-            {showInvisalignPortal && (
-              <div className="rounded-2xl border border-slate-800 bg-surface/60 backdrop-blur overflow-hidden">
-                <iframe
-                  src="https://www.invisalign.fr/SV/1851755"
-                  title="Portail Invisalign"
-                  className="w-full h-[600px]"
-                  loading="lazy"
-                />
-              </div>
-            )}
+      <header className="page-hero page-hero--light" aria-labelledby="services-title">
+        <div className="container-max page-hero__grid">
+          <div>
+            <span className="section-kicker">Les soins du cabinet</span>
+            <h1 id="services-title">Des parcours adaptés au besoin clinique.</h1>
           </div>
-        </motion.div>
-          <motion.img src={alignerImg} alt="Traitement Orthodontique Invisalign Sète" className="rounded-2xl shadow-soft w-full h-auto object-cover order-1 md:order-2" initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} />
+          <p>Chaque page présente le rôle du bilan, les grandes étapes et les limites à connaître. La proposition définitive dépend toujours de l’examen au cabinet.</p>
         </div>
+      </header>
 
-        <div>
-          <h3 className="text-xl font-bold mb-4">{t('servicesPage.generalTitle')}</h3>
-          <ServicesGrid />
+      <section className="authority-section authority-section--cream" aria-labelledby="services-principal-title">
+        <div className="container-max">
+          <div className="authority-heading">
+            <span className="section-kicker">Parcours principaux</span>
+            <h2 id="services-principal-title">Remplacer une dent ou étudier un alignement.</h2>
+          </div>
+          <div className="treatment-paths">
+            <article className="treatment-path">
+              <ResponsiveImage asset={media.implantConsultation} imageClassName="treatment-path__image" showCaption />
+              <div className="treatment-path__body">
+                <span>Implantologie</span><h3>Étudier une dent manquante.</h3>
+                <p>Bilan clinique, imagerie si elle est indiquée, options de remplacement, chirurgie et suivi des suites.</p>
+                <Link to="/implantologie/">Comprendre le parcours implantaire <span aria-hidden="true">→</span></Link>
+              </div>
+            </article>
+            <article className="treatment-path">
+              <ResponsiveImage asset={media.alignerExplanation} imageClassName="treatment-path__image" showCaption />
+              <div className="treatment-path__body">
+                <span>Orthodontie invisible</span><h3>Étudier l’alignement et l’occlusion.</h3>
+                <p>Examen, empreinte numérique selon le protocole, planification, port des aligneurs, contrôles et contention.</p>
+                <Link to="/orthodontie-invisible-sete/">Comprendre le parcours avec aligneurs <span aria-hidden="true">→</span></Link>
+              </div>
+            </article>
+          </div>
         </div>
-      </div>
-    </section>
-  )
-}
+      </section>
 
-function ServicesGrid(){
-  const [items, setItems] = useState(null)
-  useEffect(() => { getServices().then(setItems).catch(() => setItems(null)) }, [])
-  const { t } = useTranslation()
-  const fallback = t('servicesPage.generalItems', { returnObjects: true })
-  const data = items && items.length ? items : fallback
-  return (
-    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {data.map((s, i) => (
-        <div key={i} className="rounded-2xl border border-slate-800 bg-surface/60 backdrop-blur p-6 shadow-soft">
-          <div className="flex items-center gap-2 mb-2"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" className="text-primary"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z"/></svg><h4 className="font-semibold">{s.title}</h4></div>
-          <p className="text-sm text-muted">{s.description}</p>
+      <section className="authority-section" aria-labelledby="general-care-title">
+        <div className="container-max editorial-grid">
+          <div className="editorial-grid__intro">
+            <span className="section-kicker">Soins dentaires</span>
+            <h2 id="general-care-title">Prévenir, conserver et restaurer.</h2>
+            <p>Les besoins courants sont pris en charge dans une logique globale, en tenant compte de la santé bucco-dentaire avant les considérations esthétiques.</p>
+          </div>
+          <div className="editorial-list">
+            {generalCare.map(([title, text]) => <article key={title}><h3>{title}</h3><p>{text}</p></article>)}
+          </div>
         </div>
-      ))}
-    </div>
+      </section>
+
+      <section className="authority-section authority-section--blue">
+        <div className="container-max safety-grid">
+          <div><span className="section-kicker section-kicker--light">Avant le rendez-vous</span><h2>Vous ne savez pas quel parcours choisir ?</h2></div>
+          <div className="safety-points">
+            <article><h3>Pré-rendez-vous téléphonique</h3><p>Un échange gratuit de 5 minutes permet de préciser votre besoin et de vous orienter vers un rendez-vous adapté au cabinet.</p></article>
+            <article><h3>Urgence ou douleur</h3><p>Appelez directement le cabinet au 04 22 91 05 94 pour expliquer la situation.</p></article>
+            <div className="mt-6"><Link to="/pre-rendez-vous/" className="btn-accent">Déterminer mon besoin</Link></div>
+          </div>
+        </div>
+      </section>
+    </>
   )
 }

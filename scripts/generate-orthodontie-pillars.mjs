@@ -74,10 +74,10 @@ function parseCtaSections(section, pageKey) {
       const raw = clean(match[2])
       const buttons = [...raw.matchAll(/\*\*Bouton(?: [^:*]+)?\s*:\*\*\s*([^\n]+)/gu)].map((buttonMatch) => {
         const label = clean(buttonMatch[1])
-        let href = '/contact'
-      if (/prix/iu.test(label)) href = '/prix-orthodontie-invisible-sete'
-      else if (/orthodontie invisible/iu.test(label)) href = '/orthodontie-invisible-sete'
-      else if (/orthodontie à sète|orthodontie a sete/iu.test(label)) href = '/orthodontie-sete'
+        let href = '/contact/'
+      if (/prix/iu.test(label)) href = '/prix-orthodontie-invisible-sete/'
+      else if (/orthodontie invisible/iu.test(label)) href = '/orthodontie-invisible-sete/'
+      else if (/orthodontie à sète|orthodontie a sete/iu.test(label)) href = '/orthodontie-sete/'
       return { label, href }
     })
     const text = clean(raw.replace(/\*\*Bouton(?: [^:*]+)?\s*:\*\*\s*[^\n]+/gu, '').replace(/\*\*(.*?)\*\*/gu, '$1').replace(/^##\s+/gmu, '')).replace(/\n+/gu, ' ')
@@ -119,7 +119,7 @@ function parsePage(block, config) {
     ctaTitle: config.finalCtaTitle,
     ctaText: config.finalCtaText,
     ctaLabel: config.finalCtaLabel,
-    ctaHref: '/contact',
+    ctaHref: '/contact/',
     internalLinks: config.internalLinks,
     relatedReadingTitle: 'À lire aussi sur l’orthodontie et l’alignement dentaire',
     relatedReadingLinks: config.relatedReadingLinks,
@@ -140,14 +140,14 @@ async function main() {
   const pages = [
     parsePage(page1Block, {
       pageKey: 'general',
-      url: '/orthodontie-sete',
+      url: '/orthodontie-sete/',
       menuLabel: 'Orthodontie à Sète',
-      badge: 'Page pilier orthodontie',
+      badge: 'Guide patient · Orthodontie',
       title: 'Orthodontie à Sète : alignement dentaire et bilan | Dr. Abdessadok',
       metaDescription:
         'Vous vous interrogez sur l’alignement de vos dents ? Découvrez quand consulter pour une orthodontie à Sète, quelles questions poser et comment se déroule un premier bilan.',
       highlights: [
-        'Page pilier générale sur l’alignement dentaire à Sète',
+        'Guide général sur l’alignement dentaire à Sète',
         'Repères concrets sur chevauchement, espaces, récidive et orthodontie adulte',
         'Pont naturel vers l’orthodontie invisible lorsque cette option mérite discussion',
       ],
@@ -156,22 +156,22 @@ async function main() {
         'Dents chevauchées, espace visible, récidive après un ancien appareil ou simple doute sur votre sourire : un premier bilan permet de faire le point avec prudence sur ce qui mérite réellement d’être discuté.',
       finalCtaLabel: 'Demander un bilan',
       internalLinks: [
-        '/orthodontie-invisible-sete',
-        '/contact',
-        '/about',
-        '/prix-orthodontie-invisible-sete',
-        '/blog/orthodontie-sete-quand-consulter-alignement-dentaire',
-        '/blog/orthodontie-adulte-sete-questions-avant-traitement',
-        '/blog/dents-chevauchees-espaces-visibles-correction-sete',
-        '/blog/dents-qui-rebougent-apres-appareil-sete',
-        '/blog/orthodontie-bassin-de-thau-suivi-sete',
+        '/orthodontie-invisible-sete/',
+        '/contact/',
+        '/about/',
+        '/prix-orthodontie-invisible-sete/',
+        '/blog/orthodontie-sete-quand-consulter-alignement-dentaire/',
+        '/blog/orthodontie-adulte-sete-questions-avant-traitement/',
+        '/blog/dents-chevauchees-espaces-visibles-correction-sete/',
+        '/blog/dents-qui-rebougent-apres-appareil-sete/',
+        '/blog/orthodontie-bassin-de-thau-suivi-sete/',
       ],
       relatedReadingLinks: [
-        '/blog/orthodontie-sete-quand-consulter-alignement-dentaire',
-        '/blog/orthodontie-adulte-sete-questions-avant-traitement',
-        '/blog/dents-chevauchees-espaces-visibles-correction-sete',
-        '/blog/dents-qui-rebougent-apres-appareil-sete',
-        '/blog/orthodontie-bassin-de-thau-suivi-sete',
+        '/blog/orthodontie-sete-quand-consulter-alignement-dentaire/',
+        '/blog/orthodontie-adulte-sete-questions-avant-traitement/',
+        '/blog/dents-chevauchees-espaces-visibles-correction-sete/',
+        '/blog/dents-qui-rebougent-apres-appareil-sete/',
+        '/blog/orthodontie-bassin-de-thau-suivi-sete/',
       ],
       keywords: [
         'orthodontie sete',
@@ -181,49 +181,49 @@ async function main() {
         'alignement dentaire sete',
       ],
       heroActions: [
-        { label: 'Demander un bilan', href: '/contact', variant: 'primary' },
-        { label: 'Prendre contact avec le cabinet', href: '/contact', variant: 'secondary' },
-        { label: 'Découvrir l’orthodontie invisible à Sète', href: '/orthodontie-invisible-sete', variant: 'ghost' },
+        { label: 'Demander un bilan', href: '/contact/', variant: 'primary' },
+        { label: 'Prendre contact avec le cabinet', href: '/contact/', variant: 'secondary' },
+        { label: 'Découvrir l’orthodontie invisible à Sète', href: '/orthodontie-invisible-sete/', variant: 'ghost' },
       ],
     }),
     parsePage(page2Block, {
       pageKey: 'invisible',
-      url: '/orthodontie-invisible-sete',
+      url: '/orthodontie-invisible-sete/',
       menuLabel: 'Orthodontie invisible Sète',
-      badge: 'Page pilier orthodontie invisible',
+      badge: 'Guide patient · Orthodontie invisible',
       title: 'Orthodontie invisible à Sète : aligneurs et bilan | Dr. Abdessadok',
       metaDescription:
         'Découvrez l’orthodontie invisible à Sète : aligneurs transparents, bilan, suivi, durée, quotidien et questions utiles avant de prendre rendez-vous.',
       highlights: [
-        'Page pilier centrale sur les aligneurs transparents à Sète',
+        'Guide complet sur les aligneurs transparents à Sète',
         'Réponses claires sur bilan, quotidien, durée, adultes et adolescents',
-        'Maillage fort vers le prix, le suivi local et le cluster d’articles dédiés',
+        'Accès direct aux informations sur le prix, le suivi local et les guides associés',
       ],
       finalCtaTitle: 'Vous pensez à une orthodontie invisible à Sète ?',
       finalCtaText:
         'Aligneurs transparents, récidive après un ancien appareil, gêne liée à l’alignement ou simple besoin d’un avis : un premier bilan permet de poser les bonnes questions avant de se lancer.',
       finalCtaLabel: 'Prendre rendez-vous',
       internalLinks: [
-        '/orthodontie-sete',
-        '/prix-orthodontie-invisible-sete',
-        '/contact',
-        '/about',
-        '/blog/orthodontie-invisible-sete-questions-avant-bilan',
-        '/blog/invisalign-aligneurs-transparents-gouttieres-differences',
-        '/blog/duree-orthodontie-invisible-sete',
-        '/blog/orthodontie-invisible-quotidien-repas-entretien-parole',
-        '/blog/orthodontie-invisible-adulte-30-40-50-ans',
-        '/blog/orthodontie-invisible-adolescent-sete',
-        '/blog/premier-bilan-orthodontie-invisible-sete',
+        '/orthodontie-sete/',
+        '/prix-orthodontie-invisible-sete/',
+        '/contact/',
+        '/about/',
+        '/blog/orthodontie-invisible-sete-questions-avant-bilan/',
+        '/blog/invisalign-aligneurs-transparents-gouttieres-differences/',
+        '/blog/duree-orthodontie-invisible-sete/',
+        '/blog/orthodontie-invisible-quotidien-repas-entretien-parole/',
+        '/blog/orthodontie-invisible-adulte-30-40-50-ans/',
+        '/blog/orthodontie-invisible-adolescent-sete/',
+        '/blog/premier-bilan-orthodontie-invisible-sete/',
       ],
       relatedReadingLinks: [
-        '/blog/orthodontie-invisible-sete-questions-avant-bilan',
-        '/blog/invisalign-aligneurs-transparents-gouttieres-differences',
-        '/blog/duree-orthodontie-invisible-sete',
-        '/blog/orthodontie-invisible-quotidien-repas-entretien-parole',
-        '/blog/orthodontie-invisible-adulte-30-40-50-ans',
-        '/blog/orthodontie-invisible-adolescent-sete',
-        '/blog/premier-bilan-orthodontie-invisible-sete',
+        '/blog/orthodontie-invisible-sete-questions-avant-bilan/',
+        '/blog/invisalign-aligneurs-transparents-gouttieres-differences/',
+        '/blog/duree-orthodontie-invisible-sete/',
+        '/blog/orthodontie-invisible-quotidien-repas-entretien-parole/',
+        '/blog/orthodontie-invisible-adulte-30-40-50-ans/',
+        '/blog/orthodontie-invisible-adolescent-sete/',
+        '/blog/premier-bilan-orthodontie-invisible-sete/',
       ],
       keywords: [
         'orthodontie invisible sete',
@@ -234,14 +234,16 @@ async function main() {
         'orthodontie invisible bassin de thau',
       ],
       heroActions: [
-        { label: 'Demander un bilan', href: '/contact', variant: 'primary' },
-        { label: 'Prendre rendez-vous', href: '/contact', variant: 'secondary' },
-        { label: 'Voir le prix de l’orthodontie invisible', href: '/prix-orthodontie-invisible-sete', variant: 'ghost' },
+        { label: 'Demander un bilan', href: '/contact/', variant: 'primary' },
+        { label: 'Prendre rendez-vous', href: '/contact/', variant: 'secondary' },
+        { label: 'Voir le prix de l’orthodontie invisible', href: '/prix-orthodontie-invisible-sete/', variant: 'ghost' },
       ],
     }),
   ]
 
-  await fs.writeFile(outputPath, `export const generatedOrthodontiePillars = ${JSON.stringify(pages, null, 2)}\n`)
+  const fileContent = `export const generatedOrthodontiePillars = ${JSON.stringify(pages, null, 2)}\n`
+  const current = await fs.readFile(outputPath, 'utf8').catch(() => '')
+  if (current !== fileContent) await fs.writeFile(outputPath, fileContent)
   console.log(`Generated ${pages.length} orthodontie pillar pages in ${path.relative(process.cwd(), outputPath)}`)
 }
 

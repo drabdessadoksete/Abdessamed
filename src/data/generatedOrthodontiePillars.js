@@ -1,18 +1,18 @@
 export const generatedOrthodontiePillars = [
   {
-    "url": "/orthodontie-sete",
-    "path": "orthodontie-sete",
+    "url": "/orthodontie-sete/",
+    "path": "orthodontie-sete/",
     "menuGroup": "pillars",
     "menuLabel": "Orthodontie à Sète",
     "menuDescription": "Dents chevauchées, espaces visibles, récidive après un ancien appareil, gêne durable : un bilan permet d’évaluer l’intérêt d’une démarche d’orthodontie à Sète.",
-    "badge": "Page pilier orthodontie",
+    "badge": "Guide patient · Orthodontie",
     "title": "Orthodontie à Sète : alignement dentaire et bilan | Dr. Abdessadok",
     "metaDescription": "Vous vous interrogez sur l’alignement de vos dents ? Découvrez quand consulter pour une orthodontie à Sète, quelles questions poser et comment se déroule un premier bilan.",
     "h1": "Orthodontie à Sète : faire le point sur l’alignement de vos dents",
     "intro": "Dents chevauchées, espaces visibles, récidive après un ancien appareil, gêne durable : un bilan permet d’évaluer l’intérêt d’une démarche d’orthodontie à Sète.",
     "excerpt": "Dents chevauchées, espaces visibles, récidive après un ancien appareil, gêne durable : un bilan permet d’évaluer l’intérêt d’une démarche d’orthodontie à Sète.",
     "highlights": [
-      "Page pilier générale sur l’alignement dentaire à Sète",
+      "Guide général sur l’alignement dentaire à Sète",
       "Repères concrets sur chevauchement, espaces, récidive et orthodontie adulte",
       "Pont naturel vers l’orthodontie invisible lorsque cette option mérite discussion"
     ],
@@ -82,7 +82,7 @@ export const generatedOrthodontiePillars = [
         "buttons": [
           {
             "label": "Demander un bilan",
-            "href": "/contact"
+            "href": "/contact/"
           }
         ],
         "tone": "emerald"
@@ -91,25 +91,25 @@ export const generatedOrthodontiePillars = [
     "ctaTitle": "Vous vous interrogez sur votre alignement dentaire à Sète ?",
     "ctaText": "Dents chevauchées, espace visible, récidive après un ancien appareil ou simple doute sur votre sourire : un premier bilan permet de faire le point avec prudence sur ce qui mérite réellement d’être discuté.",
     "ctaLabel": "Demander un bilan",
-    "ctaHref": "/contact",
+    "ctaHref": "/contact/",
     "internalLinks": [
-      "/orthodontie-invisible-sete",
-      "/contact",
-      "/about",
-      "/prix-orthodontie-invisible-sete",
-      "/blog/orthodontie-sete-quand-consulter-alignement-dentaire",
-      "/blog/orthodontie-adulte-sete-questions-avant-traitement",
-      "/blog/dents-chevauchees-espaces-visibles-correction-sete",
-      "/blog/dents-qui-rebougent-apres-appareil-sete",
-      "/blog/orthodontie-bassin-de-thau-suivi-sete"
+      "/orthodontie-invisible-sete/",
+      "/contact/",
+      "/about/",
+      "/prix-orthodontie-invisible-sete/",
+      "/blog/orthodontie-sete-quand-consulter-alignement-dentaire/",
+      "/blog/orthodontie-adulte-sete-questions-avant-traitement/",
+      "/blog/dents-chevauchees-espaces-visibles-correction-sete/",
+      "/blog/dents-qui-rebougent-apres-appareil-sete/",
+      "/blog/orthodontie-bassin-de-thau-suivi-sete/"
     ],
     "relatedReadingTitle": "À lire aussi sur l’orthodontie et l’alignement dentaire",
     "relatedReadingLinks": [
-      "/blog/orthodontie-sete-quand-consulter-alignement-dentaire",
-      "/blog/orthodontie-adulte-sete-questions-avant-traitement",
-      "/blog/dents-chevauchees-espaces-visibles-correction-sete",
-      "/blog/dents-qui-rebougent-apres-appareil-sete",
-      "/blog/orthodontie-bassin-de-thau-suivi-sete"
+      "/blog/orthodontie-sete-quand-consulter-alignement-dentaire/",
+      "/blog/orthodontie-adulte-sete-questions-avant-traitement/",
+      "/blog/dents-chevauchees-espaces-visibles-correction-sete/",
+      "/blog/dents-qui-rebougent-apres-appareil-sete/",
+      "/blog/orthodontie-bassin-de-thau-suivi-sete/"
     ],
     "keywords": [
       "orthodontie sete",
@@ -121,17 +121,17 @@ export const generatedOrthodontiePillars = [
     "heroActions": [
       {
         "label": "Demander un bilan",
-        "href": "/contact",
+        "href": "/contact/",
         "variant": "primary"
       },
       {
         "label": "Prendre contact avec le cabinet",
-        "href": "/contact",
+        "href": "/contact/",
         "variant": "secondary"
       },
       {
         "label": "Découvrir l’orthodontie invisible à Sète",
-        "href": "/orthodontie-invisible-sete",
+        "href": "/orthodontie-invisible-sete/",
         "variant": "ghost"
       }
     ],
@@ -149,21 +149,21 @@ export const generatedOrthodontiePillars = [
     "wordCountApprox": 3194
   },
   {
-    "url": "/orthodontie-invisible-sete",
-    "path": "orthodontie-invisible-sete",
+    "url": "/orthodontie-invisible-sete/",
+    "path": "orthodontie-invisible-sete/",
     "menuGroup": "pillars",
     "menuLabel": "Orthodontie invisible Sète",
     "menuDescription": "Aligneurs transparents, Invisalign, durée, quotidien, adultes, adolescents : une page complète pour comprendre l’orthodontie invisible avant de demander un bilan à Sète.",
-    "badge": "Page pilier orthodontie invisible",
+    "badge": "Guide patient · Orthodontie invisible",
     "title": "Orthodontie invisible à Sète : aligneurs et bilan | Dr. Abdessadok",
     "metaDescription": "Découvrez l’orthodontie invisible à Sète : aligneurs transparents, bilan, suivi, durée, quotidien et questions utiles avant de prendre rendez-vous.",
     "h1": "Orthodontie invisible à Sète : comprendre les aligneurs avant de commencer",
     "intro": "Aligneurs transparents, Invisalign, durée, quotidien, adultes, adolescents : une page complète pour comprendre l’orthodontie invisible avant de demander un bilan à Sète.",
     "excerpt": "Aligneurs transparents, Invisalign, durée, quotidien, adultes, adolescents : une page complète pour comprendre l’orthodontie invisible avant de demander un bilan à Sète.",
     "highlights": [
-      "Page pilier centrale sur les aligneurs transparents à Sète",
+      "Guide complet sur les aligneurs transparents à Sète",
       "Réponses claires sur bilan, quotidien, durée, adultes et adolescents",
-      "Maillage fort vers le prix, le suivi local et le cluster d’articles dédiés"
+      "Accès direct aux informations sur le prix, le suivi local et les guides associés"
     ],
     "articleBody": "Vous pensez à une solution plus discrète pour améliorer l’alignement de vos dents ?  \nL’orthodontie invisible, souvent recherchée à travers les termes **Invisalign**, **aligneurs transparents** ou **gouttières invisibles**, suscite beaucoup d’intérêt chez les adultes et chez certains adolescents. Elle peut répondre à un besoin de discrétion, mais reste avant tout un **traitement d’alignement dentaire qui doit être évalué au cas par cas**.\n\nAu **Cabinet Dentaire Dr. Abdessadok à Sète**, un premier bilan permet de comprendre votre demande, d’examiner votre situation clinique et de préciser si une approche par aligneurs peut être discutée.\n\n## Pourquoi l’orthodontie invisible attire autant d’adultes à Sète\n\nBeaucoup de patients souhaitent corriger un chevauchement, un espace ou un désalignement visible, mais hésitent à se lancer par crainte d’un appareil trop présent dans leur vie quotidienne. L’orthodontie invisible attire alors pour plusieurs raisons.\n\n### Une demande de discrétion\n\nLes aligneurs transparents sont recherchés par des adultes qui souhaitent, lorsque l’indication le permet, discuter d’une option plus discrète. Cette attente peut être liée :\n\n- à la vie professionnelle ;\n- aux échanges sociaux ;\n- à la prise de parole ;\n- à un inconfort personnel vis-à-vis d’un appareil très visible.\n\nIl ne faut toutefois pas réduire le traitement à son aspect esthétique. La discrétion du dispositif ne dispense ni d’un examen clinique, ni d’un suivi, ni d’une implication du patient.\n\n### Une solution compatible avec certains rythmes de vie\n\nLes aligneurs sont amovibles, ce qui constitue souvent un avantage apprécié lors des repas et du brossage. Cette caractéristique peut sembler plus confortable à organiser dans certaines routines quotidiennes.\n\nMais cette liberté s’accompagne d’une exigence : les aligneurs doivent être portés conformément aux consignes du praticien. L’efficacité du traitement dépend donc aussi de la régularité du patient.\n\n### Une réponse possible à des demandes variées\n\nLes patients qui s’intéressent à l’orthodontie invisible n’ont pas tous le même profil. Certains souhaitent traiter une gêne récente, d’autres une récidive après un appareil ancien, d’autres encore veulent savoir si un sourire légèrement irrégulier peut être amélioré.\n\nLa consultation permet de passer d’une curiosité générale à une réflexion individualisée.\n\n## Orthodontie invisible, Invisalign, aligneurs transparents : de quoi parle-t-on ?\n\nLes mots sont souvent utilisés comme des synonymes dans les recherches en ligne, alors qu’ils ne désignent pas exactement la même chose.\n\n### Orthodontie invisible : une famille de traitements discrets\n\nL’expression “orthodontie invisible” est souvent employée pour parler de solutions visant à corriger l’alignement des dents avec une visibilité réduite. Dans l’usage courant, elle renvoie fréquemment aux **aligneurs transparents**, bien que la logique clinique soit plus importante que le vocabulaire marketing.\n\n### Aligneurs transparents : le principe général\n\nLes aligneurs sont des gouttières transparentes conçues pour s’adapter à la dentition et accompagner progressivement certains mouvements dentaires selon un plan défini. Ils sont portés en série et changés selon le protocole prescrit par le praticien lorsque cette solution est retenue.\n\nIls ne conviennent pas automatiquement à toutes les situations. Leur pertinence dépend :\n\n- du type de désalignement ;\n- des mouvements nécessaires ;\n- de la santé bucco-dentaire ;\n- de la coopération du patient ;\n- de la stratégie thérapeutique choisie.\n\n### Invisalign : un nom souvent recherché\n\n“Invisalign” est l’un des termes les plus connus du grand public lorsqu’il s’agit d’aligneurs transparents. De nombreux patients le tapent directement dans Google ou l’utilisent pour parler de toute orthodontie invisible. Il est toutefois utile de distinguer :\n\n- la **catégorie** : aligneurs transparents / orthodontie invisible ;\n- le **système ou la marque** évoqué dans la discussion clinique.\n\nLe patient n’a pas besoin de maîtriser cette distinction avant de consulter. Le praticien pourra préciser le vocabulaire et expliquer ce qui est réellement envisagé dans son cas.\n\n### Gouttières invisibles : une expression courante mais parfois imprécise\n\nL’expression “gouttières invisibles” est très utilisée par les patients. Elle évoque bien l’idée d’un dispositif amovible et discret, mais elle reste plus large et moins précise. Lors d’un bilan, le cabinet pourra clarifier de quel type de traitement il est question et éviter les confusions avec d’autres dispositifs qui n’ont pas le même objectif.\n\n## Dans quels cas les patients se posent-ils la question ?\n\nL’orthodontie invisible est souvent envisagée à partir d’une gêne bien concrète. La consultation ne sert pas à transformer toute petite irrégularité en traitement, mais à vérifier si la demande mérite d’être étudiée.\n\n### Dents chevauchées\n\nLe patient peut remarquer que certaines dents de devant se superposent, qu’une incisive est légèrement tournée ou qu’une zone paraît de moins en moins régulière. Selon la situation, cette gêne peut être surtout esthétique ou s’accompagner de questions d’entretien.\n\n### Espaces visibles\n\nUn espace entre deux dents peut devenir une source de gêne, notamment s’il est situé dans la zone du sourire. L’intérêt d’une correction doit être évalué avec soin, car tous les espaces ne relèvent pas du même mécanisme ni du même projet.\n\n### Récidive après un ancien appareil\n\nBeaucoup d’adultes recherchent des aligneurs parce que leurs dents ont rebougé après un traitement antérieur. Ils ont connu un alignement satisfaisant puis constatent, avec le temps, un léger retour du chevauchement ou une modification visible.\n\nCette demande est particulièrement fréquente et mérite un bilan pour déterminer ce qui peut être discuté sans généraliser.\n\n### Gêne esthétique durable\n\nCertains patients se sentent gênés par leur sourire depuis longtemps, mais n’ont jamais consulté. Ils ne savent pas si leur demande est “assez importante”. Le bilan permet d’objectiver la situation et d’expliquer les possibilités ou les limites d’un traitement invisible.\n\n### Souhait d’une option plus discrète\n\nIl arrive qu’un patient sache qu’une réflexion orthodontique pourrait être utile, mais qu’il redoute un appareil visible. Les aligneurs transparents suscitent alors de l’intérêt. Le cabinet peut expliquer si cette piste est cohérente avec le cas présenté.\n\n## Suis-je un bon candidat ? Ce que le bilan permet vraiment de déterminer\n\nC’est l’une des questions les plus importantes, et il n’existe pas de réponse sérieuse sans examen.\n\n### L’indication dépend de la situation clinique\n\nUn traitement par aligneurs peut être discuté dans certaines situations, mais il n’est pas universel. Le praticien doit comprendre :\n\n- l’alignement actuel ;\n- la fermeture des dents ;\n- l’espace disponible ;\n- la santé des dents et des gencives ;\n- les soins antérieurs ;\n- les objectifs du patient.\n\nCette analyse permet d’éviter de confondre “je souhaite une solution discrète” et “cette solution est indiquée dans mon cas”.\n\n### L’occlusion doit être prise en compte\n\nMême si le patient consulte d’abord pour une gêne visible, l’évaluation ne se limite pas à l’avant du sourire. La relation entre les dents du haut et du bas peut influencer la stratégie de traitement. C’est pourquoi un bilan complet est indispensable.\n\n### La santé bucco-dentaire conditionne la discussion\n\nAvant d’envisager des mouvements dentaires, il est important de vérifier que la bouche se trouve dans un état compatible avec le projet. Une inflammation gingivale, une situation parodontale non stabilisée ou certains soins à prioriser peuvent conduire à adapter l’ordre des étapes.\n\n### La discipline de port est essentielle\n\nLes aligneurs sont amovibles. Cette caractéristique est appréciée, mais elle suppose une implication active. Si le dispositif n’est pas porté comme recommandé, le traitement peut ne pas évoluer comme prévu. La capacité à suivre les consignes fait donc partie des critères de décision.\n\n### Tous les cas ne relèvent pas de la même approche\n\nCertaines demandes peuvent être compatibles avec une solution invisible. D’autres peuvent nécessiter une autre stratégie. Le bilan permet de dire les choses avec mesure, sans promettre ce qui n’est pas indiqué.\n\n## Comment se déroule un premier bilan d’orthodontie invisible à Sète ?\n\nCette consultation joue un rôle essentiel. Elle ne sert pas seulement à “demander un devis”, mais à comprendre si la demande peut être traduite en projet clinique cohérent.\n\n### 1. Écouter votre objectif\n\nLe praticien commence par vous laisser exprimer ce qui vous gêne :\n\n- une dent déplacée ;\n- un chevauchement ;\n- une récidive ;\n- un espace ;\n- une demande de discrétion ;\n- une hésitation plus générale.\n\nCette étape permet de ne pas plaquer une solution standard sur une demande personnelle.\n\n### 2. Examiner l’alignement\n\nLe cabinet observe la dentition, la forme du sourire, l’organisation générale des dents et les points qui motivent votre consultation.\n\n### 3. Évaluer le contexte oral\n\nLa consultation ne sépare pas l’alignement du reste de la bouche. Le praticien peut vérifier l’état des gencives, les restaurations existantes, l’hygiène et les éléments qui peuvent influencer la faisabilité d’un traitement.\n\n### 4. Discuter de la pertinence des aligneurs\n\nSi la situation paraît compatible, les aligneurs transparents peuvent être évoqués. Le praticien pourra expliquer :\n\n- ce que le traitement cherche à corriger ;\n- ce qu’il demande au quotidien ;\n- ce qui doit encore être analysé ;\n- quelles seraient les étapes suivantes.\n\nSi les aligneurs ne semblent pas être l’option la plus adaptée, une autre orientation peut être proposée.\n\n### 5. Clarifier les suites possibles\n\nSelon le cas, la suite peut prendre plusieurs formes :\n\n- approfondir l’analyse avec des éléments complémentaires ;\n- préparer une proposition de traitement ;\n- traiter d’abord un autre point bucco-dentaire ;\n- laisser au patient un temps de réflexion.\n\nUn bon bilan n’oblige pas à décider dans l’instant. Il sert à décider mieux.\n\n## Le quotidien avec des aligneurs transparents\n\nL’un des grands sujets qui intéressent les patients est la vie pratique : comment manger, parler, travailler, se brosser les dents, voyager ou participer à des repas sociaux ?\n\n### Le port des aligneurs\n\nLe port doit suivre les consignes données par le praticien. La régularité est centrale. Même si les gouttières sont amovibles, elles ne doivent pas devenir un dispositif porté “quand on y pense”.\n\n### Les repas\n\nLes aligneurs sont généralement retirés pour manger. Cela permet de conserver des habitudes alimentaires plus proches du quotidien habituel que certains appareils fixes. En contrepartie, il faut penser à les remettre ensuite et à maintenir de bonnes habitudes d’hygiène.\n\n### L’hygiène\n\nLe brossage des dents et l’entretien des aligneurs sont essentiels. Une bouche propre et un dispositif correctement entretenu contribuent à un parcours plus serein. Le cabinet pourra donner des consignes précises adaptées au système retenu.\n\n### La parole\n\nCertains patients se demandent s’ils parleront différemment au début. Une phase d’adaptation peut exister chez certaines personnes, puis s’estomper. L’intensité et la durée de cette adaptation varient selon les patients.\n\n### La vie professionnelle et sociale\n\nLes adultes apprécient souvent le caractère discret des aligneurs dans les réunions, les échanges clients ou les événements sociaux. Mais il reste important de prévoir une organisation simple autour des repas, des déplacements et du rangement des gouttières.\n\n### Les voyages\n\nVoyager avec des aligneurs demande surtout un peu d’anticipation : emporter l’étui, respecter les consignes et ne pas interrompre le port de manière prolongée. Le cabinet pourra préciser les recommandations pratiques lors du suivi.\n\n## Combien de temps dure une orthodontie invisible ?\n\nC’est une question légitime, mais la réponse doit rester individualisée.\n\n### La durée dépend de la complexité du cas\n\nUn léger ajustement d’alignement n’a pas nécessairement le même parcours qu’une correction plus importante. Le nombre et la nature des mouvements envisagés influencent la durée.\n\n### La régularité du port joue un rôle\n\nUn traitement par aligneurs repose sur la coopération du patient. Une utilisation irrégulière peut perturber l’avancement prévu. C’est pourquoi la discipline fait partie intégrante du succès de la démarche.\n\n### Des ajustements peuvent être nécessaires\n\nAu cours d’un traitement, il peut être utile de réévaluer certains points, d’ajuster la stratégie ou de prévoir des étapes complémentaires lorsque cela est indiqué. Ces possibilités expliquent pourquoi il est préférable de ne pas présenter la durée comme une promesse intangible.\n\n### Le suivi permet de réévaluer au fil du parcours\n\nLa consultation initiale fournit une première estimation lorsque le projet est suffisamment défini, mais le suivi reste important pour s’assurer que l’évolution correspond aux attentes du plan de traitement.\n\n## Orthodontie invisible chez l’adulte\n\nL’orthodontie invisible est souvent recherchée par les adultes parce qu’elle semble mieux s’intégrer à leur quotidien.\n\n### Après 30 ans\n\nÀ cette période, certains patients souhaitent corriger une gêne qu’ils avaient laissée de côté plus jeunes ou améliorer la régularité de leur sourire dans un contexte professionnel et personnel plus affirmé.\n\n### Après 40 ans\n\nLa demande peut s’inscrire dans une réflexion plus globale sur le sourire, l’entretien de certaines zones chevauchées ou la cohérence d’un plan de soins dentaire plus large.\n\n### Après 50 ans\n\nL’âge seul ne ferme pas la discussion, mais l’évaluation clinique doit être particulièrement soigneuse. L’état gingival, les restaurations existantes et les objectifs réalistes jouent un rôle important.\n\nPour approfondir ce sujet, un article dédié peut accompagner la réflexion :  \n**Orthodontie invisible après 30, 40 ou 50 ans : ce qui change vraiment.**\n\n## Orthodontie invisible chez l’adolescent\n\nLes aligneurs transparents peuvent aussi susciter l’intérêt de certains adolescents, notamment parce qu’ils sont plus discrets. Toutefois, il serait imprudent de les présenter comme adaptés à tous.\n\n### Une question de contexte clinique\n\nL’indication dépend de la dentition, du type de correction envisagée et du stade de développement.\n\n### Une question de maturité et de discipline\n\nParce qu’ils sont amovibles, les aligneurs demandent une régularité de port. Le jeune doit comprendre son rôle dans le traitement et être capable de respecter les consignes avec sérieux.\n\n### Une question à discuter, pas à présumer\n\nLes parents peuvent tout à fait demander si cette option peut être abordée. Le praticien précisera si elle mérite d’être étudiée ou si une autre prise en charge paraît plus cohérente.\n\nUn contenu dédié peut venir compléter la page :  \n**Orthodontie invisible chez l’adolescent à Sète : pour quels profils en parler ?**\n\n## Pourquoi le suivi à Sète et dans le Bassin de Thau peut compter\n\nUn traitement invisible attire souvent pour sa discrétion, mais il ne doit pas être pensé comme un soin “à distance” ou sans accompagnement. Le suivi reste une composante importante du parcours.\n\n### Une proximité utile pour les contrôles\n\nPour les patients de Sète et des communes du Bassin de Thau, être suivi localement peut simplifier la participation aux rendez-vous nécessaires et rendre les échanges plus faciles à intégrer dans le quotidien.\n\n### Un cabinet accessible pour poser ses questions\n\nLes patients s’interrogent souvent sur le port, l’entretien, une sensation nouvelle ou un doute dans l’organisation. Savoir vers qui se tourner dans un cadre local contribue à la qualité de la relation de soin.\n\n### Une démarche de suivi, pas une simple livraison d’aligneurs\n\nL’orthodontie invisible n’est pas qu’un ensemble de gouttières. Elle repose sur une évaluation, une indication, un plan et un accompagnement. Cette dimension doit rester centrale dans la manière dont le patient aborde son traitement.\n\n## Prix, devis et remboursement : pourquoi un bilan reste nécessaire\n\nLa question du budget arrive souvent très tôt. Elle est légitime. Toutefois, il n’existe pas de réponse sérieuse et personnalisée sans connaître :\n\n- la situation de départ ;\n- la complexité du cas ;\n- les objectifs du patient ;\n- la stratégie retenue ;\n- la durée et le suivi envisagés.\n\nC’est pourquoi une page spécifique peut expliquer les éléments qui influencent le prix, tandis que le bilan permet de comprendre ce qui correspond réellement au cas du patient.\n\n## Ce que le patient doit vraiment retenir avant de se lancer\n\nAvant de demander un bilan, il peut être utile de garder en tête quelques repères simples :\n\n1. L’orthodontie invisible est une possibilité de traitement discret, pas une solution automatique.\n2. Les mots Invisalign, aligneurs transparents et gouttières invisibles sont souvent utilisés ensemble, mais le praticien clarifie ce qui est réellement envisagé.\n3. Le bilan reste l’étape centrale pour savoir si cette approche est pertinente.\n4. Le quotidien avec aligneurs est généralement compatible avec une vie active, mais il demande de l’organisation.\n5. La durée dépend du cas, de la stratégie et de la régularité du port.\n6. Adultes comme adolescents peuvent poser la question, mais l’indication reste individuelle.\n7. Le suivi à Sète contribue à inscrire le traitement dans un parcours clair et accompagné.\n\n## Ce que les idées reçues sur les aligneurs peuvent faire oublier\n\nL’orthodontie invisible est souvent présentée en ligne sous un angle très séduisant : discrétion, simplicité apparente, liberté de retirer les gouttières. Ces éléments comptent, mais ils ne racontent pas tout le parcours. Une page d’information utile doit aussi aider le patient à éviter quelques confusions fréquentes.\n\n### “Invisible” ne veut pas dire “sans présence”\n\nLes aligneurs sont recherchés pour leur discrétion, mais ils restent un dispositif porté dans la bouche au quotidien. Selon le cas et la stratégie thérapeutique retenue, certains éléments associés au traitement peuvent aussi être nécessaires. Le praticien pourra expliquer ce qui serait envisagé dans votre situation et ce qui resterait visible ou non.\n\nCette nuance est importante : un traitement peut être discret sans être littéralement imperceptible à chaque instant. Mieux vaut l’aborder avec une attente réaliste plutôt qu’avec une promesse absolue.\n\n### “Amovible” ne veut pas dire “à porter quand on veut”\n\nLe caractère amovible des aligneurs est souvent vécu comme un avantage. Il facilite l’organisation des repas et de l’hygiène, ce qui séduit particulièrement les adultes actifs. Mais l’amovibilité crée aussi une responsabilité : le patient doit remettre les aligneurs, suivre les consignes et éviter les interruptions répétées.\n\nUn traitement qui semble confortable dans son principe peut devenir moins efficace s’il est mal intégré au quotidien. C’est pourquoi le bilan doit aborder non seulement l’indication clinique, mais aussi la capacité du patient à adopter une routine régulière.\n\n### “Discret” ne veut pas dire “sans contrôle”\n\nCertaines personnes imaginent encore qu’un traitement par aligneurs se déroule presque seul une fois les gouttières remises. En réalité, le suivi reste essentiel. Il permet d’observer l’évolution, de répondre aux questions, de vérifier la cohérence du parcours et d’adapter la stratégie lorsque cela est indiqué.\n\nLe patient n’achète pas simplement une série de dispositifs : il s’engage dans un parcours de soins encadré. Cette différence mérite d’être comprise avant de commencer.\n\n### “Aligner les dents” ne veut pas toujours dire répondre à toute la gêne\n\nUn patient peut espérer qu’un traitement invisible améliore l’ensemble de son sourire ou règle une gêne qu’il attribue à l’alignement. Parfois, la demande correspond effectivement à un désalignement qui mérite discussion. Dans d’autres situations, le sujet peut être plus large : forme des dents, restaurations anciennes, usure, teinte, ou autre problématique qui ne relève pas uniquement d’un mouvement dentaire.\n\nLe rôle du bilan est précisément de ne pas réduire toutes les demandes à un seul outil. Il aide à distinguer ce qui peut relever de l’orthodontie invisible, ce qui relève d’un autre type de soin et ce qui nécessite peut-être simplement une information claire.\n\n### Une bonne décision repose sur un accord entre envie, indication et faisabilité\n\nL’envie d’un traitement discret est légitime. L’intérêt clinique doit être vérifié. La faisabilité dépend du cas. Et le quotidien du patient doit permettre d’en suivre les exigences. Lorsque ces dimensions sont alignées, la discussion devient constructive. Lorsqu’elles ne le sont pas, il est préférable de le comprendre tôt.\n\nC’est ce qui donne de la valeur à un premier rendez-vous : il transforme une idée générale — “j’aimerais des gouttières invisibles” — en une réflexion personnalisée, plus fiable et plus honnête.",
     "faq": [
@@ -247,11 +247,11 @@ export const generatedOrthodontiePillars = [
         "buttons": [
           {
             "label": "Demander un bilan",
-            "href": "/contact"
+            "href": "/contact/"
           },
           {
             "label": "Prendre contact avec le cabinet",
-            "href": "/contact"
+            "href": "/contact/"
           }
         ],
         "tone": "gold"
@@ -262,7 +262,7 @@ export const generatedOrthodontiePillars = [
         "buttons": [
           {
             "label": "Voir la page sur le prix de l’orthodontie invisible",
-            "href": "/prix-orthodontie-invisible-sete"
+            "href": "/prix-orthodontie-invisible-sete/"
           }
         ],
         "tone": "gold"
@@ -271,29 +271,29 @@ export const generatedOrthodontiePillars = [
     "ctaTitle": "Vous pensez à une orthodontie invisible à Sète ?",
     "ctaText": "Aligneurs transparents, récidive après un ancien appareil, gêne liée à l’alignement ou simple besoin d’un avis : un premier bilan permet de poser les bonnes questions avant de se lancer.",
     "ctaLabel": "Prendre rendez-vous",
-    "ctaHref": "/contact",
+    "ctaHref": "/contact/",
     "internalLinks": [
-      "/orthodontie-sete",
-      "/prix-orthodontie-invisible-sete",
-      "/contact",
-      "/about",
-      "/blog/orthodontie-invisible-sete-questions-avant-bilan",
-      "/blog/invisalign-aligneurs-transparents-gouttieres-differences",
-      "/blog/duree-orthodontie-invisible-sete",
-      "/blog/orthodontie-invisible-quotidien-repas-entretien-parole",
-      "/blog/orthodontie-invisible-adulte-30-40-50-ans",
-      "/blog/orthodontie-invisible-adolescent-sete",
-      "/blog/premier-bilan-orthodontie-invisible-sete"
+      "/orthodontie-sete/",
+      "/prix-orthodontie-invisible-sete/",
+      "/contact/",
+      "/about/",
+      "/blog/orthodontie-invisible-sete-questions-avant-bilan/",
+      "/blog/invisalign-aligneurs-transparents-gouttieres-differences/",
+      "/blog/duree-orthodontie-invisible-sete/",
+      "/blog/orthodontie-invisible-quotidien-repas-entretien-parole/",
+      "/blog/orthodontie-invisible-adulte-30-40-50-ans/",
+      "/blog/orthodontie-invisible-adolescent-sete/",
+      "/blog/premier-bilan-orthodontie-invisible-sete/"
     ],
     "relatedReadingTitle": "À lire aussi sur l’orthodontie et l’alignement dentaire",
     "relatedReadingLinks": [
-      "/blog/orthodontie-invisible-sete-questions-avant-bilan",
-      "/blog/invisalign-aligneurs-transparents-gouttieres-differences",
-      "/blog/duree-orthodontie-invisible-sete",
-      "/blog/orthodontie-invisible-quotidien-repas-entretien-parole",
-      "/blog/orthodontie-invisible-adulte-30-40-50-ans",
-      "/blog/orthodontie-invisible-adolescent-sete",
-      "/blog/premier-bilan-orthodontie-invisible-sete"
+      "/blog/orthodontie-invisible-sete-questions-avant-bilan/",
+      "/blog/invisalign-aligneurs-transparents-gouttieres-differences/",
+      "/blog/duree-orthodontie-invisible-sete/",
+      "/blog/orthodontie-invisible-quotidien-repas-entretien-parole/",
+      "/blog/orthodontie-invisible-adulte-30-40-50-ans/",
+      "/blog/orthodontie-invisible-adolescent-sete/",
+      "/blog/premier-bilan-orthodontie-invisible-sete/"
     ],
     "keywords": [
       "orthodontie invisible sete",
@@ -306,17 +306,17 @@ export const generatedOrthodontiePillars = [
     "heroActions": [
       {
         "label": "Demander un bilan",
-        "href": "/contact",
+        "href": "/contact/",
         "variant": "primary"
       },
       {
         "label": "Prendre rendez-vous",
-        "href": "/contact",
+        "href": "/contact/",
         "variant": "secondary"
       },
       {
         "label": "Voir le prix de l’orthodontie invisible",
-        "href": "/prix-orthodontie-invisible-sete",
+        "href": "/prix-orthodontie-invisible-sete/",
         "variant": "ghost"
       }
     ],

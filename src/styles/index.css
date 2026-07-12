@@ -244,30 +244,6 @@ button, input, select, textarea { font: inherit; }
   border-radius: 999px;
   background: rgba(7,31,23,.34);
 }
-.hero-video-control {
-  position: absolute;
-  z-index: 3;
-  right: 2rem;
-  bottom: 2rem;
-  display: inline-flex;
-  align-items: center;
-  gap: .55rem;
-  min-height: 2.65rem;
-  padding: .55rem .85rem;
-  color: #fff;
-  border: 1px solid rgba(255,255,255,.28);
-  border-radius: 999px;
-  background: rgba(6,27,20,.46);
-  box-shadow: 0 10px 30px rgba(0,0,0,.15), inset 0 1px rgba(255,255,255,.12);
-  -webkit-backdrop-filter: blur(12px);
-  backdrop-filter: blur(12px);
-  font-size: .72rem;
-  font-weight: 800;
-  letter-spacing: .08em;
-  text-transform: uppercase;
-  transition: transform 180ms ease, background 180ms ease;
-}
-.hero-video-control:hover { transform: translateY(-2px); background: rgba(6,27,20,.68); }
 .hero-proof {
   @apply grid grid-cols-3 divide-x overflow-hidden rounded-2xl border backdrop-blur-md;
   color: #fff;
@@ -428,7 +404,6 @@ button, input, select, textarea { font: inherit; }
   .home-hero__video { object-position: 58% center; }
   .home-hero__copy { margin-left: 0; padding: 0; border-radius: 0; background: transparent; backdrop-filter: none; }
   .home-hero__copy .btn { min-height: 3.9rem; padding-inline: 1.4rem; font-size: .98rem; }
-  .hero-video-control { top: 5rem; right: 1rem; bottom: auto; }
   .service-pathway { min-height: 31rem; border-radius: 1.25rem; }
   .service-pathway__content { padding: 1.35rem; }
   .btn { width: 100%; min-height: 3.45rem; padding-inline: 1.2rem; }

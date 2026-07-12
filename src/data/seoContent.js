@@ -1,19 +1,20 @@
 import { generatedOrthodontieArticles } from './generatedOrthodontieArticles.js'
 import { generatedOrthodontiePillars } from './generatedOrthodontiePillars.js'
+import { implantologyArticles } from './implantologyArticles.js'
 
 const baseServicePages = [
   {
-    url: '/invisalign',
+    url: '/invisalign/',
     path: 'invisalign',
     menuGroup: 'pillars',
     menuLabel: 'Invisalign a Sete',
-    menuDescription: "Page pilier sur l'orthodontie invisible pour adultes et adolescents.",
-    badge: 'Page pilier principale',
+    menuDescription: "Guide sur la solution Invisalign pour adultes et adolescents selon l'indication clinique.",
+    badge: 'Guide patient · Invisalign',
     title: 'Invisalign Sete : Orthodontie invisible pour adultes et adolescents',
     metaDescription: "Invisalign a Sete : orthodontie invisible, scanner 3D, taquets, duree, port quotidien et suivi du traitement au cabinet du Dr Abdessadok.",
     h1: "Invisalign a Sete : le guide complet de l'orthodontie invisible",
     intro:
-      "Cette page pilier a ete pensee pour les patients qui veulent redresser leurs dents sans bagues visibles, tout en comprenant vraiment comment fonctionne un traitement Invisalign au quotidien. Le cabinet du Dr Abdessadok a Sete s'appuie sur une approche pedagogique, des empreintes numeriques 3D et un suivi regulier pour proposer un alignement dentaire discret, adapte aussi bien aux adultes qu'aux adolescents selon les indications cliniques.",
+      "Ce guide est destiné aux patients qui veulent comprendre le fonctionnement d'un traitement Invisalign au quotidien. Le cabinet du Dr Abdessadok à Sète s'appuie sur une approche pédagogique, des empreintes numériques lorsqu'elles sont indiquées et un suivi régulier. L'éligibilité dépend toujours du bilan clinique.",
     highlights: [
       'Scanner intra-oral 3D pour eviter les empreintes classiques inconfortables',
       'Traitement discret pour adultes actifs, adolescents et patients soucieux de leur image',
@@ -111,16 +112,16 @@ const baseServicePages = [
       "Si vous souhaitez savoir si l'orthodontie invisible est adaptee a votre sourire, le plus utile reste un bilan clinique avec scanner 3D et explication claire du protocole, de la duree et des options de suivi.",
     ctaLabel: 'Prendre rendez-vous pour un bilan',
     internalLinks: [
-      '/prix-orthodontie-invisible-sete',
-      '/orthodontie-invisible-sete',
-      '/orthodontie-invisible-meze',
-      '/invisalign-frontignan',
-      '/orthodontie-adulte-balaruc-les-bains',
-      '/implantologie',
-      '/blog/verite-invisalign-taquets-temps-port-gene',
-      '/blog/orthodontie-invisible-sete-questions-avant-bilan',
-      '/blog/duree-orthodontie-invisible-sete',
-      '/blog/premier-bilan-orthodontie-invisible-sete',
+      '/prix-orthodontie-invisible-sete/',
+      '/orthodontie-invisible-sete/',
+      '/orthodontie-invisible-meze/',
+      '/invisalign-frontignan/',
+      '/orthodontie-adulte-balaruc-les-bains/',
+      '/implantologie/',
+      '/blog/verite-invisalign-taquets-temps-port-gene/',
+      '/blog/orthodontie-invisible-sete-questions-avant-bilan/',
+      '/blog/duree-orthodontie-invisible-sete/',
+      '/blog/premier-bilan-orthodontie-invisible-sete/',
     ],
     keywords: [
       'invisalign sete',
@@ -132,12 +133,12 @@ const baseServicePages = [
     ],
   },
   {
-    url: '/prix-orthodontie-invisible-sete',
+    url: '/prix-orthodontie-invisible-sete/',
     path: 'prix-orthodontie-invisible-sete',
     menuGroup: 'pillars',
     menuLabel: 'Prix orthodontie invisible',
-    menuDescription: 'Page pilier financiere sur le devis, la mutuelle et le remboursement.',
-    badge: 'Page pilier financiere',
+    menuDescription: 'Guide sur le devis, la mutuelle et le remboursement.',
+    badge: 'Guide patient · Budget et devis',
     title: "Prix orthodontie invisible Sete : devis, cout et remboursement mutuelle",
     metaDescription:
       "Prix de l'orthodontie invisible a Sete : ce qui influence le devis, le cout des aligneurs, la mutuelle et les remboursements selon votre situation.",
@@ -224,13 +225,13 @@ const baseServicePages = [
       "Le meilleur moyen d'avoir une vision juste du prix consiste a realiser un bilan avec evaluation clinique et planification. Vous repartez avec des explications claires sur la faisabilite, la duree et les options de prise en charge.",
     ctaLabel: 'Demander un premier bilan',
     internalLinks: [
-      '/invisalign',
-      '/orthodontie-invisible-sete',
-      '/orthodontie-invisible-meze',
-      '/blog/prix-orthodontie-invisible-sete',
-      '/blog/verite-invisalign-taquets-temps-port-gene',
-      '/blog/orthodontie-adulte-sete-questions-avant-traitement',
-      '/blog/duree-orthodontie-invisible-sete',
+      '/invisalign/',
+      '/orthodontie-invisible-sete/',
+      '/orthodontie-invisible-meze/',
+      '/blog/prix-orthodontie-invisible-sete/',
+      '/blog/verite-invisalign-taquets-temps-port-gene/',
+      '/blog/orthodontie-adulte-sete-questions-avant-traitement/',
+      '/blog/duree-orthodontie-invisible-sete/',
     ],
     keywords: [
       'prix invisalign sete',
@@ -240,12 +241,12 @@ const baseServicePages = [
     ],
   },
   {
-    url: '/implantologie',
+    url: '/implantologie/',
     path: 'implantologie',
     menuGroup: 'pillars',
     menuLabel: 'Implantologie BioTech',
-    menuDescription: 'Page pilier secondaire sur les implants dentaires BioTech a Sete.',
-    badge: 'Page pilier secondaire',
+    menuDescription: 'Guide sur les implants dentaires et les solutions de remplacement à Sète.',
+    badge: 'Guide patient · Implantologie',
     title: 'Implantologie BioTech Sete : implant dentaire et remplacement durable',
     metaDescription:
       'Implantologie BioTech a Sete : remplacement de dent manquante, fabrication francaise, protocole rassurant et suivi clinique au cabinet du Dr Abdessadok.',
@@ -329,10 +330,10 @@ const baseServicePages = [
       "Si vous avez une dent manquante ou un projet de rehabilitation plus complet, le premier objectif est de clarifier les options realistes, les etapes et le suivi necessaire.",
     ctaLabel: "Prendre rendez-vous pour un bilan d'implantologie",
     internalLinks: [
-      '/orthodontie-adulte-balaruc-les-bains',
-      '/invisalign-bassin-de-thau',
-      '/blog/aligner-dents-avant-implant',
-      '/invisalign',
+      '/orthodontie-adulte-balaruc-les-bains/',
+      '/invisalign-bassin-de-thau/',
+      '/blog/aligner-dents-avant-implant/',
+      '/invisalign/',
     ],
     keywords: [
       'implantologie sete',
@@ -343,7 +344,7 @@ const baseServicePages = [
     ],
   },
   {
-    url: '/orthodontie-invisible-sete',
+    url: '/orthodontie-invisible-sete/',
     path: 'orthodontie-invisible-sete',
     menuGroup: 'locals',
     menuLabel: 'Orthodontie invisible Sete',
@@ -362,12 +363,12 @@ const baseServicePages = [
     ],
     sections: [
       {
-        heading: 'Pourquoi cette page est differente de la page pilier ?',
+        heading: 'Comment cette page complète-t-elle le guide Invisalign ?',
         blocks: [
           {
             subheading: 'Ici, on parle de Sete et du quotidien des patients setois',
             paragraphs: [
-              "La page pilier Invisalign explique le protocole complet. Cette page locale, elle, s'adresse a ceux qui veulent savoir ce que cela change concretement de se faire suivre dans Sete. Quand un traitement dure plusieurs mois, l'acces au cabinet, la simplicite du trajet et la regularite des controles deviennent de vrais criteres de decision.",
+              "Le guide Invisalign explique le protocole de la solution de marque. Cette page locale s'adresse à ceux qui veulent savoir ce que cela change concrètement de se faire suivre à Sète. Quand un traitement dure plusieurs mois, l'accès au cabinet, la simplicité du trajet et la régularité des contrôles deviennent des critères pratiques.",
               "Le cabinet met donc en avant une approche locale : suivi de proximite, rendez-vous organises avec clarte, et environnement technologique rassurant pour limiter les contraintes inutiles.",
             ],
           },
@@ -420,14 +421,14 @@ const baseServicePages = [
       "Si vous vivez a Sete et souhaitez redresser vos dents avec une solution discrete, un premier rendez-vous permet de faire le point sur la faisabilite, la duree et l'organisation du suivi.",
     ctaLabel: 'Reserver une consultation a Sete',
     internalLinks: [
-      '/invisalign',
-      '/prix-orthodontie-invisible-sete',
-      '/orthodontie-invisible-meze',
-      '/invisalign-frontignan',
-      '/blog/prix-orthodontie-invisible-sete',
-      '/blog/orthodontie-sete-quand-consulter-alignement-dentaire',
-      '/blog/orthodontie-invisible-sete-questions-avant-bilan',
-      '/blog/premier-bilan-orthodontie-invisible-sete',
+      '/invisalign/',
+      '/prix-orthodontie-invisible-sete/',
+      '/orthodontie-invisible-meze/',
+      '/invisalign-frontignan/',
+      '/blog/prix-orthodontie-invisible-sete/',
+      '/blog/orthodontie-sete-quand-consulter-alignement-dentaire/',
+      '/blog/orthodontie-invisible-sete-questions-avant-bilan/',
+      '/blog/premier-bilan-orthodontie-invisible-sete/',
     ],
     keywords: [
       'orthodontie invisible sete',
@@ -437,7 +438,7 @@ const baseServicePages = [
     ],
   },
   {
-    url: '/orthodontie-invisible-meze',
+    url: '/orthodontie-invisible-meze/',
     path: 'orthodontie-invisible-meze',
     menuGroup: 'locals',
     menuLabel: 'Orthodontie invisible Meze',
@@ -513,10 +514,10 @@ const baseServicePages = [
       "Un premier bilan permet de savoir si votre sourire peut etre corrige par orthodontie invisible et comment organiser le suivi sans perturber votre rythme de vie.",
     ctaLabel: 'Demander un premier bilan',
     internalLinks: [
-      '/invisalign',
-      '/prix-orthodontie-invisible-sete',
-      '/orthodontie-invisible-sete',
-      '/blog/verite-invisalign-taquets-temps-port-gene',
+      '/invisalign/',
+      '/prix-orthodontie-invisible-sete/',
+      '/orthodontie-invisible-sete/',
+      '/blog/verite-invisalign-taquets-temps-port-gene/',
     ],
     keywords: [
       'orthodontie invisible meze',
@@ -526,7 +527,7 @@ const baseServicePages = [
     ],
   },
   {
-    url: '/invisalign-frontignan',
+    url: '/invisalign-frontignan/',
     path: 'invisalign-frontignan',
     menuGroup: 'locals',
     menuLabel: 'Invisalign Frontignan',
@@ -602,10 +603,10 @@ const baseServicePages = [
       "Si vous souhaitez comparer les solutions ou demander un second avis sur votre alignement dentaire, un bilan au cabinet permet de clarifier la faisabilite et la meilleure strategie pour votre sourire.",
     ctaLabel: 'Demander un avis specialise',
     internalLinks: [
-      '/invisalign',
-      '/orthodontie-invisible-sete',
-      '/prix-orthodontie-invisible-sete',
-      '/blog/verite-invisalign-taquets-temps-port-gene',
+      '/invisalign/',
+      '/orthodontie-invisible-sete/',
+      '/prix-orthodontie-invisible-sete/',
+      '/blog/verite-invisalign-taquets-temps-port-gene/',
     ],
     keywords: [
       'invisalign frontignan',
@@ -615,7 +616,7 @@ const baseServicePages = [
     ],
   },
   {
-    url: '/invisalign-marseillan',
+    url: '/invisalign-marseillan/',
     path: 'invisalign-marseillan',
     menuGroup: 'locals',
     menuLabel: 'Invisalign Marseillan',
@@ -691,10 +692,10 @@ const baseServicePages = [
       "Si vous partagez votre temps entre Marseillan et un autre lieu de vie, un premier rendez-vous permet d'etudier une organisation de traitement plus souple et realiste.",
     ctaLabel: 'Planifier un bilan',
     internalLinks: [
-      '/invisalign',
-      '/orthodontie-invisible-agde',
-      '/prix-orthodontie-invisible-sete',
-      '/blog/verite-invisalign-taquets-temps-port-gene',
+      '/invisalign/',
+      '/orthodontie-invisible-agde/',
+      '/prix-orthodontie-invisible-sete/',
+      '/blog/verite-invisalign-taquets-temps-port-gene/',
     ],
     keywords: [
       'invisalign marseillan',
@@ -704,7 +705,7 @@ const baseServicePages = [
     ],
   },
   {
-    url: '/orthodontie-invisible-agde',
+    url: '/orthodontie-invisible-agde/',
     path: 'orthodontie-invisible-agde',
     menuGroup: 'locals',
     menuLabel: 'Orthodontie invisible Agde',
@@ -780,10 +781,10 @@ const baseServicePages = [
       "Un premier rendez-vous permet de savoir si votre correction peut etre envisagee avec des aligneurs transparents et comment organiser le suivi de facon realiste.",
     ctaLabel: 'Demander un bilan proche d Agde',
     internalLinks: [
-      '/invisalign',
-      '/invisalign-marseillan',
-      '/prix-orthodontie-invisible-sete',
-      '/blog/prix-orthodontie-invisible-sete',
+      '/invisalign/',
+      '/invisalign-marseillan/',
+      '/prix-orthodontie-invisible-sete/',
+      '/blog/prix-orthodontie-invisible-sete/',
     ],
     keywords: [
       'orthodontie invisible agde',
@@ -793,7 +794,7 @@ const baseServicePages = [
     ],
   },
   {
-    url: '/orthodontie-adulte-balaruc-les-bains',
+    url: '/orthodontie-adulte-balaruc-les-bains/',
     path: 'orthodontie-adulte-balaruc-les-bains',
     menuGroup: 'locals',
     menuLabel: 'Balaruc-les-Bains',
@@ -870,10 +871,10 @@ const baseServicePages = [
       "Un premier rendez-vous permet de faire le point sur votre sourire de facon globale, qu'il s'agisse d'un alignement discret, d'un remplacement de dent manquante ou d'une rehabilitation plus complete.",
     ctaLabel: 'Demander une evaluation globale',
     internalLinks: [
-      '/implantologie',
-      '/invisalign',
-      '/invisalign-bassin-de-thau',
-      '/blog/aligner-dents-avant-implant',
+      '/implantologie/',
+      '/invisalign/',
+      '/invisalign-bassin-de-thau/',
+      '/blog/aligner-dents-avant-implant/',
     ],
     keywords: [
       'orthodontie adulte balaruc les bains',
@@ -883,32 +884,32 @@ const baseServicePages = [
     ],
   },
   {
-    url: '/invisalign-bassin-de-thau',
+    url: '/invisalign-bassin-de-thau/',
     path: 'invisalign-bassin-de-thau',
     menuGroup: 'locals',
     menuLabel: 'Bassin de Thau',
     menuDescription: "Page manifeste regionale reliant Sete, Meze, Frontignan, Agde, Marseillan et Balaruc.",
     badge: 'Page territoriale Bassin de Thau',
-    title: 'Invisalign Bassin de Thau : cabinet de reference a Sete pour votre sourire',
+    title: 'Orthodontie invisible dans le Bassin de Thau : suivi à Sète',
     metaDescription:
       "Invisalign et implantologie dans le Bassin de Thau : cabinet a Sete, pages locales par ville et prise en charge regionale du sourire.",
-    h1: 'Bassin de Thau : un cabinet a Sete qui rayonne sur toute la region pour le sourire',
+    h1: "Bassin de Thau : préparer un suivi d'orthodontie invisible à Sète",
     intro:
-      "Cette page d'autorite regionale a pour mission de relier les differentes intentions locales du Bassin de Thau sans les confondre. Elle ne remplace pas les pages dediees a Sete, Meze, Frontignan, Marseillan, Agde ou Balaruc-les-Bains. Elle sert de point d'entree pour les internautes qui cherchent une solution serieuse dans la region, sans vouloir forcement se tourner vers une grande metropole.",
+      "Ce guide régional aide les patients du Bassin de Thau à préparer un suivi au cabinet de Sète. Il ne remplace pas les informations d'accès depuis Mèze, Frontignan, Marseillan, Agde ou Balaruc-les-Bains et ne prétend pas que le cabinet dispose d'adresses dans ces communes.",
     highlights: [
-      "Page d'autorite regionale reliee a toutes les pages locales",
-      'Positionnement prioritaire sur orthodontie invisible et secondaire sur implantologie',
-      'Vision claire du maillage territorial autour du cabinet de Sete',
+      "Informations pratiques pour les patients du Bassin de Thau",
+      "Rappel des étapes et du suivi d'une orthodontie invisible",
+      "Accès aux informations de trajet vers le cabinet de Sète",
     ],
     sections: [
       {
         heading: 'Pourquoi une page Bassin de Thau ?',
         blocks: [
           {
-            subheading: "Construire une autorite regionale sans dupliquer les pages villes",
+            subheading: "Rassembler les informations utiles sans confondre les communes",
             paragraphs: [
               "Le Bassin de Thau regroupe des besoins tres differents. Certains internautes recherchent un traitement a Sete, d'autres veulent une solution proche de Meze, un second avis depuis Frontignan, une organisation flexible depuis Marseillan ou Agde, ou une rehabilitation plus globale a proximite de Balaruc-les-Bains.",
-              "Cette page donne une vue d'ensemble du positionnement du cabinet tout en orientant chaque profil vers la page locale la plus pertinente. Elle permet aussi d'envoyer un signal semantique regional fort sans tomber dans le piege du city swap.",
+              "Cette page donne une vue d'ensemble du suivi proposé à Sète et oriente vers les informations de trajet les plus utiles selon la commune de départ.",
             ],
           },
         ],
@@ -919,7 +920,7 @@ const baseServicePages = [
           {
             subheading: 'Le fil rouge reste Invisalign et les aligneurs transparents',
             paragraphs: [
-              "La vocation principale du cabinet sur cette campagne locale est l'orthodontie invisible pour adultes et adolescents selon les cas. C'est le sujet commercial et editorial prioritaire. L'implantologie existe comme axe secondaire, plus visible pour certains profils ou certaines pages, notamment Balaruc-les-Bains et la page pilier dediee.",
+              "Les pages locales répondent principalement aux questions pratiques des adultes et adolescents qui envisagent une orthodontie invisible selon les indications cliniques. L'implantologie est présentée séparément lorsque la question concerne une dent manquante.",
             ],
           },
         ],
@@ -941,7 +942,7 @@ const baseServicePages = [
       {
         question: 'A quoi sert cette page regionale si chaque ville a deja sa page ?',
         answer:
-          "Elle sert de porte d'entree d'autorite pour tout le Bassin de Thau et oriente ensuite vers la page locale la plus pertinente selon la commune et le besoin.",
+          "Elle rassemble les informations générales pour le Bassin de Thau et oriente ensuite vers les indications d'accès correspondant à la commune de départ.",
       },
       {
         question: "Le sujet principal reste-t-il Invisalign ?",
@@ -956,16 +957,16 @@ const baseServicePages = [
     ],
     ctaTitle: 'Decouvrir la prise en charge du cabinet sur tout le Bassin de Thau',
     ctaText:
-      "Si vous cherchez un cabinet de reference dans la region pour un traitement discret du sourire ou une rehabilitation plus globale, cette page est le bon point de depart avant de rejoindre votre page locale.",
+      "Si vous préparez un traitement d'alignement ou une réhabilitation plus globale depuis le Bassin de Thau, cette page aide à identifier les informations pratiques avant de consulter à Sète.",
     ctaLabel: 'Explorer les pages locales',
     internalLinks: [
-      '/orthodontie-invisible-sete',
-      '/orthodontie-invisible-meze',
-      '/invisalign-frontignan',
-      '/invisalign-marseillan',
-      '/orthodontie-invisible-agde',
-      '/orthodontie-adulte-balaruc-les-bains',
-      '/implantologie',
+      '/orthodontie-invisible-sete/',
+      '/orthodontie-invisible-meze/',
+      '/invisalign-frontignan/',
+      '/invisalign-marseillan/',
+      '/orthodontie-invisible-agde/',
+      '/orthodontie-adulte-balaruc-les-bains/',
+      '/implantologie/',
     ],
     keywords: [
       'invisalign bassin de thau',
@@ -976,8 +977,8 @@ const baseServicePages = [
   },
 ]
 
-const replacedPillarUrls = new Set(['/orthodontie-invisible-sete'])
-const leadPillarUrls = new Set(['/invisalign', '/prix-orthodontie-invisible-sete', '/implantologie'])
+const replacedPillarUrls = new Set(['/orthodontie-invisible-sete/'])
+const leadPillarUrls = new Set(['/invisalign/', '/prix-orthodontie-invisible-sete/', '/implantologie/'])
 
 export const servicePages = [
   ...baseServicePages.filter((page) => leadPillarUrls.has(page.url)),
@@ -985,13 +986,13 @@ export const servicePages = [
   ...baseServicePages.filter((page) => !leadPillarUrls.has(page.url) && !replacedPillarUrls.has(page.url)),
 ]
 
-export const blogPages = [
+const rawBlogPages = [
   ...generatedOrthodontieArticles,
   {
-    url: '/blog/verite-invisalign-taquets-temps-port-gene',
+    url: '/blog/verite-invisalign-taquets-temps-port-gene/',
     path: 'blog/verite-invisalign-taquets-temps-port-gene',
     menuLabel: 'Taquets, port, gene',
-    menuDescription: 'Article blog longue trainee sur les vraies contraintes du quotidien.',
+    menuDescription: 'Guide détaillé sur les contraintes quotidiennes du traitement.',
     badge: 'Article blog',
     title: 'La verite sur Invisalign : taquets, temps de port et gene au quotidien',
     metaDescription:
@@ -1064,10 +1065,10 @@ export const blogPages = [
       "Si vous vous demandez surtout comment vivre le traitement au travail, au restaurant ou dans une vie sociale active, le plus utile est d'en discuter lors d'un bilan personnalise.",
     ctaLabel: 'Prendre rendez-vous pour un bilan',
     internalLinks: [
-      '/invisalign',
-      '/prix-orthodontie-invisible-sete',
-      '/orthodontie-invisible-meze',
-      '/invisalign-frontignan',
+      '/invisalign/',
+      '/prix-orthodontie-invisible-sete/',
+      '/orthodontie-invisible-meze/',
+      '/invisalign-frontignan/',
     ],
     keywords: [
       'taquets invisalign',
@@ -1078,7 +1079,7 @@ export const blogPages = [
     ],
   },
   {
-    url: '/blog/prix-orthodontie-invisible-sete',
+    url: '/blog/prix-orthodontie-invisible-sete/',
     path: 'blog/prix-orthodontie-invisible-sete',
     menuLabel: 'Vrai prix orthodontie',
     menuDescription: "Article blog sur le cout reel d'un traitement invisible a Sete.",
@@ -1088,7 +1089,7 @@ export const blogPages = [
       "Quel est le vrai prix de l'orthodontie invisible a Sete ? Un article clair sur les facteurs de cout, la mutuelle, le devis et la logique du traitement.",
     h1: "Quel est le vrai prix de l'orthodontie invisible a Sete ?",
     intro:
-      "Quand les internautes tapent prix Invisalign ou prix aligneurs transparents, ils cherchent en realite plus qu'un chiffre. Ils veulent comprendre ce qu'ils vont payer, pourquoi le montant varie et si le traitement est compatible avec leur budget. Cet article complete la page pilier financiere avec une approche plus pedagogique.",
+      "Quand les patients cherchent le prix d'Invisalign ou des aligneurs transparents, ils veulent comprendre ce qu'ils vont payer, pourquoi le montant varie et si le traitement est compatible avec leur budget. Cet article complète le guide financier avec une approche pédagogique.",
     highlights: [
       "Explication du prix reel derriere un chiffre trop souvent isole de son contexte",
       'Lecture simple des elements qui font varier un devis',
@@ -1159,9 +1160,9 @@ export const blogPages = [
       "Si votre principale question concerne le prix, un premier bilan reste la meilleure facon d'obtenir une estimation serieuse, adaptee a votre cas et lisible dans ses composantes.",
     ctaLabel: 'Demander un bilan avec devis',
     internalLinks: [
-      '/prix-orthodontie-invisible-sete',
-      '/invisalign',
-      '/orthodontie-invisible-sete',
+      '/prix-orthodontie-invisible-sete/',
+      '/invisalign/',
+      '/orthodontie-invisible-sete/',
     ],
     keywords: [
       'prix orthodontie invisible sete',
@@ -1171,7 +1172,7 @@ export const blogPages = [
     ],
   },
   {
-    url: '/blog/aligner-dents-avant-implant',
+    url: '/blog/aligner-dents-avant-implant/',
     path: 'blog/aligner-dents-avant-implant',
     menuLabel: 'Aligner avant implant',
     menuDescription: 'Article de liaison entre orthodontie invisible et implantologie.',
@@ -1185,7 +1186,7 @@ export const blogPages = [
     highlights: [
       "Article passerelle entre les deux expertises du cabinet",
       'Explication chronologique simple et non anxiogène',
-      'Lien naturel vers la page pilier Invisalign et la page Implantologie BioTech',
+      'Liens utiles vers les guides Invisalign et implantologie',
     ],
     sections: [
       {
@@ -1245,7 +1246,7 @@ export const blogPages = [
     ctaText:
       "Si vous avez une dent manquante et un sourire que vous aimeriez aussi harmoniser, un bilan permet de clarifier le bon ordre des etapes et les options qui ont du sens pour vous.",
     ctaLabel: 'Demander une evaluation globale',
-    internalLinks: ['/invisalign', '/implantologie', '/orthodontie-adulte-balaruc-les-bains'],
+    internalLinks: ['/invisalign/', '/implantologie/', '/orthodontie-adulte-balaruc-les-bains/'],
     keywords: [
       'aligner dents avant implant',
       'implant et orthodontie invisible',
@@ -1255,12 +1256,27 @@ export const blogPages = [
   },
 ]
 
+const duplicatePriceArticle = '/blog/prix-orthodontie-invisible-sete/'
+
+export const blogPages = [...rawBlogPages, ...implantologyArticles]
+  .filter((page) => `${page.url.replace(/\/+$/, '')}/` !== duplicatePriceArticle)
+  .map((page) => ({
+    authorName: 'Équipe éditoriale du cabinet',
+    medicalReviewStatus: 'pending',
+    medicalReviewer: null,
+    datePublished: page.datePublished || '2026-07-12',
+    dateModified: page.dateModified || '2026-07-13',
+    ...page,
+    url: `${page.url.replace(/\/+$/, '')}/`,
+    internalLinks: (page.internalLinks || []).map((url) => url === duplicatePriceArticle ? '/prix-orthodontie-invisible-sete/' : url),
+  }))
+
 const allPages = [...servicePages, ...blogPages]
 
 export const pageLookup = Object.fromEntries(allPages.map((page) => [page.url, page]))
 
 export function getPageByUrl(url) {
-  const normalized = url === '/' ? '/' : url.replace(/\/+$/, '')
+  const normalized = url === '/' ? '/' : `${url.replace(/\/+$/, '')}/`
   return pageLookup[normalized] || null
 }
 

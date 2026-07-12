@@ -118,7 +118,7 @@ export default function ActualitiesAdmin(){
     <section className="section">
       <div className="container-max">
         <div className="mb-4">
-          <Link to="/admin" className="btn-outline">Retour au panneau admin</Link>
+          <Link to="/admin/" className="btn-outline">Retour au panneau admin</Link>
         </div>
         <div className="grid md:grid-cols-2 gap-6">
           <motion.div className="rounded-2xl border border-slate-800 bg-surface/60 backdrop-blur p-6" initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>

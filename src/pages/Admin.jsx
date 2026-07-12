@@ -67,7 +67,7 @@ const pageMeta = {
 
 const handleLogout = async () => {
   await logoutAdmin()
-  window.location.href = '/login'
+  window.location.href = '/login/'
 }
 
 export default function Admin() {
@@ -115,7 +115,7 @@ export default function Admin() {
           <p className="mt-8 px-3 text-[.65rem] font-black uppercase tracking-[.2em] text-[#d8c59c]/60">Site & contenu</p>
           <nav className="mt-3 space-y-1.5">
             {navigation.slice(3).map((item) => <NavButton key={item.key} item={item} active={tab === item.key} onClick={() => navigate(item.key)} />)}
-            <Link to="/admin/actualities" className="group flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-semibold text-white/70 transition hover:bg-white/10 hover:text-white"><Icon name="articles" className="h-[1.15rem] w-[1.15rem]" /><span className="flex-1">Actualités</span><Icon name="chevron" className="h-4 w-4 opacity-40 transition group-hover:translate-x-0.5" /></Link>
+            <Link to="/admin/actualities/" className="group flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-semibold text-white/70 transition hover:bg-white/10 hover:text-white"><Icon name="articles" className="h-[1.15rem] w-[1.15rem]" /><span className="flex-1">Actualités</span><Icon name="chevron" className="h-4 w-4 opacity-40 transition group-hover:translate-x-0.5" /></Link>
           </nav>
         </div>
 

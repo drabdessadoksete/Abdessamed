@@ -5,7 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "node scripts/generate-orthodontie-articles.mjs && node scripts/generate-orthodontie-pillars.mjs && node scripts/generate-sitemap.mjs && vite build && node scripts/prerender-static-pages.mjs",
+    "media:prepare": "node scripts/prepare-media.mjs",
+    "build": "node scripts/generate-orthodontie-articles.mjs && node scripts/generate-orthodontie-pillars.mjs && node scripts/generate-sitemap.mjs && node scripts/generate-redirects.mjs && node scripts/generate-llms.mjs && vite build && node scripts/prerender-static-pages.mjs",
+    "seo:check": "npm run build && node scripts/seo-check.mjs",
     "preview": "vite preview",
     "server": "node server/index.js"
   },

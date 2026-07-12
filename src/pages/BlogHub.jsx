@@ -1,139 +1,111 @@
+import { useDeferredValue, useEffect, useState } from 'react'
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { Helmet } from 'react-helmet-async'
 import { Link } from 'react-router-dom'
-import { blogPages, servicePages } from '../data/seoContent'
+import ResponsiveImage from '../components/ResponsiveImage'
+import { blogPages } from '../data/seoContent'
+import { media } from '../config/media'
 
-const blogHubImage = '/seo-images/logo-hero-section.png'
+const categories = ['Tous', 'Implantologie', 'Orthodontie', 'Orthodontie invisible', 'Bassin de Thau / Suivi local']
 
-const categoryOrder = [
-  'Orthodontie',
-  'Orthodontie invisible',
-  'Bassin de Thau / Suivi local',
-]
+function articleCategory(page) {
+  return page.category || (page.cluster === 'implantologie' ? 'Implantologie' : 'Orthodontie invisible')
+}
 
-function groupPagesByCategory() {
-  const groups = new Map()
-
-  for (const category of categoryOrder) {
-    groups.set(category, [])
-  }
-
-  for (const page of blogPages) {
-    const category = page.category || 'Autres articles'
-    if (!groups.has(category)) groups.set(category, [])
-    groups.get(category).push(page)
-  }
-
-  return [...groups.entries()].filter(([, pages]) => pages.length)
+function articleAsset(page) {
+  if (page.cluster === 'implantologie' || page.url.includes('implant')) return media.implantConsultation
+  if (page.url.includes('quotidien') || page.url.includes('premier-bilan')) return media.alignerExplanation
+  return media.intraoralScanner
 }
 
 export default function BlogHub() {
-  const featuredOrthodontiePages = blogPages.filter((page) => page.cluster === 'orthodontie').slice(0, 6)
-  const groupedPages = groupPagesByCategory()
-  const essentialPages = servicePages.filter((page) => ['/orthodontie-sete', '/orthodontie-invisible-sete'].includes(page.url))
+  const [activeCategory, setActiveCategory] = useState('Tous')
+  const [featuredIndex, setFeaturedIndex] = useState(0)
+  const deferredCategory = useDeferredValue(activeCategory)
+  const reduceMotion = useReducedMotion()
+  const featured = blogPages.filter((page) => page.cluster === 'implantologie').slice(0, 5)
+  const visibleArticles = deferredCategory === 'Tous' ? blogPages : blogPages.filter((page) => articleCategory(page) === deferredCategory)
+  const current = featured[featuredIndex]
+
+  useEffect(() => {
+    if (reduceMotion || featured.length < 2) return undefined
+    const timer = setInterval(() => setFeaturedIndex((index) => (index + 1) % featured.length), 5600)
+    return () => clearInterval(timer)
+  }, [featured.length, reduceMotion])
 
   return (
-    <section className="section">
+    <>
       <Helmet>
-        <title>Blog dentaire Sete : orthodontie, Invisalign et implantologie</title>
-        <meta
-          name="description"
-          content="Blog dentaire du cabinet à Sète : nouveaux articles sur l’orthodontie, l’orthodontie invisible, Invisalign et le suivi dans le Bassin de Thau."
-        />
-        <meta property="og:image" content="https://cabinetdentairesete.fr/seo-images/logo-hero-section.png" />
-        <meta property="og:image:alt" content="Identité visuelle du Cabinet Dentaire Dr. Abdessadok à Sète" />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:image" content="https://cabinetdentairesete.fr/seo-images/logo-hero-section.png" />
+        <title>Guides dentaires à Sète | Implantologie et orthodontie</title>
+        <meta name="description" content="Guides patients du cabinet à Sète sur les implants dentaires, l’orthodontie invisible, les aligneurs et la préparation du premier bilan." />
       </Helmet>
 
-      <div className="container-max">
-        <div className="rounded-[2rem] border border-rolexGold/30 bg-gradient-to-br from-rolexGreen/35 via-surface to-background p-8 md:p-12 shadow-soft">
-          <div className="badge mb-4">Blog d'autorite</div>
-          <h1 className="text-4xl md:text-5xl font-extrabold mb-6">Blog dentaire à Sète : orthodontie, orthodontie invisible et implantologie</h1>
-          <p className="text-lg text-slate-200 max-w-4xl leading-8">
-            Cette rubrique met désormais en avant un cluster complet sur l’orthodontie à Sète, l’orthodontie invisible,
-            les aligneurs transparents et le suivi des patients du Bassin de Thau, avec des contenus complémentaires sur
-            le prix du traitement et l’implantologie.
-          </p>
-          <figure className="mt-8 overflow-hidden rounded-[2rem] border border-rolexGold/20 bg-rolexGreen/10">
-            <img
-              src={blogHubImage}
-              alt="Identité visuelle du Cabinet Dentaire Dr. Abdessadok à Sète"
-              className="w-full h-[260px] md:h-[380px] object-contain bg-white p-6"
-              loading="eager"
-            />
-          </figure>
+      <header className="guides-hero" aria-labelledby="blog-title">
+        <div className="guides-hero__orb" aria-hidden="true" />
+        <div className="container-max guides-hero__grid">
+          <motion.div initial={reduceMotion ? false : { opacity: 0, y: 22 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.65 }}>
+            <span className="section-kicker section-kicker--light">Bibliothèque patient</span>
+            <h1 id="blog-title">Comprendre avant votre rendez-vous.</h1>
+            <p>Des guides illustrés pour préparer vos questions sur les implants, les aligneurs et le suivi. Chaque article distingue ce qui est général de ce qui nécessite un examen.</p>
+            <div className="guides-hero__stats"><div><strong>{blogPages.length}</strong><span>guides disponibles</span></div><div><strong>2</strong><span>parcours principaux</span></div><div><strong>4</strong><span>langues d’information</span></div></div>
+          </motion.div>
+          <ResponsiveImage asset={media.implantConsultation} eager showCaption className="guides-hero__visual" imageClassName="guides-hero__image" />
         </div>
+      </header>
 
-        <section className="grid gap-6 md:grid-cols-2 mt-10">
-          {essentialPages.map((page) => (
-            <Link key={page.url} to={page.url} className="card p-6 hover:-translate-y-1 transition">
-              <div className="badge mb-4">{page.badge}</div>
-              <h2 className="text-2xl font-bold mb-3">{page.menuLabel}</h2>
-              <p className="text-slate-300 leading-7">{page.menuDescription || page.metaDescription}</p>
-            </Link>
-          ))}
-        </section>
+      <section className="featured-guides" aria-labelledby="featured-guides-title">
+        <div className="container-max">
+          <div className="featured-guides__heading"><div><span className="section-kicker">À découvrir</span><h2 id="featured-guides-title">Le dossier implantologie.</h2></div><div className="featured-guides__controls"><button type="button" aria-label="Guide précédent" onClick={() => setFeaturedIndex((featuredIndex - 1 + featured.length) % featured.length)}>←</button><span>{String(featuredIndex + 1).padStart(2, '0')} / {String(featured.length).padStart(2, '0')}</span><button type="button" aria-label="Guide suivant" onClick={() => setFeaturedIndex((featuredIndex + 1) % featured.length)}>→</button></div></div>
 
-        <section className="mt-10">
-          <div className="flex items-end justify-between gap-4 mb-6">
-            <div>
-              <div className="badge mb-3">Cluster prioritaire</div>
-              <h2 className="text-3xl md:text-4xl font-bold">Orthodontie et alignement dentaire à Sète</h2>
-            </div>
-            <p className="text-slate-300 max-w-2xl leading-7">
-              Les contenus les plus stratégiques sur l’orthodontie, l’orthodontie invisible et les premières questions à se poser avant un bilan.
-            </p>
+          <div className="featured-guides__stage">
+            <AnimatePresence mode="wait">
+              <motion.article key={current.url} initial={reduceMotion ? false : { opacity: 0, x: 35 }} animate={{ opacity: 1, x: 0 }} exit={reduceMotion ? undefined : { opacity: 0, x: -25 }} transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}>
+                <ResponsiveImage asset={articleAsset(current)} className="featured-guides__image" imageClassName="w-full h-full object-cover" />
+                <div className="featured-guides__copy">
+                  <div className="blog-card__meta"><span>{articleCategory(current)}</span><span>{new Date(current.dateModified).toLocaleDateString('fr-FR')}</span></div>
+                  <h3>{current.h1}</h3>
+                  <p>{current.excerpt || current.intro}</p>
+                  <Link to={current.url} className="btn-accent">Lire ce guide <span aria-hidden="true">→</span></Link>
+                </div>
+              </motion.article>
+            </AnimatePresence>
+            <div className="featured-guides__progress" aria-hidden="true">{featured.map((page, index) => <button key={page.url} type="button" className={index === featuredIndex ? 'is-active' : ''} onClick={() => setFeaturedIndex(index)} />)}</div>
           </div>
-
-          <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
-            {featuredOrthodontiePages.map((page) => (
-              <Link key={page.url} to={page.url} className="card p-6 hover:-translate-y-1 transition">
-                <div className="badge mb-4">{page.badge}</div>
-                {(page.cardImage?.src || page.image?.src) ? (
-                  <img
-                    src={page.cardImage?.src || page.image.src}
-                    alt={page.cardImage?.alt || page.image?.alt || page.h1}
-                    className="h-20 w-20 rounded-2xl object-contain border border-rolexGold/20 bg-white/90 p-3 mb-5"
-                    loading="lazy"
-                  />
-                ) : null}
-                <h3 className="text-2xl font-bold mb-3">{page.h1}</h3>
-                <p className="text-slate-300 leading-7 mb-6">{page.excerpt || page.intro}</p>
-                <span className="text-rolexGold font-semibold">Lire l'article</span>
-              </Link>
-            ))}
-          </div>
-        </section>
-
-        <div className="space-y-10 mt-12">
-          {groupedPages.map(([category, pages]) => (
-            <section key={category}>
-              <div className="flex items-end justify-between gap-4 mb-5">
-                <h2 className="text-2xl md:text-3xl font-bold">{category}</h2>
-                <div className="text-sm text-slate-400">{pages.length} article{pages.length > 1 ? 's' : ''}</div>
-              </div>
-              <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
-                {pages.map((page) => (
-                  <Link key={page.url} to={page.url} className="card p-6 hover:-translate-y-1 transition">
-                    <div className="badge mb-4">{page.badge}</div>
-                {(page.cardImage?.src || page.image?.src) ? (
-                      <img
-                        src={page.cardImage?.src || page.image.src}
-                        alt={page.cardImage?.alt || page.image?.alt || page.h1}
-                        className="h-20 w-20 rounded-2xl object-contain border border-rolexGold/20 bg-white/90 p-3 mb-5"
-                        loading="lazy"
-                      />
-                    ) : null}
-                    <h3 className="text-2xl font-bold mb-3">{page.h1}</h3>
-                    <p className="text-slate-300 leading-7 mb-6">{page.excerpt || page.intro}</p>
-                    <span className="text-rolexGold font-semibold">Lire l'article</span>
-                  </Link>
-                ))}
-              </div>
-            </section>
-          ))}
         </div>
-      </div>
-    </section>
+      </section>
+
+      <section className="guides-library" aria-labelledby="guides-library-title">
+        <div className="container-max">
+          <div className="guides-library__heading"><div><span className="section-kicker">Tous les sujets</span><h2 id="guides-library-title">Choisissez votre question.</h2></div><p>Filtrez les contenus par parcours. Les cartes se réorganisent sans recharger la page.</p></div>
+          <div className="guides-filters" role="group" aria-label="Filtrer les guides par thème">
+            {categories.map((category) => <button key={category} type="button" className={activeCategory === category ? 'is-active' : ''} aria-pressed={activeCategory === category} onClick={() => setActiveCategory(category)}>{category}</button>)}
+          </div>
+          <motion.div layout className="blog-card-grid">
+            <AnimatePresence mode="popLayout">
+              {visibleArticles.map((page, index) => <ArticleCard key={page.url} page={page} index={index} reduceMotion={reduceMotion} />)}
+            </AnimatePresence>
+          </motion.div>
+        </div>
+      </section>
+    </>
+  )
+}
+
+function ArticleCard({ page, index, reduceMotion }) {
+  return (
+    <motion.article
+      layout
+      className={`blog-card blog-card--${index % 3}`}
+      initial={reduceMotion ? false : { opacity: 0, y: 18, scale: 0.985 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      exit={reduceMotion ? undefined : { opacity: 0, scale: 0.97 }}
+      transition={{ duration: 0.34, delay: Math.min(index, 5) * 0.035 }}
+    >
+      <div className="blog-card__number">{String(index + 1).padStart(2, '0')}</div>
+      <div className="blog-card__meta"><span>{articleCategory(page)}</span><span>{new Date(page.dateModified).toLocaleDateString('fr-FR')}</span></div>
+      <h3><Link to={page.url}>{page.h1}</Link></h3>
+      <p>{page.excerpt || page.intro}</p>
+      <div className="blog-card__footer"><Link to={page.url}>Lire le guide <span aria-hidden="true">→</span></Link><small>Information générale</small></div>
+    </motion.article>
   )
 }

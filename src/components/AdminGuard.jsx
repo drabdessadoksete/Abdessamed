@@ -31,7 +31,7 @@ export default function AdminGuard({ children }) {
   }
 
   if (state === 'denied') {
-    return <Navigate to="/login" replace state={{ from: location.pathname }} />
+    return <Navigate to="/login/" replace state={{ from: location.pathname }} />
   }
 
   return children

@@ -18,53 +18,53 @@ const heroLogoImage = {
 
 const articleCrossLinks = {
   'orthodontie-sete-quand-consulter-alignement-dentaire': [
-    '/blog/orthodontie-adulte-sete-questions-avant-traitement',
-    '/blog/orthodontie-invisible-sete-questions-avant-bilan',
+    '/blog/orthodontie-adulte-sete-questions-avant-traitement/',
+    '/blog/orthodontie-invisible-sete-questions-avant-bilan/',
   ],
   'orthodontie-adulte-sete-questions-avant-traitement': [
-    '/blog/orthodontie-invisible-adulte-30-40-50-ans',
-    '/blog/verite-invisalign-taquets-temps-port-gene',
+    '/blog/orthodontie-invisible-adulte-30-40-50-ans/',
+    '/blog/verite-invisalign-taquets-temps-port-gene/',
   ],
   'dents-chevauchees-espaces-visibles-correction-sete': [
-    '/blog/orthodontie-sete-quand-consulter-alignement-dentaire',
-    '/blog/orthodontie-invisible-sete-questions-avant-bilan',
+    '/blog/orthodontie-sete-quand-consulter-alignement-dentaire/',
+    '/blog/orthodontie-invisible-sete-questions-avant-bilan/',
   ],
   'dents-qui-rebougent-apres-appareil-sete': [
-    '/blog/orthodontie-invisible-sete-questions-avant-bilan',
-    '/blog/premier-bilan-orthodontie-invisible-sete',
+    '/blog/orthodontie-invisible-sete-questions-avant-bilan/',
+    '/blog/premier-bilan-orthodontie-invisible-sete/',
   ],
   'orthodontie-bassin-de-thau-suivi-sete': [
-    '/invisalign-bassin-de-thau',
-    '/blog/orthodontie-sete-quand-consulter-alignement-dentaire',
+    '/invisalign-bassin-de-thau/',
+    '/blog/orthodontie-sete-quand-consulter-alignement-dentaire/',
   ],
   'orthodontie-invisible-sete-questions-avant-bilan': [
-    '/blog/duree-orthodontie-invisible-sete',
-    '/blog/orthodontie-invisible-quotidien-repas-entretien-parole',
-    '/blog/premier-bilan-orthodontie-invisible-sete',
+    '/blog/duree-orthodontie-invisible-sete/',
+    '/blog/orthodontie-invisible-quotidien-repas-entretien-parole/',
+    '/blog/premier-bilan-orthodontie-invisible-sete/',
   ],
   'invisalign-aligneurs-transparents-gouttieres-differences': [
-    '/blog/orthodontie-invisible-sete-questions-avant-bilan',
-    '/invisalign',
+    '/blog/orthodontie-invisible-sete-questions-avant-bilan/',
+    '/invisalign/',
   ],
   'duree-orthodontie-invisible-sete': [
-    '/blog/premier-bilan-orthodontie-invisible-sete',
-    '/blog/orthodontie-invisible-quotidien-repas-entretien-parole',
+    '/blog/premier-bilan-orthodontie-invisible-sete/',
+    '/blog/orthodontie-invisible-quotidien-repas-entretien-parole/',
   ],
   'orthodontie-invisible-quotidien-repas-entretien-parole': [
-    '/blog/orthodontie-invisible-sete-questions-avant-bilan',
-    '/blog/duree-orthodontie-invisible-sete',
+    '/blog/orthodontie-invisible-sete-questions-avant-bilan/',
+    '/blog/duree-orthodontie-invisible-sete/',
   ],
   'orthodontie-invisible-adulte-30-40-50-ans': [
-    '/blog/orthodontie-adulte-sete-questions-avant-traitement',
-    '/blog/orthodontie-invisible-sete-questions-avant-bilan',
+    '/blog/orthodontie-adulte-sete-questions-avant-traitement/',
+    '/blog/orthodontie-invisible-sete-questions-avant-bilan/',
   ],
   'orthodontie-invisible-adolescent-sete': [
-    '/blog/orthodontie-invisible-sete-questions-avant-bilan',
-    '/invisalign',
+    '/blog/orthodontie-invisible-sete-questions-avant-bilan/',
+    '/invisalign/',
   ],
   'premier-bilan-orthodontie-invisible-sete': [
-    '/blog/orthodontie-invisible-sete-questions-avant-bilan',
-    '/orthodontie-invisible-sete',
+    '/blog/orthodontie-invisible-sete-questions-avant-bilan/',
+    '/orthodontie-invisible-sete/',
   ],
 }
 
@@ -162,7 +162,7 @@ function buildHighlights(category, slug) {
     return [
       'Angle local Sète et Bassin de Thau',
       'Importance du suivi et de la proximité du cabinet',
-      'Maillage vers les pages locales et les contenus orthodontie',
+      'Liens utiles vers les informations locales et les autres guides orthodontiques',
     ]
   }
 
@@ -174,7 +174,7 @@ function buildHighlights(category, slug) {
 }
 
 function getPrimaryPillar(category) {
-  return category === 'Orthodontie invisible' ? '/orthodontie-invisible-sete' : '/orthodontie-sete'
+  return category === 'Orthodontie invisible' ? '/orthodontie-invisible-sete/' : '/orthodontie-sete/'
 }
 
 function stripLeadingTitle(body, title) {
@@ -234,10 +234,10 @@ function parseArticle(part) {
     ctaTitle: 'Demander un premier bilan au cabinet',
     ctaText,
     ctaLabel: 'Nous contacter',
-    ctaHref: '/contact',
+    ctaHref: '/contact/',
     internalLinks,
     relatedReadingTitle: 'À lire aussi sur l’orthodontie et l’alignement dentaire',
-    relatedReadingLinks: internalLinks.filter((url) => !['/contact', '/about'].includes(url)).slice(0, 5),
+    relatedReadingLinks: internalLinks.filter((url) => !['/contact/', '/about/'].includes(url)).slice(0, 5),
     keywords,
     image: logoImage,
     cardImage: logoImage,
@@ -254,7 +254,8 @@ async function main() {
   const articles = parts.map(parseArticle)
 
   const fileContent = `export const generatedOrthodontieArticles = ${JSON.stringify(articles, null, 2)}\n`
-  await fs.writeFile(outputPath, fileContent)
+  const current = await fs.readFile(outputPath, 'utf8').catch(() => '')
+  if (current !== fileContent) await fs.writeFile(outputPath, fileContent)
   console.log(`Generated ${articles.length} orthodontie articles in ${path.relative(process.cwd(), outputPath)}`)
 }
 

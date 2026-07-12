@@ -3,6 +3,7 @@ import { Helmet } from 'react-helmet-async'
 import { Link, useSearchParams } from 'react-router-dom'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { submitPreAppointment } from '../services/api'
+import { trackEvent } from '../utils/analytics'
 
 const specialties = [
   {
@@ -49,13 +50,16 @@ export default function PreAppointment() {
     }
 
     setStatus('sending')
+    trackEvent('form_submit', { form: 'pre_appointment' })
     try {
       const response = await submitPreAppointment({ ...form, specialty })
       if (!response?.success) throw new Error('request-not-saved')
       setStatus('success')
+      trackEvent('form_success', { form: 'pre_appointment' })
     } catch {
       setStatus('error')
       setError('La demande n’a pas pu être enregistrée. Vous pouvez appeler directement le 04 22 91 05 94.')
+      trackEvent('form_error', { form: 'pre_appointment' })
     }
   }
 
@@ -84,6 +88,7 @@ export default function PreAppointment() {
       <Helmet>
         <title>Pré-rendez-vous téléphonique à Sète | Dr Abdessadok</title>
         <meta name="description" content="Demandez un pré-rendez-vous téléphonique avec le cabinet du Dr Abdessadok à Sète pour déterminer votre besoin en santé bucco-dentaire et être orienté vers un rendez-vous adapté." />
+        <meta name="robots" content="noindex,follow" />
       </Helmet>
 
       <div className="container-max">

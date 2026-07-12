@@ -43,23 +43,23 @@ export const generatedOrthodontieArticles = [
     "ctaTitle": "Demander un premier bilan au cabinet",
     "ctaText": "Vous vous interrogez sur l’alignement de vos dents ou sur l’intérêt d’un bilan d’orthodontie à Sète ? Le Cabinet Dentaire Dr. Abdessadok peut vous recevoir pour faire le point avec prudence, comprendre votre situation et vous orienter vers la démarche la plus adaptée.",
     "ctaLabel": "Nous contacter",
-    "ctaHref": "/contact",
+    "ctaHref": "/contact/",
     "internalLinks": [
-      "/orthodontie-sete",
+      "/orthodontie-sete/",
       "/orthodontie-invisible-sete",
       "/contact",
       "/prix-orthodontie-invisible-sete",
       "/about",
-      "/blog/orthodontie-adulte-sete-questions-avant-traitement",
-      "/blog/orthodontie-invisible-sete-questions-avant-bilan"
+      "/blog/orthodontie-adulte-sete-questions-avant-traitement/",
+      "/blog/orthodontie-invisible-sete-questions-avant-bilan/"
     ],
     "relatedReadingTitle": "À lire aussi sur l’orthodontie et l’alignement dentaire",
     "relatedReadingLinks": [
-      "/orthodontie-sete",
+      "/orthodontie-sete/",
       "/orthodontie-invisible-sete",
+      "/contact",
       "/prix-orthodontie-invisible-sete",
-      "/blog/orthodontie-adulte-sete-questions-avant-traitement",
-      "/blog/orthodontie-invisible-sete-questions-avant-bilan"
+      "/about"
     ],
     "keywords": [
       "orthodontie Sète",
@@ -152,22 +152,23 @@ export const generatedOrthodontieArticles = [
     "ctaTitle": "Demander un premier bilan au cabinet",
     "ctaText": "Vous envisagez une orthodontie adulte à Sète et souhaitez savoir si votre situation mérite un bilan ? Le Cabinet Dentaire Dr. Abdessadok peut vous aider à clarifier vos attentes, examiner l’alignement de vos dents et discuter des options envisageables avec mesure.",
     "ctaLabel": "Nous contacter",
-    "ctaHref": "/contact",
+    "ctaHref": "/contact/",
     "internalLinks": [
-      "/orthodontie-sete",
+      "/orthodontie-sete/",
       "/orthodontie-invisible-sete",
       "/prix-orthodontie-invisible-sete",
       "/blog/verite-invisalign-taquets-temps-port-gene",
       "/contact",
-      "/blog/orthodontie-invisible-adulte-30-40-50-ans"
+      "/blog/orthodontie-invisible-adulte-30-40-50-ans/",
+      "/blog/verite-invisalign-taquets-temps-port-gene/"
     ],
     "relatedReadingTitle": "À lire aussi sur l’orthodontie et l’alignement dentaire",
     "relatedReadingLinks": [
-      "/orthodontie-sete",
+      "/orthodontie-sete/",
       "/orthodontie-invisible-sete",
       "/prix-orthodontie-invisible-sete",
       "/blog/verite-invisalign-taquets-temps-port-gene",
-      "/blog/orthodontie-invisible-adulte-30-40-50-ans"
+      "/contact"
     ],
     "keywords": [
       "orthodontie adulte Sète",
@@ -260,23 +261,23 @@ export const generatedOrthodontieArticles = [
     "ctaTitle": "Demander un premier bilan au cabinet",
     "ctaText": "Vous remarquez des dents qui se chevauchent, un espace visible ou une modification de votre alignement ? Un bilan au Cabinet Dentaire Dr. Abdessadok à Sète peut vous aider à comprendre votre situation et à savoir si une correction mérite d’être discutée.",
     "ctaLabel": "Nous contacter",
-    "ctaHref": "/contact",
+    "ctaHref": "/contact/",
     "internalLinks": [
-      "/orthodontie-sete",
+      "/orthodontie-sete/",
       "/orthodontie-invisible-sete",
       "/blog/aligner-dents-avant-implant",
       "/contact",
       "/prix-orthodontie-invisible-sete",
-      "/blog/orthodontie-sete-quand-consulter-alignement-dentaire",
-      "/blog/orthodontie-invisible-sete-questions-avant-bilan"
+      "/blog/orthodontie-sete-quand-consulter-alignement-dentaire/",
+      "/blog/orthodontie-invisible-sete-questions-avant-bilan/"
     ],
     "relatedReadingTitle": "À lire aussi sur l’orthodontie et l’alignement dentaire",
     "relatedReadingLinks": [
-      "/orthodontie-sete",
+      "/orthodontie-sete/",
       "/orthodontie-invisible-sete",
       "/blog/aligner-dents-avant-implant",
-      "/prix-orthodontie-invisible-sete",
-      "/blog/orthodontie-sete-quand-consulter-alignement-dentaire"
+      "/contact",
+      "/prix-orthodontie-invisible-sete"
     ],
     "keywords": [
       "dents qui se chevauchent Sète",
@@ -369,23 +370,23 @@ export const generatedOrthodontieArticles = [
     "ctaTitle": "Demander un premier bilan au cabinet",
     "ctaText": "Vous avez porté un appareil plus jeune et vous avez l’impression que certaines dents ont rebougé ? Un bilan au Cabinet Dentaire Dr. Abdessadok à Sète peut permettre de comprendre l’évolution et de discuter des options éventuelles avec prudence.",
     "ctaLabel": "Nous contacter",
-    "ctaHref": "/contact",
+    "ctaHref": "/contact/",
     "internalLinks": [
-      "/orthodontie-sete",
+      "/orthodontie-sete/",
       "/orthodontie-invisible-sete",
       "/blog/verite-invisalign-taquets-temps-port-gene",
       "/contact",
       "/prix-orthodontie-invisible-sete",
-      "/blog/orthodontie-invisible-sete-questions-avant-bilan",
-      "/blog/premier-bilan-orthodontie-invisible-sete"
+      "/blog/orthodontie-invisible-sete-questions-avant-bilan/",
+      "/blog/premier-bilan-orthodontie-invisible-sete/"
     ],
     "relatedReadingTitle": "À lire aussi sur l’orthodontie et l’alignement dentaire",
     "relatedReadingLinks": [
-      "/orthodontie-sete",
+      "/orthodontie-sete/",
       "/orthodontie-invisible-sete",
       "/blog/verite-invisalign-taquets-temps-port-gene",
-      "/prix-orthodontie-invisible-sete",
-      "/blog/orthodontie-invisible-sete-questions-avant-bilan"
+      "/contact",
+      "/prix-orthodontie-invisible-sete"
     ],
     "keywords": [
       "dents qui bougent après appareil Sète",
@@ -450,9 +451,9 @@ export const generatedOrthodontieArticles = [
     "highlights": [
       "Angle local Sète et Bassin de Thau",
       "Importance du suivi et de la proximité du cabinet",
-      "Maillage vers les pages locales et les contenus orthodontie"
+      "Liens utiles vers les informations locales et les autres guides orthodontiques"
     ],
-    "articleBody": "Lorsqu’un patient commence à s’intéresser à l’orthodontie ou à l’orthodontie invisible, il pense souvent d’abord au résultat espéré : des dents plus alignées, un sourire plus harmonieux, une gêne qui serait mieux prise en compte. Pourtant, un autre facteur mérite une attention réelle dès le départ : le suivi.\n\nUn traitement d’alignement dentaire ne se limite pas à une première consultation et à la remise d’un dispositif. Il s’inscrit dans une démarche progressive, avec une analyse initiale, un plan adapté, des rendez-vous de contrôle et parfois des ajustements. Cette réalité concerne aussi bien les patients vivant à Sète que ceux venant de Mèze, Frontignan, Balaruc-les-Bains, Marseillan, Agde ou d’autres communes du Bassin de Thau. Les traitements orthodontiques reposent sur une évaluation individualisée et un suivi cohérent avec le plan de traitement.\n\nDans cette perspective, consulter à Sète peut compter non seulement pour la qualité de l’évaluation initiale, mais aussi pour la simplicité pratique d’un parcours que le patient doit pouvoir intégrer à son quotidien.\n\nL’orthodontie est un parcours, pas un rendez-vous isolé\n\nUn patient qui se demande s’il pourrait bénéficier d’un traitement d’alignement imagine parfois une décision rapide : on vient, on choisit, on commence. En réalité, une démarche sérieuse comprend plusieurs temps.\n\nLe premier bilan\n\nIl sert à écouter la demande, observer l’alignement, vérifier la situation bucco-dentaire, comprendre les objectifs et déterminer les examens éventuellement nécessaires. C’est à ce moment qu’une première orientation peut être discutée.\n\nLa proposition de traitement\n\nSi une correction paraît pertinente, le praticien explique les options possibles selon la situation clinique. Dans le cas des aligneurs transparents, l’indication, la discipline attendue et l’organisation du suivi doivent être abordées clairement.\n\nLe suivi dans le temps\n\nUn traitement implique ensuite des rendez-vous permettant d’évaluer l’évolution, de vérifier que la progression reste cohérente et de traiter les questions du patient. Même lorsqu’un dispositif semble discret ou simple à vivre, le suivi reste une partie centrale du parcours.\n\nPourquoi la proximité géographique devient importante\n\nLa proximité d’un cabinet ne détermine pas à elle seule la pertinence d’un traitement, mais elle joue un rôle concret dans la facilité à suivre le parcours recommandé.\n\nRespecter les rendez-vous avec moins de friction\n\nUn patient qui doit parcourir une distance compliquée ou adapter toute sa journée pour chaque contrôle peut finir par ressentir davantage de contrainte. À l’inverse, un cabinet accessible depuis son bassin de vie facilite souvent la régularité.\n\nPour les habitants du Bassin de Thau, Sète représente un point de consultation naturel lorsqu’ils s’y rendent déjà pour le travail, les soins, les courses ou certaines démarches.\n\nPoser ses questions plus sereinement\n\nUn traitement d’alignement peut susciter de petites interrogations au fil des mois : sensations, entretien, rythme, évolution visible, compréhension de certaines étapes. Savoir que le cabinet reste relativement accessible peut rassurer et rendre le patient plus à l’aise pour demander un avis au bon moment.\n\nMieux intégrer le suivi au quotidien\n\nL’organisation personnelle compte. Un adulte qui travaille, un parent, un étudiant ou une personne ayant des contraintes de mobilité n’aborde pas le suivi de la même manière. Pouvoir se rendre à Sète sans transformer chaque rendez-vous en déplacement lourd est un aspect pratique à considérer.\n\nPatients de Mèze, Frontignan, Balaruc, Marseillan, Agde : une même logique de suivi\n\nIl serait réducteur de transformer l’orthodontie dans le Bassin de Thau en simple juxtaposition de villes. Ce qui relie ces communes, c’est surtout une logique de bassin de vie. Les patients circulent régulièrement entre elles pour leurs habitudes quotidiennes.\n\nUne personne de Mèze peut venir à Sète pour un bilan si cela s’intègre naturellement à ses trajets. Un patient de Frontignan peut chercher une consultation accessible sans s’éloigner inutilement. Une personne de Balaruc-les-Bains ou de Marseillan peut privilégier un suivi centralisé dans la zone. Un habitant d’Agde peut également s’interroger sur les possibilités de consultation à Sète, selon sa situation.\n\nCette proximité relative n’a pas vocation à remplacer le critère clinique. Elle devient simplement un élément de confort dans un traitement qui demande du temps et de la constance.\n\nOrthodontie invisible : encore plus besoin d’un cadre clair\n\nL’orthodontie invisible attire de nombreux adultes parce qu’elle paraît discrète et compatible avec une vie sociale ou professionnelle active. Mais il faut éviter une confusion : discrétion ne signifie pas absence de suivi.\n\nLes aligneurs transparents nécessitent :\n\nune indication adaptée ;\nun port régulier selon les consignes données ;\nune hygiène rigoureuse ;\nun contrôle de la progression ;\nparfois des ajustements ou des étapes complémentaires.\n\nLes sources professionnelles rappellent que les aligneurs reposent fortement sur l’implication du patient. Le suivi sert justement à vérifier que le traitement reste sur la bonne trajectoire.\n\nPour un patient du Bassin de Thau, pouvoir effectuer ce suivi à Sète peut donc constituer un point pratique appréciable.\n\nLa qualité du suivi compte autant que la discrétion du dispositif\n\nCertains patients commencent leur recherche par des mots-clés comme “Invisalign Sète”, “gouttières invisibles”, “orthodontie adulte Bassin de Thau”. C’est naturel. Mais le bon réflexe consiste ensuite à dépasser le seul nom du dispositif pour s’intéresser au cadre de prise en charge.\n\nUn traitement bien vécu est généralement un traitement où le patient :\n\ncomprend les objectifs ;\nsait ce qui dépend de lui ;\nconnaît les grandes étapes ;\ndispose d’un interlocuteur de suivi ;\npeut poser ses questions sans attendre que l’incertitude s’installe.\n\nLa relation avec le cabinet prend donc une place importante.\n\nPourquoi un traitement localement accessible peut améliorer l’engagement du patient\n\nL’engagement du patient n’est pas une notion abstraite. Il dépend de sa motivation, mais aussi de la facilité concrète à suivre les recommandations. Si les rendez-vous sont difficiles à organiser, si chaque contrôle nécessite un arbitrage lourd, la charge perçue peut augmenter.\n\nÀ l’inverse, un suivi accessible :\n\nfacilite la régularité ;\nlimite les reports inutiles ;\nrend le parcours plus réaliste ;\npermet de traiter plus rapidement certaines questions.\n\nCe sont des facteurs pratiques, mais ils influencent la manière dont un patient vit son traitement.\n\nComment savoir si Sète est un bon point de suivi pour vous ?\n\nVous pouvez vous poser quelques questions :\n\nEst-ce que je peux me rendre facilement à Sète sur plusieurs mois ?\nEst-ce compatible avec mon emploi du temps ?\nAi-je besoin d’un cabinet suffisamment proche pour poser mes questions au bon moment ?\nEst-ce que je recherche une démarche progressive avec un vrai suivi local ?\n\nSi ces réponses sont positives, demander un bilan à Sète peut être une étape cohérente.\n\nLe bilan reste le point de départ\n\nQuel que soit votre lieu de résidence dans le Bassin de Thau, la première question n’est pas “quel traitement choisir immédiatement ?” mais “quel est mon besoin réel et que montre l’examen ?” Le praticien pourra préciser :\n\nsi une correction orthodontique mérite d’être discutée ;\nsi une solution invisible semble pertinente ;\nquelles sont les limites éventuelles ;\ncomment s’organiser pour la suite.\nCe qu’il faut retenir\n\nL’orthodontie dans le Bassin de Thau ne se pense pas seulement en termes de destination de consultation, mais aussi en termes de suivi dans la durée. Pour un traitement d’alignement dentaire ou une orthodontie invisible, la proximité d’un cabinet à Sète peut simplifier les rendez-vous, les échanges et l’intégration du parcours au quotidien. Le choix final reste toujours clinique et personnel, mais l’accessibilité du suivi mérite d’être considérée dès le départ.",
+    "articleBody": "Lorsqu’un patient commence à s’intéresser à l’orthodontie ou à l’orthodontie invisible, il pense souvent d’abord au résultat espéré : des dents plus alignées, un sourire plus harmonieux, une gêne qui serait mieux prise en compte. Pourtant, un autre facteur mérite une attention réelle dès le départ : le suivi.\n\nUn traitement d’alignement dentaire ne se limite pas à une première consultation et à la remise d’un dispositif. Il s’inscrit dans une démarche progressive, avec une analyse initiale, un plan adapté, des rendez-vous de contrôle et parfois des ajustements. Cette réalité concerne aussi bien les patients vivant à Sète que ceux venant de Mèze, Frontignan, Balaruc-les-Bains, Marseillan, Agde ou d’autres communes du Bassin de Thau. Les traitements orthodontiques reposent sur une évaluation individualisée et un suivi cohérent avec le plan de traitement.\n\nDans cette perspective, consulter à Sète peut compter non seulement pour la qualité de l’évaluation initiale, mais aussi pour la simplicité pratique d’un parcours que le patient doit pouvoir intégrer à son quotidien.\n\nL’orthodontie est un parcours, pas un rendez-vous isolé\n\nUn patient qui se demande s’il pourrait bénéficier d’un traitement d’alignement imagine parfois une décision rapide : on vient, on choisit, on commence. En réalité, une démarche sérieuse comprend plusieurs temps.\n\nLe premier bilan\n\nIl sert à écouter la demande, observer l’alignement, vérifier la situation bucco-dentaire, comprendre les objectifs et déterminer les examens éventuellement nécessaires. C’est à ce moment qu’une première orientation peut être discutée.\n\nLa proposition de traitement\n\nSi une correction paraît pertinente, le praticien explique les options possibles selon la situation clinique. Dans le cas des aligneurs transparents, l’indication, la discipline attendue et l’organisation du suivi doivent être abordées clairement.\n\nLe suivi dans le temps\n\nUn traitement implique ensuite des rendez-vous permettant d’évaluer l’évolution, de vérifier que la progression reste cohérente et de traiter les questions du patient. Même lorsqu’un dispositif semble discret ou simple à vivre, le suivi reste une partie centrale du parcours.\n\nPourquoi la proximité géographique devient importante\n\nLa proximité d’un cabinet ne détermine pas à elle seule la pertinence d’un traitement, mais elle joue un rôle concret dans la facilité à suivre le parcours recommandé.\n\nRespecter les rendez-vous avec moins de friction\n\nUn patient qui doit parcourir une distance compliquée ou adapter toute sa journée pour chaque contrôle peut finir par ressentir davantage de contrainte. À l’inverse, un cabinet accessible depuis son bassin de vie facilite souvent la régularité.\n\nPour les habitants du Bassin de Thau, Sète représente un point de consultation naturel lorsqu’ils s’y rendent déjà pour le travail, les soins, les courses ou certaines démarches.\n\nPoser ses questions plus sereinement\n\nUn traitement d’alignement peut susciter de petites interrogations au fil des mois : sensations, entretien, rythme, évolution visible, compréhension de certaines étapes. Savoir que le cabinet reste relativement accessible peut rassurer et rendre le patient plus à l’aise pour demander un avis au bon moment.\n\nMieux intégrer le suivi au quotidien\n\nL’organisation personnelle compte. Un adulte qui travaille, un parent, un étudiant ou une personne ayant des contraintes de mobilité n’aborde pas le suivi de la même manière. Pouvoir se rendre à Sète sans transformer chaque rendez-vous en déplacement lourd est un aspect pratique à considérer.\n\nPatients de Mèze, Frontignan, Balaruc, Marseillan, Agde : une même logique de suivi\n\nIl serait réducteur de transformer l’orthodontie dans le Bassin de Thau en simple juxtaposition de villes. Ce qui relie ces communes, c’est surtout une logique de bassin de vie. Les patients circulent régulièrement entre elles pour leurs habitudes quotidiennes.\n\nUne personne de Mèze peut venir à Sète pour un bilan si cela s’intègre naturellement à ses trajets. Un patient de Frontignan peut chercher une consultation accessible sans s’éloigner inutilement. Une personne de Balaruc-les-Bains ou de Marseillan peut privilégier un suivi centralisé dans la zone. Un habitant d’Agde peut également s’interroger sur les possibilités de consultation à Sète, selon sa situation.\n\nCette proximité relative n’a pas vocation à remplacer le critère clinique. Elle devient simplement un élément de confort dans un traitement qui demande du temps et de la constance.\n\nOrthodontie invisible : encore plus besoin d’un cadre clair\n\nL’orthodontie invisible attire de nombreux adultes parce qu’elle paraît discrète et compatible avec une vie sociale ou professionnelle active. Mais il faut éviter une confusion : discrétion ne signifie pas absence de suivi.\n\nLes aligneurs transparents nécessitent :\n\nune indication adaptée ;\nun port régulier selon les consignes données ;\nune hygiène rigoureuse ;\nun contrôle de la progression ;\nparfois des ajustements ou des étapes complémentaires.\n\nLes sources professionnelles rappellent que les aligneurs reposent fortement sur l’implication du patient. Le suivi sert justement à vérifier que le traitement reste sur la bonne trajectoire.\n\nPour un patient du Bassin de Thau, pouvoir effectuer ce suivi à Sète peut donc constituer un point pratique appréciable.\n\nLa qualité du suivi compte autant que la discrétion du dispositif\n\nCertains patients commencent leur recherche avec des expressions comme “Invisalign Sète”, “gouttières invisibles” ou “orthodontie adulte Bassin de Thau”. C’est naturel. Mais le bon réflexe consiste ensuite à dépasser le seul nom du dispositif pour s’intéresser au cadre de prise en charge.\n\nUn traitement bien vécu est généralement un traitement où le patient :\n\ncomprend les objectifs ;\nsait ce qui dépend de lui ;\nconnaît les grandes étapes ;\ndispose d’un interlocuteur de suivi ;\npeut poser ses questions sans attendre que l’incertitude s’installe.\n\nLa relation avec le cabinet prend donc une place importante.\n\nPourquoi un traitement localement accessible peut améliorer l’engagement du patient\n\nL’engagement du patient n’est pas une notion abstraite. Il dépend de sa motivation, mais aussi de la facilité concrète à suivre les recommandations. Si les rendez-vous sont difficiles à organiser, si chaque contrôle nécessite un arbitrage lourd, la charge perçue peut augmenter.\n\nÀ l’inverse, un suivi accessible :\n\nfacilite la régularité ;\nlimite les reports inutiles ;\nrend le parcours plus réaliste ;\npermet de traiter plus rapidement certaines questions.\n\nCe sont des facteurs pratiques, mais ils influencent la manière dont un patient vit son traitement.\n\nComment savoir si Sète est un bon point de suivi pour vous ?\n\nVous pouvez vous poser quelques questions :\n\nEst-ce que je peux me rendre facilement à Sète sur plusieurs mois ?\nEst-ce compatible avec mon emploi du temps ?\nAi-je besoin d’un cabinet suffisamment proche pour poser mes questions au bon moment ?\nEst-ce que je recherche une démarche progressive avec un vrai suivi local ?\n\nSi ces réponses sont positives, demander un bilan à Sète peut être une étape cohérente.\n\nLe bilan reste le point de départ\n\nQuel que soit votre lieu de résidence dans le Bassin de Thau, la première question n’est pas “quel traitement choisir immédiatement ?” mais “quel est mon besoin réel et que montre l’examen ?” Le praticien pourra préciser :\n\nsi une correction orthodontique mérite d’être discutée ;\nsi une solution invisible semble pertinente ;\nquelles sont les limites éventuelles ;\ncomment s’organiser pour la suite.\nCe qu’il faut retenir\n\nL’orthodontie dans le Bassin de Thau ne se pense pas seulement en termes de destination de consultation, mais aussi en termes de suivi dans la durée. Pour un traitement d’alignement dentaire ou une orthodontie invisible, la proximité d’un cabinet à Sète peut simplifier les rendez-vous, les échanges et l’intégration du parcours au quotidien. Le choix final reste toujours clinique et personnel, mais l’accessibilité du suivi mérite d’être considérée dès le départ.",
     "faq": [
       {
         "question": "Pourquoi le suivi est-il important en orthodontie ?",
@@ -478,21 +479,22 @@ export const generatedOrthodontieArticles = [
     "ctaTitle": "Demander un premier bilan au cabinet",
     "ctaText": "Vous vivez à Sète ou dans le Bassin de Thau et souhaitez parler d’orthodontie ou d’orthodontie invisible ? Le Cabinet Dentaire Dr. Abdessadok peut vous recevoir pour un bilan et vous aider à envisager la suite avec un cadre de suivi accessible.",
     "ctaLabel": "Nous contacter",
-    "ctaHref": "/contact",
+    "ctaHref": "/contact/",
     "internalLinks": [
-      "/orthodontie-sete",
+      "/orthodontie-sete/",
       "/orthodontie-invisible-sete",
       "/contact",
       "/about",
-      "/invisalign-bassin-de-thau",
-      "/blog/orthodontie-sete-quand-consulter-alignement-dentaire"
+      "/invisalign-bassin-de-thau/",
+      "/blog/orthodontie-sete-quand-consulter-alignement-dentaire/"
     ],
     "relatedReadingTitle": "À lire aussi sur l’orthodontie et l’alignement dentaire",
     "relatedReadingLinks": [
-      "/orthodontie-sete",
+      "/orthodontie-sete/",
       "/orthodontie-invisible-sete",
-      "/invisalign-bassin-de-thau",
-      "/blog/orthodontie-sete-quand-consulter-alignement-dentaire"
+      "/contact",
+      "/about",
+      "/invisalign-bassin-de-thau/"
     ],
     "keywords": [
       "orthodontie Bassin de Thau",
@@ -534,7 +536,7 @@ export const generatedOrthodontieArticles = [
         "anchor": "en savoir plus sur le cabinet"
       }
     ],
-    "wordCountApprox": 1221
+    "wordCountApprox": 1222
   },
   {
     "url": "/blog/orthodontie-invisible-sete-questions-avant-bilan",
@@ -584,23 +586,24 @@ export const generatedOrthodontieArticles = [
     "ctaTitle": "Demander un premier bilan au cabinet",
     "ctaText": "Vous vous interrogez sur une orthodontie invisible à Sète, sans savoir si les aligneurs transparents correspondent réellement à votre situation ? Un premier bilan au Cabinet Dentaire Dr. Abdessadok permet d’évaluer votre alignement dentaire, de discuter de vos attentes et de préciser les options envisageables avec prudence et clarté.",
     "ctaLabel": "Nous contacter",
-    "ctaHref": "/contact",
+    "ctaHref": "/contact/",
     "internalLinks": [
+      "/orthodontie-invisible-sete/",
       "/orthodontie-invisible-sete",
       "/prix-orthodontie-invisible-sete",
       "/blog/verite-invisalign-taquets-temps-port-gene",
       "/contact",
-      "/blog/duree-orthodontie-invisible-sete",
-      "/blog/orthodontie-invisible-quotidien-repas-entretien-parole",
-      "/blog/premier-bilan-orthodontie-invisible-sete"
+      "/blog/duree-orthodontie-invisible-sete/",
+      "/blog/orthodontie-invisible-quotidien-repas-entretien-parole/",
+      "/blog/premier-bilan-orthodontie-invisible-sete/"
     ],
     "relatedReadingTitle": "À lire aussi sur l’orthodontie et l’alignement dentaire",
     "relatedReadingLinks": [
+      "/orthodontie-invisible-sete/",
       "/orthodontie-invisible-sete",
       "/prix-orthodontie-invisible-sete",
       "/blog/verite-invisalign-taquets-temps-port-gene",
-      "/blog/duree-orthodontie-invisible-sete",
-      "/blog/orthodontie-invisible-quotidien-repas-entretien-parole"
+      "/contact"
     ],
     "keywords": [
       "orthodontie invisible Sète",
@@ -693,17 +696,17 @@ export const generatedOrthodontieArticles = [
     "ctaTitle": "Demander un premier bilan au cabinet",
     "ctaText": "Vous hésitez entre les mots Invisalign, aligneurs transparents ou gouttières invisibles ? Un bilan au Cabinet Dentaire Dr. Abdessadok à Sète permet de dépasser le vocabulaire et d’évaluer concrètement la solution la plus cohérente pour votre alignement dentaire.",
     "ctaLabel": "Nous contacter",
-    "ctaHref": "/contact",
+    "ctaHref": "/contact/",
     "internalLinks": [
-      "/orthodontie-invisible-sete",
-      "/blog/orthodontie-invisible-sete-questions-avant-bilan",
-      "/invisalign"
+      "/orthodontie-invisible-sete/",
+      "/blog/orthodontie-invisible-sete-questions-avant-bilan/",
+      "/invisalign/"
     ],
     "relatedReadingTitle": "À lire aussi sur l’orthodontie et l’alignement dentaire",
     "relatedReadingLinks": [
-      "/orthodontie-invisible-sete",
-      "/blog/orthodontie-invisible-sete-questions-avant-bilan",
-      "/invisalign"
+      "/orthodontie-invisible-sete/",
+      "/blog/orthodontie-invisible-sete-questions-avant-bilan/",
+      "/invisalign/"
     ],
     "keywords": [
       "Invisalign Sète / aligneurs transparents Sète / gouttières invisibles",
@@ -775,17 +778,17 @@ export const generatedOrthodontieArticles = [
     "ctaTitle": "Demander un premier bilan au cabinet",
     "ctaText": "Vous souhaitez savoir combien de temps pourrait durer une orthodontie invisible dans votre cas ? Un bilan au Cabinet Dentaire Dr. Abdessadok à Sète permet d’évaluer votre alignement, d’expliquer les facteurs qui influencent la durée et de vous donner une orientation personnalisée.",
     "ctaLabel": "Nous contacter",
-    "ctaHref": "/contact",
+    "ctaHref": "/contact/",
     "internalLinks": [
-      "/orthodontie-invisible-sete",
-      "/blog/premier-bilan-orthodontie-invisible-sete",
-      "/blog/orthodontie-invisible-quotidien-repas-entretien-parole"
+      "/orthodontie-invisible-sete/",
+      "/blog/premier-bilan-orthodontie-invisible-sete/",
+      "/blog/orthodontie-invisible-quotidien-repas-entretien-parole/"
     ],
     "relatedReadingTitle": "À lire aussi sur l’orthodontie et l’alignement dentaire",
     "relatedReadingLinks": [
-      "/orthodontie-invisible-sete",
-      "/blog/premier-bilan-orthodontie-invisible-sete",
-      "/blog/orthodontie-invisible-quotidien-repas-entretien-parole"
+      "/orthodontie-invisible-sete/",
+      "/blog/premier-bilan-orthodontie-invisible-sete/",
+      "/blog/orthodontie-invisible-quotidien-repas-entretien-parole/"
     ],
     "keywords": [
       "durée orthodontie invisible Sète / combien de temps Invisalign",
@@ -861,17 +864,17 @@ export const generatedOrthodontieArticles = [
     "ctaTitle": "Demander un premier bilan au cabinet",
     "ctaText": "Vous souhaitez savoir si l’orthodontie invisible s’intègre facilement à votre rythme de vie ? Un bilan au Cabinet Dentaire Dr. Abdessadok à Sète permet d’aborder concrètement les repas, l’entretien, la parole et la discipline de port avant d’envisager un traitement.",
     "ctaLabel": "Nous contacter",
-    "ctaHref": "/contact",
+    "ctaHref": "/contact/",
     "internalLinks": [
-      "/orthodontie-invisible-sete",
-      "/blog/orthodontie-invisible-sete-questions-avant-bilan",
-      "/blog/duree-orthodontie-invisible-sete"
+      "/orthodontie-invisible-sete/",
+      "/blog/orthodontie-invisible-sete-questions-avant-bilan/",
+      "/blog/duree-orthodontie-invisible-sete/"
     ],
     "relatedReadingTitle": "À lire aussi sur l’orthodontie et l’alignement dentaire",
     "relatedReadingLinks": [
-      "/orthodontie-invisible-sete",
-      "/blog/orthodontie-invisible-sete-questions-avant-bilan",
-      "/blog/duree-orthodontie-invisible-sete"
+      "/orthodontie-invisible-sete/",
+      "/blog/orthodontie-invisible-sete-questions-avant-bilan/",
+      "/blog/duree-orthodontie-invisible-sete/"
     ],
     "keywords": [
       "orthodontie invisible quotidien / manger avec gouttières / parler avec Invisalign",
@@ -943,17 +946,17 @@ export const generatedOrthodontieArticles = [
     "ctaTitle": "Demander un premier bilan au cabinet",
     "ctaText": "Vous avez plus de 30, 40 ou 50 ans et vous vous demandez si une orthodontie invisible peut correspondre à votre situation ? Un premier bilan au Cabinet Dentaire Dr. Abdessadok à Sète permet de faire le point sereinement sur vos attentes, votre santé bucco-dentaire et les options envisageables.",
     "ctaLabel": "Nous contacter",
-    "ctaHref": "/contact",
+    "ctaHref": "/contact/",
     "internalLinks": [
-      "/orthodontie-invisible-sete",
-      "/blog/orthodontie-adulte-sete-questions-avant-traitement",
-      "/blog/orthodontie-invisible-sete-questions-avant-bilan"
+      "/orthodontie-invisible-sete/",
+      "/blog/orthodontie-adulte-sete-questions-avant-traitement/",
+      "/blog/orthodontie-invisible-sete-questions-avant-bilan/"
     ],
     "relatedReadingTitle": "À lire aussi sur l’orthodontie et l’alignement dentaire",
     "relatedReadingLinks": [
-      "/orthodontie-invisible-sete",
-      "/blog/orthodontie-adulte-sete-questions-avant-traitement",
-      "/blog/orthodontie-invisible-sete-questions-avant-bilan"
+      "/orthodontie-invisible-sete/",
+      "/blog/orthodontie-adulte-sete-questions-avant-traitement/",
+      "/blog/orthodontie-invisible-sete-questions-avant-bilan/"
     ],
     "keywords": [
       "orthodontie invisible adulte Sète / Invisalign adulte Sète",
@@ -1025,17 +1028,17 @@ export const generatedOrthodontieArticles = [
     "ctaTitle": "Demander un premier bilan au cabinet",
     "ctaText": "Votre adolescent se pose des questions sur l’alignement de ses dents ou sur les aligneurs transparents ? Un bilan au Cabinet Dentaire Dr. Abdessadok à Sète permet d’évaluer la situation avec prudence et d’expliquer les options réellement envisageables.",
     "ctaLabel": "Nous contacter",
-    "ctaHref": "/contact",
+    "ctaHref": "/contact/",
     "internalLinks": [
-      "/orthodontie-invisible-sete",
-      "/blog/orthodontie-invisible-sete-questions-avant-bilan",
-      "/invisalign"
+      "/orthodontie-invisible-sete/",
+      "/blog/orthodontie-invisible-sete-questions-avant-bilan/",
+      "/invisalign/"
     ],
     "relatedReadingTitle": "À lire aussi sur l’orthodontie et l’alignement dentaire",
     "relatedReadingLinks": [
-      "/orthodontie-invisible-sete",
-      "/blog/orthodontie-invisible-sete-questions-avant-bilan",
-      "/invisalign"
+      "/orthodontie-invisible-sete/",
+      "/blog/orthodontie-invisible-sete-questions-avant-bilan/",
+      "/invisalign/"
     ],
     "keywords": [
       "orthodontie invisible adolescent Sète",
@@ -1107,15 +1110,15 @@ export const generatedOrthodontieArticles = [
     "ctaTitle": "Demander un premier bilan au cabinet",
     "ctaText": "Vous envisagez une orthodontie invisible à Sète et souhaitez savoir si cette approche correspond à votre situation ? Le premier bilan permet d’obtenir une réponse claire, individualisée et prudente. Vous pouvez contacter le Cabinet Dentaire Dr. Abdessadok pour prendre rendez-vous et faire le point.",
     "ctaLabel": "Nous contacter",
-    "ctaHref": "/contact",
+    "ctaHref": "/contact/",
     "internalLinks": [
-      "/orthodontie-invisible-sete",
-      "/blog/orthodontie-invisible-sete-questions-avant-bilan"
+      "/orthodontie-invisible-sete/",
+      "/blog/orthodontie-invisible-sete-questions-avant-bilan/"
     ],
     "relatedReadingTitle": "À lire aussi sur l’orthodontie et l’alignement dentaire",
     "relatedReadingLinks": [
-      "/orthodontie-invisible-sete",
-      "/blog/orthodontie-invisible-sete-questions-avant-bilan"
+      "/orthodontie-invisible-sete/",
+      "/blog/orthodontie-invisible-sete-questions-avant-bilan/"
     ],
     "keywords": [
       "bilan orthodontie invisible Sète",
