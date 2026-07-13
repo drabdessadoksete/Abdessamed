@@ -36,7 +36,7 @@ export default function Services() {
           </div>
           <div className="treatment-paths">
             <article className="treatment-path">
-              <ResponsiveImage asset={media.implantConsultation} imageClassName="treatment-path__image" showCaption />
+              <ResponsiveImage asset={media.implantDigitalPlanning} imageClassName="treatment-path__image" />
               <div className="treatment-path__body">
                 <span>Implantologie</span><h3>Étudier une dent manquante.</h3>
                 <p>Bilan clinique, imagerie si elle est indiquée, options de remplacement, chirurgie et suivi des suites.</p>
@@ -44,7 +44,7 @@ export default function Services() {
               </div>
             </article>
             <article className="treatment-path">
-              <ResponsiveImage asset={media.alignerExplanation} imageClassName="treatment-path__image" showCaption />
+              <ResponsiveImage asset={media.orthoTeamExplanation} imageClassName="treatment-path__image" />
               <div className="treatment-path__body">
                 <span>Orthodontie invisible</span><h3>Étudier l’alignement et l’occlusion.</h3>
                 <p>Examen, empreinte numérique selon le protocole, planification, port des aligneurs, contrôles et contention.</p>

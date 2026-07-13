@@ -29,7 +29,7 @@ The public experience, route configuration, image pipeline, content hub, treatme
 
 ## 4. Core pages rebuilt
 
-About, Services, Contact, Guides and Gallery now use the same editorial design system. Gallery uses clearly disclosed illustrations and can add only admin images marked as verified documentary photographs.
+About, Services, Contact, Guides and Gallery now use the same editorial design system. Gallery uses varied pedagogical scenes and can add admin images only when they are marked as verified documentary photographs.
 
 ## 5. Redirect map
 
@@ -57,11 +57,11 @@ Kept pending Search Console evidence. No new city page was added and every page 
 
 ## 11. Image-to-page mapping
 
-See `docs/image-inventory.md`. Five generated illustrations were optimized and mapped to home, implantology, orthodontie-invisible, guide and gallery contexts.
+See `docs/image-inventory.md`. The original five published scenes and the 20-image guide set are optimized and mapped by treatment, guide and gallery context.
 
 ## 12. Real versus generated classification
 
-The supplied logo is a verified brand asset. All eight new scenes are generated. Three potentially misleading team/waiting-room images are not published.
+The supplied logo is a verified brand asset. The published clinical scenes are generated editorial assets and are not described as documentary photographs. Three potentially misleading images from the original set remain unpublished.
 
 ## 13. New implantology article list
 
@@ -90,7 +90,7 @@ Skip link, language-aware HTML, keyboard-accessible navigation and filters, visi
 
 ## 17. Performance improvements
 
-Public forms, content pages, translations and admin are route-split. The previous gallery PNG imports and duplicate keepalive load were removed from the initial bundle. Responsive AVIF/WebP images replaced multi-megabyte PNG use. The restored desktop hero video remains the largest asset by explicit user request.
+Public forms, content pages, translations and admin are route-split. The guide renderer is prefetched from the guide hub and includes one-time stale-chunk recovery, preventing intermittent blank client navigations without inflating the initial bundle. Responsive AVIF/WebP images replace multi-megabyte PNG use. The restored desktop hero video remains the largest asset by explicit user request.
 
 ## 18. Build result
 

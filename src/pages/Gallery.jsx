@@ -7,11 +7,16 @@ import { media } from '../config/media'
 import { getGallery } from '../services/api'
 
 const editorialImages = [
-  { id: 'consultation-orthodontie', category: 'Consultation', title: 'Écouter avant de proposer', text: 'Un échange pour préciser la gêne, les priorités et les questions du patient.', asset: media.homeConsultation },
-  { id: 'consultation-implantologie', category: 'Implantologie', title: 'Expliquer le remplacement d’une dent', text: 'Visualiser les solutions possibles avant de discuter le parcours clinique.', asset: media.implantConsultation },
-  { id: 'scanner-intraoral', category: 'Orthodontie invisible', title: 'Numériser lorsque le protocole l’indique', text: 'L’empreinte numérique peut soutenir l’étude de l’alignement et les explications.', asset: media.intraoralScanner },
-  { id: 'explication-aligneurs', category: 'Orthodontie invisible', title: 'Comprendre le rôle des aligneurs', text: 'Port quotidien, taquets, suivi et contention sont présentés avant la décision.', asset: media.alignerExplanation },
-  { id: 'environnement-clinique', category: 'Technologie', title: 'Des outils au service du soin', text: 'Une illustration de l’environnement numérique, sans prétendre représenter le cabinet réel.', asset: media.clinicalTechnology },
+  { id: 'premier-echange', category: 'Consultation', title: 'Écouter avant de proposer', text: 'Un échange pour préciser la gêne, les priorités et les questions du patient.', asset: media.orthoFirstExchange },
+  { id: 'planification-implant', category: 'Implantologie', title: 'Planifier avant d’intervenir', text: 'L’imagerie et la visualisation numérique accompagnent l’analyse du projet implantaire.', asset: media.implantDigitalPlanning },
+  { id: 'scanner-adulte', category: 'Orthodontie invisible', title: 'Acquérir une empreinte numérique', text: 'Le scanner intra-oral peut soutenir l’étude de l’alignement et la préparation du suivi.', asset: media.orthoAdultScan },
+  { id: 'implant-modele', category: 'Implantologie', title: 'Comprendre le remplacement d’une dent', text: 'Le modèle dentaire aide à distinguer l’implant, la restauration et les tissus voisins.', asset: media.implantCloseModel },
+  { id: 'aligneurs-options', category: 'Orthodontie invisible', title: 'Choisir un dispositif adapté', text: 'Le type d’aligneur dépend des mouvements recherchés, de l’examen et du rythme de suivi.', asset: media.orthoOptions },
+  { id: 'imagerie-implant', category: 'Technologie', title: 'Lire l’imagerie avec méthode', text: 'Chaque examen répond à une question clinique précise avant la planification.', asset: media.implantImaging },
+  { id: 'suivi-aligneurs', category: 'Orthodontie invisible', title: 'Contrôler la progression', text: 'Les rendez-vous de suivi permettent d’observer l’adaptation et d’ajuster la suite du parcours.', asset: media.orthoFollowUp },
+  { id: 'implant-manquant', category: 'Implantologie', title: 'Comparer les solutions possibles', text: 'Le remplacement d’une dent manquante se discute selon l’os, les dents voisines et les attentes.', asset: media.implantMissingTooth },
+  { id: 'resultat-miroir', category: 'Consultation', title: 'Observer et expliquer', text: 'Le dialogue permet de relier le ressenti du patient aux objectifs réalistes du traitement.', asset: media.orthoMirrorResult },
+  { id: 'implant-ecran', category: 'Technologie', title: 'Visualiser les étapes', text: 'Les supports numériques rendent le projet plus lisible sans remplacer l’examen clinique.', asset: media.implantScreenPlanning },
 ]
 
 const categories = ['Tous', 'Consultation', 'Implantologie', 'Orthodontie invisible', 'Technologie']
@@ -46,8 +51,8 @@ export default function Gallery() {
   return (
     <>
       <Helmet>
-        <title>Galerie visuelle des parcours dentaires | Dr Abdessadok</title>
-        <meta name="description" content="Galerie visuelle du cabinet dentaire à Sète : illustrations signalées des parcours en implantologie, orthodontie invisible et technologie." />
+        <title>Galerie des parcours dentaires | Dr Abdessadok</title>
+        <meta name="description" content="Découvrez en images les parcours en implantologie, orthodontie invisible et technologie dentaire proposés par le cabinet à Sète." />
       </Helmet>
 
       <header className="gallery-hero" aria-labelledby="gallery-title">
@@ -55,7 +60,7 @@ export default function Gallery() {
           <motion.div initial={reduceMotion ? false : { opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
             <span className="section-kicker section-kicker--light">Parcours en images</span>
             <h1 id="gallery-title">Voir pour mieux comprendre.</h1>
-            <p>Une galerie éditoriale autour des consultations, de l’implantologie et des aligneurs. Chaque image illustrative est clairement signalée et n’est jamais présentée comme une photographie réelle du cabinet.</p>
+            <p>Des scènes pédagogiques autour de la consultation, de l’implantologie et des aligneurs pour mieux comprendre chaque étape du parcours.</p>
           </motion.div>
           <div className="gallery-hero__stack" aria-hidden="true">
             {editorialImages.slice(0, 3).map((image, index) => <ResponsiveImage key={image.id} asset={image.asset} className={`gallery-hero__stack-item gallery-hero__stack-item--${index}`} imageClassName="w-full h-full object-cover" />)}
@@ -69,7 +74,7 @@ export default function Gallery() {
           <AnimatePresence mode="wait">
             <motion.article key={featured.id} className="gallery-feature__stage" initial={reduceMotion ? false : { opacity: 0, scale: 0.985 }} animate={{ opacity: 1, scale: 1 }} exit={reduceMotion ? undefined : { opacity: 0 }} transition={{ duration: 0.45 }}>
               <ResponsiveImage asset={featured.asset} className="gallery-feature__visual" imageClassName="w-full h-full object-cover" />
-              <div className="gallery-feature__copy"><span>{featured.category}</span><h3>{featured.title}</h3><p>{featured.text}</p><small>{featured.asset.caption}</small></div>
+              <div className="gallery-feature__copy"><span>{featured.category}</span><h3>{featured.title}</h3><p>{featured.text}</p></div>
             </motion.article>
           </AnimatePresence>
         </div>
@@ -77,7 +82,7 @@ export default function Gallery() {
 
       <section className="gallery-library" aria-labelledby="gallery-library-title">
         <div className="container-max">
-          <div className="gallery-library__heading"><div><span className="section-kicker">Explorer</span><h2 id="gallery-library-title">Les univers du cabinet.</h2></div><p>Utilisez les filtres ou faites simplement défiler. Sur mobile, les visuels occupent davantage l’écran pour une lecture plus immersive.</p></div>
+          <div className="gallery-library__heading"><div><span className="section-kicker">Explorer</span><h2 id="gallery-library-title">Les parcours en détail.</h2></div><p>Utilisez les filtres ou faites simplement défiler. Sur mobile, chaque scène devient une séquence plein écran facile à parcourir.</p></div>
           <div className="gallery-filters" role="group" aria-label="Filtrer la galerie">
             {categories.map((category) => <button key={category} type="button" className={activeCategory === category ? 'is-active' : ''} aria-pressed={activeCategory === category} onClick={() => setActiveCategory(category)}>{category}</button>)}
           </div>
@@ -86,7 +91,7 @@ export default function Gallery() {
               {visible.map((image, index) => (
                 <motion.article layout key={image.id} className={`gallery-tile gallery-tile--${index % 4}`} initial={reduceMotion ? false : { opacity: 0, y: 22 }} animate={{ opacity: 1, y: 0 }} exit={reduceMotion ? undefined : { opacity: 0, scale: 0.97 }}>
                   <ResponsiveImage asset={image.asset} className="gallery-tile__visual" imageClassName="w-full h-full object-cover" />
-                  <div><span>{image.category}</span><h3>{image.title}</h3><p>{image.text}</p><small>Illustration éditoriale</small></div>
+                  <div><span>{image.category}</span><h3>{image.title}</h3><p>{image.text}</p></div>
                 </motion.article>
               ))}
             </AnimatePresence>

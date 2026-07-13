@@ -1,8 +1,10 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import { seoRouteByPath, seoRoutes, sitemapRoutes } from '../src/config/seoRoutes.js'
+import { mediaByRoute } from '../src/config/media.js'
 import { getAlternatesForPageType } from '../src/config/multilingualRoutes.js'
 import { absoluteUrl, trailingSlash } from '../src/config/site.js'
+import { blogPages } from '../src/data/seoContent.js'
 
 const distDir = path.resolve('dist')
 const failures = []
@@ -136,6 +138,9 @@ for (const url of sitemapUrls) {
   if (/Maillage interne|Mots-cl[eé]s travaill[eé]s|Blog d.autorit[eé]|Cluster prioritaire|Page pilier|city swap|signal s[eé]mantique/i.test(stripTags(html))) {
     fail(`${pathname}: patient-visible SEO strategy terminology remains`)
   }
+  if (/Illustration d.ambiance|Illustration [eé]ditoriale|non-photographie du cabinet|non r[eé]alis[eé]e dans le cabinet/i.test(stripTags(html))) {
+    fail(`${pathname}: an internal image disclaimer is visible to patients`)
+  }
 
   for (const tag of [...html.matchAll(/<img\b[^>]*>/gi)].map((match) => attributes(match[0]))) {
     if (!('alt' in tag)) fail(`${pathname}: image is missing an alt attribute`)
@@ -175,6 +180,24 @@ for (const route of sitemapRoutes.filter((item) => item.pageType)) {
       fail(`${route.path}: hreflang is not reciprocal from ${alternate.href}`)
     }
   }
+}
+
+const guideAssets = new Map()
+for (const page of blogPages) {
+  const pathname = trailingSlash(page.url)
+  const route = seoRouteByPath.get(pathname)
+  const html = htmlByPath.get(pathname)
+  const asset = mediaByRoute[pathname]
+
+  if (!page.url.startsWith('/blog/') || !page.url.endsWith('/')) fail(`${page.url}: guide URL must use /blog/ and a trailing slash`)
+  if (!route || route.type !== 'article') fail(`${pathname}: guide has no article route configuration`)
+  if (!asset) fail(`${pathname}: guide has no dedicated image mapping`)
+  if (asset && guideAssets.has(asset.fallback)) fail(`${pathname}: guide repeats the image assigned to ${guideAssets.get(asset.fallback)}`)
+  if (asset) guideAssets.set(asset.fallback, pathname)
+  if (!sitemapUrls.includes(absoluteUrl(pathname))) fail(`${pathname}: guide is absent from the sitemap`)
+  if (!html) fail(`${pathname}: guide initial HTML was not generated`)
+  if (html && h1Of(html) !== page.h1) fail(`${pathname}: generated guide H1 does not match its content record`)
+  if (html && canonicalOf(html) !== absoluteUrl(pathname)) fail(`${pathname}: generated guide canonical is not self-referencing`)
 }
 
 const preAppointmentPath = '/pre-rendez-vous/'

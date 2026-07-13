@@ -1,15 +1,14 @@
 import { Helmet } from 'react-helmet-async'
 import { Link } from 'react-router-dom'
 import ResponsiveImage from './ResponsiveImage'
+import SmileViewSimulator from './SmileViewSimulator'
 import { getPagesByUrls } from '../data/seoContent'
 import { buildArticleBodyBlocks } from '../utils/seoArticleContent'
-import { media } from '../config/media'
+import { mediaForRoute } from '../config/media'
 import { absoluteUrl, dentistPersonSchema, dentistSchema, organizationSchema } from '../config/site'
 
 function primaryAsset(page) {
-  if (page.url.includes('implant')) return media.implantConsultation
-  if (page.url.includes('orthodontie') || page.url.includes('invisalign')) return media.alignerExplanation
-  return media.logo
+  return mediaForRoute(page.url)
 }
 
 function faqSchema(page) {
@@ -98,15 +97,18 @@ function LongFormContent({ page }) {
 function TreatmentEssentials({ page }) {
   if (page.url === '/orthodontie-invisible-sete/') {
     return (
-      <section className="treatment-essentials" aria-labelledby="ortho-essentials-title">
-        <h2 id="ortho-essentials-title">Ce que le bilan doit clarifier</h2>
-        <div>
-          <article><span>01</span><h3>Indication</h3><p>Les mouvements nécessaires, l’occlusion, les tissus et les alternatives possibles.</p></article>
-          <article><span>02</span><h3>Vie quotidienne</h3><p>Temps de port, retrait pendant les repas, hygiène, taquets éventuels et rendez-vous de contrôle.</p></article>
-          <article><span>03</span><h3>Limites</h3><p>Un aligneur est discret, pas totalement invisible, et il ne convient pas à toutes les corrections.</p></article>
-          <article><span>04</span><h3>Stabilisation</h3><p>La contention et le suivi à long terme font partie du traitement, même après l’alignement actif.</p></article>
-        </div>
-      </section>
+      <>
+        <section className="treatment-essentials" aria-labelledby="ortho-essentials-title">
+          <h2 id="ortho-essentials-title">Ce que le bilan doit clarifier</h2>
+          <div>
+            <article><span>01</span><h3>Indication</h3><p>Les mouvements nécessaires, l’occlusion, les tissus et les alternatives possibles.</p></article>
+            <article><span>02</span><h3>Vie quotidienne</h3><p>Temps de port, retrait pendant les repas, hygiène, taquets éventuels et rendez-vous de contrôle.</p></article>
+            <article><span>03</span><h3>Limites</h3><p>Un aligneur est discret, pas totalement invisible, et il ne convient pas à toutes les corrections.</p></article>
+            <article><span>04</span><h3>Stabilisation</h3><p>La contention et le suivi à long terme font partie du traitement, même après l’alignement actif.</p></article>
+          </div>
+        </section>
+        <SmileViewSimulator id="orthodontie-smileview" />
+      </>
     )
   }
 
@@ -166,7 +168,7 @@ export default function SeoContentPage({ page, type = 'service' }) {
                 <Link to="/contact/" className="btn-light">Contacter le cabinet</Link>
               </div>
             </div>
-            <ResponsiveImage asset={asset} eager showCaption className="content-hero__visual" imageClassName="content-hero__image" />
+            <ResponsiveImage asset={asset} eager className="content-hero__visual" imageClassName="content-hero__image" />
           </div>
         </div>
       </header>

@@ -4,7 +4,7 @@ import { Helmet } from 'react-helmet-async'
 import { Link } from 'react-router-dom'
 import ResponsiveImage from '../components/ResponsiveImage'
 import { blogPages } from '../data/seoContent'
-import { media } from '../config/media'
+import { media, mediaForRoute } from '../config/media'
 
 const categories = ['Tous', 'Implantologie', 'Orthodontie', 'Orthodontie invisible', 'Bassin de Thau / Suivi local']
 
@@ -13,9 +13,7 @@ function articleCategory(page) {
 }
 
 function articleAsset(page) {
-  if (page.cluster === 'implantologie' || page.url.includes('implant')) return media.implantConsultation
-  if (page.url.includes('quotidien') || page.url.includes('premier-bilan')) return media.alignerExplanation
-  return media.intraoralScanner
+  return mediaForRoute(page.url)
 }
 
 export default function BlogHub() {
@@ -33,6 +31,11 @@ export default function BlogHub() {
     return () => clearInterval(timer)
   }, [featured.length, reduceMotion])
 
+  useEffect(() => {
+    // The guide renderer is ready before the first click while remaining outside the initial bundle.
+    import('./SeoBlogPage').catch(() => undefined)
+  }, [])
+
   return (
     <>
       <Helmet>
@@ -49,7 +52,7 @@ export default function BlogHub() {
             <p>Des guides illustrés pour préparer vos questions sur les implants, les aligneurs et le suivi. Chaque article distingue ce qui est général de ce qui nécessite un examen.</p>
             <div className="guides-hero__stats"><div><strong>{blogPages.length}</strong><span>guides disponibles</span></div><div><strong>2</strong><span>parcours principaux</span></div><div><strong>4</strong><span>langues d’information</span></div></div>
           </motion.div>
-          <ResponsiveImage asset={media.implantConsultation} eager showCaption className="guides-hero__visual" imageClassName="guides-hero__image" />
+          <ResponsiveImage asset={media.implantModel} eager className="guides-hero__visual" imageClassName="guides-hero__image" />
         </div>
       </header>
 

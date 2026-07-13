@@ -3,7 +3,7 @@ import path from 'node:path'
 import { buildArticleBodyBlocks } from '../src/utils/seoArticleContent.js'
 import { seoRoutes, routeUrl } from '../src/config/seoRoutes.js'
 import { getAlternatesForPageType, getLanguageNavigation } from '../src/config/multilingualRoutes.js'
-import { media } from '../src/config/media.js'
+import { media, mediaForRoute } from '../src/config/media.js'
 import {
   absoluteUrl,
   dentistPersonSchema,
@@ -21,9 +21,11 @@ const escapeHtml = (value = '') => String(value)
   .replaceAll('"', '&quot;').replaceAll("'", '&#39;')
 
 function routeAsset(route) {
-  if (route.path.includes('implant')) return media.implantConsultation
-  if (route.path.includes('orthodont') || route.path.includes('invisalign') || route.path.includes('align')) return media.intraoralScanner
-  if (route.type === 'contact' || route.type === 'gallery' || route.type === 'about') return media.logo
+  if (route.page) return mediaForRoute(route.path)
+  if (route.pageType === 'implant' || route.path.includes('implant')) return media.implantDigitalPlanning
+  if (route.pageType === 'ortho' || route.path.includes('orthodont') || route.path.includes('invisalign') || route.path.includes('align')) return media.orthoTeamExplanation
+  if (route.type === 'gallery') return media.implantModel
+  if (route.type === 'contact' || route.type === 'about') return media.logo
   return media.homeConsultation
 }
 
@@ -132,7 +134,7 @@ function breadcrumbsHtml(route) {
 }
 
 function responsiveImage(asset, eager = false) {
-  return `<figure><picture><source type="image/avif" srcset="${asset.sources.avif}" sizes="${asset.sizes || '100vw'}"><source type="image/webp" srcset="${asset.sources.webp}" sizes="${asset.sizes || '100vw'}"><img src="${asset.fallback}" alt="${escapeHtml(asset.alt)}" width="${asset.width}" height="${asset.height}" loading="${eager ? 'eager' : 'lazy'}" decoding="async"></picture>${asset.caption ? `<figcaption class="media-caption">${escapeHtml(asset.caption)}</figcaption>` : ''}</figure>`
+  return `<figure><picture><source type="image/avif" srcset="${asset.sources.avif}" sizes="${asset.sizes || '100vw'}"><source type="image/webp" srcset="${asset.sources.webp}" sizes="${asset.sizes || '100vw'}"><img src="${asset.fallback}" alt="${escapeHtml(asset.alt)}" width="${asset.width}" height="${asset.height}" loading="${eager ? 'eager' : 'lazy'}" decoding="async"></picture></figure>`
 }
 
 function shell(route, content) {
@@ -153,7 +155,7 @@ function corePage(route) {
     },
     about: { eyebrow: 'Le praticien et le cabinet', intro: 'Parcours universitaire, qualifications déclarées et approche clinique du Dr Abdessamed Abdessadok.', sections: site.qualifications.map((item) => ['Qualification', item]) },
     services: { eyebrow: 'Les soins du cabinet', intro: 'Chaque parcours commence par un bilan clinique et une discussion des alternatives.', sections: [['Implantologie', 'Évaluation d’une dent manquante et des solutions de remplacement.'], ['Orthodontie invisible', 'Étude de l’alignement, de l’occlusion et des aligneurs.'], ['Soins dentaires', 'Prévention, soins conservateurs, prothèses et urgences.']] },
-    gallery: { eyebrow: 'Parcours en images', intro: 'Une galerie éditoriale autour des consultations, de l’implantologie et des aligneurs. Chaque illustration est signalée et ne prétend pas représenter le cabinet réel.', sections: [['Consultation', 'Écouter et expliquer avant de proposer une option.'], ['Implantologie', 'Visualiser les solutions de remplacement et les étapes du parcours.'], ['Orthodontie invisible', 'Comprendre le scanner, le port des aligneurs et le suivi.'], ['Technologie', 'Présenter les outils numériques sans garantie de résultat.']] },
+    gallery: { eyebrow: 'Parcours en images', intro: 'Des scènes pédagogiques autour des consultations, de l’implantologie et des aligneurs pour mieux comprendre chaque parcours.', sections: [['Consultation', 'Écouter et expliquer avant de proposer une option.'], ['Implantologie', 'Visualiser les solutions de remplacement et les étapes du parcours.'], ['Orthodontie invisible', 'Comprendre le scanner, le port des aligneurs et le suivi.'], ['Technologie', 'Présenter les outils numériques sans garantie de résultat.']] },
     contact: { eyebrow: 'Nous joindre', intro: `${site.address.streetAddress}, ${site.address.postalCode} ${site.address.addressLocality}. Téléphone : ${site.telephoneDisplay}.`, sections: [['Adresse et accès', 'Rez-de-chaussée, au centre de Sète.'], ['Horaires', 'Lundi, mardi, jeudi et vendredi : 08:00–12:00 et 14:00–17:00. Mercredi : 08:00–12:00.'], ['Message non urgent', 'Ne transmettez pas de données médicales sensibles par le formulaire.']] },
     preAppointment: { eyebrow: 'Pré-rendez-vous téléphonique', intro: 'Un échange gratuit de 5 minutes pour déterminer votre besoin en santé bucco-dentaire et vous orienter vers un rendez-vous adapté au cabinet.', sections: [['Déterminez votre besoin', 'Un seul parcours téléphonique, sans choix de spécialité préalable.'], ['Laissez vos coordonnées', 'Le cabinet utilise vos coordonnées uniquement pour répondre à la demande.']] },
   }[route.type]

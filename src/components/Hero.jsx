@@ -1,31 +1,49 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
 import { Link } from 'react-router-dom'
-import heroPoster from '../assets/abdessamed-hero-poster.png'
-import heroVideoDesktop from '../assets/video/abdessamed-hero-720.m4v'
-import heroVideoMobile from '../assets/video/abdessamed-hero-mobile.m4v'
+import heroPosterAvif from '../assets/abdessamed-hero-poster.avif'
+import heroPosterWebp from '../assets/abdessamed-hero-poster.webp'
+import heroVideoDesktop from '../assets/video/abdessamed-hero-desktop.mp4'
+import heroVideoMobile from '../assets/video/abdessamed-hero-mobile-optimized.mp4'
 import { trackEvent } from '../utils/analytics'
 
 export default function Hero() {
   const reduceMotion = useReducedMotion()
   const [ready, setReady] = useState(false)
+  const [videoSource, setVideoSource] = useState(null)
+
+  useEffect(() => {
+    const saveData = navigator.connection?.saveData === true
+    if (reduceMotion || saveData) {
+      setVideoSource(null)
+      return
+    }
+
+    setVideoSource(window.matchMedia('(max-width: 767px)').matches ? heroVideoMobile : heroVideoDesktop)
+  }, [reduceMotion])
 
   return (
     <section className="home-hero relative flex items-end overflow-hidden" aria-labelledby="home-hero-title">
       <div className="home-hero__media" aria-hidden="true">
-        <video
-          className={`home-hero__video ${ready ? 'is-ready' : ''}`}
-          poster={heroPoster}
-          autoPlay={!reduceMotion}
-          muted
-          loop
-          playsInline
-          preload="metadata"
-          onCanPlay={() => setReady(true)}
-        >
-          <source src={heroVideoMobile} media="(max-width: 767px)" />
-          <source src={heroVideoDesktop} />
-        </video>
+        <picture className="home-hero__poster">
+          <source srcSet={heroPosterAvif} type="image/avif" />
+          <source srcSet={heroPosterWebp} type="image/webp" />
+          <img src={heroPosterWebp} alt="" width="1400" height="787" loading="eager" fetchPriority="high" />
+        </picture>
+        {videoSource ? (
+          <video
+            className={`home-hero__video ${ready ? 'is-ready' : ''}`}
+            src={videoSource}
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            width="1280"
+            height="720"
+            onCanPlay={() => setReady(true)}
+          />
+        ) : null}
       </div>
 
       <div className="container-max relative z-10 w-full pb-8 pt-28 md:pb-14 md:pt-36">

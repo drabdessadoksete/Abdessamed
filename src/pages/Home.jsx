@@ -4,6 +4,7 @@ import Hero from '../components/Hero'
 import ResponsiveImage from '../components/ResponsiveImage'
 import CTA from '../components/CTA'
 import ReviewsMarquee from '../components/ReviewsMarquee'
+import SmileViewSimulator from '../components/SmileViewSimulator'
 import { media, mediaSlots } from '../config/media'
 import { site } from '../config/site'
 import { trackEvent } from '../utils/analytics'
@@ -15,7 +16,7 @@ const treatmentPaths = [
     text: 'Évaluer les tissus, l’espace disponible et les solutions de remplacement avant toute proposition de traitement.',
     href: '/implantologie/',
     link: "Comprendre le bilan implantaire",
-    image: media.implantConsultation,
+    image: media.implantModel,
   },
   {
     eyebrow: 'Alignement dentaire',
@@ -23,7 +24,7 @@ const treatmentPaths = [
     text: 'Étudier l’occlusion, les mouvements possibles, le port des aligneurs et la contention qui stabilise le résultat.',
     href: '/orthodontie-invisible-sete/',
     link: 'Découvrir le parcours avec aligneurs',
-    image: media.intraoralScanner,
+    image: media.orthoTeamExplanation,
   },
 ]
 
@@ -113,7 +114,7 @@ export default function Home() {
           <div className="treatment-paths">
             {treatmentPaths.map((path) => (
               <article className="treatment-path" key={path.href}>
-                <ResponsiveImage asset={path.image} imageClassName="treatment-path__image" showCaption />
+                <ResponsiveImage asset={path.image} imageClassName="treatment-path__image" />
                 <div className="treatment-path__body">
                   <span>{path.eyebrow}</span>
                   <h3>{path.title}</h3>
@@ -123,6 +124,7 @@ export default function Home() {
               </article>
             ))}
           </div>
+          <SmileViewSimulator id="home-smileview" />
         </div>
       </section>
 
@@ -158,7 +160,7 @@ export default function Home() {
 
       <section className="authority-section technology-section" aria-labelledby="technology-title">
         <div className="container-max technology-grid">
-          <ResponsiveImage asset={media.clinicalTechnology} className="technology-visual" imageClassName="technology-visual__image" showCaption />
+          <ResponsiveImage asset={media.clinicalTechnology} className="technology-visual" imageClassName="technology-visual__image" />
           <div>
             <span className="section-kicker">Précision numérique</span>
             <h2 id="technology-title">Des outils au service du diagnostic et de l’explication.</h2>

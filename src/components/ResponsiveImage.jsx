@@ -3,7 +3,6 @@ export default function ResponsiveImage({
   className = '',
   imageClassName = '',
   eager = false,
-  showCaption = false,
 }) {
   if (!asset) return null
 
@@ -24,7 +23,6 @@ export default function ResponsiveImage({
           style={asset.focalPoint ? { objectPosition: asset.focalPoint } : undefined}
         />
       </picture>
-      {showCaption && asset.caption ? <figcaption className="media-caption">{asset.caption}</figcaption> : null}
     </figure>
   )
 }

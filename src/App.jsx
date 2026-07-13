@@ -1,6 +1,6 @@
 import { Outlet, useLocation } from 'react-router-dom'
 import { useEffect } from 'react'
-import { AnimatePresence, motion } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { Helmet } from 'react-helmet-async'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
@@ -57,17 +57,14 @@ export default function App() {
       </Helmet>
       <Navbar />
       <main id="main-content" tabIndex="-1" className={`overflow-x-hidden ${isHome ? 'public-main--home' : 'public-main--internal'}`}>
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={location.pathname}
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            transition={{ duration: 0.25, ease: 'easeOut' }}
-          >
-            <Outlet />
-          </motion.div>
-        </AnimatePresence>
+        <motion.div
+          key={location.pathname}
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.25, ease: 'easeOut' }}
+        >
+          <Outlet />
+        </motion.div>
       </main>
       <MobileBookingBar pathname={location.pathname} />
       <Footer />

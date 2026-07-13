@@ -31,6 +31,106 @@ const assets = [
     destination: 'public/images/orthodontie/scanner',
     name: 'scanner-intraoral',
   },
+  {
+    source: 'the new 20 images/ChatGPT Image 13 juil. 2026, 11_42_03 (1).webp',
+    destination: 'public/images/orthodontie/guides',
+    name: 'premier-echange-aligneurs',
+  },
+  {
+    source: 'the new 20 images/ChatGPT Image 13 juil. 2026, 11_42_04 (2).webp',
+    destination: 'public/images/orthodontie/guides',
+    name: 'scanner-bilan-adulte',
+  },
+  {
+    source: 'the new 20 images/ChatGPT Image 13 juil. 2026, 11_42_04 (3).webp',
+    destination: 'public/images/orthodontie/guides',
+    name: 'planification-alignement',
+  },
+  {
+    source: 'the new 20 images/ChatGPT Image 13 juil. 2026, 11_42_04 (4).webp',
+    destination: 'public/images/orthodontie/guides',
+    name: 'explication-modele-aligneurs',
+  },
+  {
+    source: 'the new 20 images/ChatGPT Image 13 juil. 2026, 11_42_05 (5).webp',
+    destination: 'public/images/orthodontie/guides',
+    name: 'consultation-aligneurs',
+  },
+  {
+    source: 'the new 20 images/ChatGPT Image 13 juil. 2026, 11_42_05 (6).webp',
+    destination: 'public/images/orthodontie/guides',
+    name: 'equipe-explication-aligneurs',
+  },
+  {
+    source: 'the new 20 images/ChatGPT Image 13 juil. 2026, 11_42_06 (7).webp',
+    destination: 'public/images/orthodontie/guides',
+    name: 'resultat-aligneurs-miroir',
+  },
+  {
+    source: 'the new 20 images/ChatGPT Image 13 juil. 2026, 11_42_06 (8).webp',
+    destination: 'public/images/orthodontie/guides',
+    name: 'suivi-traitement-aligneurs',
+  },
+  {
+    source: 'the new 20 images/ChatGPT Image 13 juil. 2026, 11_42_06 (9).webp',
+    destination: 'public/images/orthodontie/guides',
+    name: 'choix-aligneurs',
+  },
+  {
+    source: 'the new 20 images/ChatGPT Image 13 juil. 2026, 11_42_07 (10).webp',
+    destination: 'public/images/orthodontie/guides',
+    name: 'contention-suivi-aligneurs',
+  },
+  {
+    source: 'the new 20 images/ChatGPT Image 13 juil. 2026, 11_42_09 (1).webp',
+    destination: 'public/images/implantologie/guides',
+    name: 'explication-implant-modele',
+  },
+  {
+    source: 'the new 20 images/ChatGPT Image 13 juil. 2026, 11_42_09 (2).webp',
+    destination: 'public/images/implantologie/guides',
+    name: 'planification-numerique-implant',
+  },
+  {
+    source: 'the new 20 images/ChatGPT Image 13 juil. 2026, 11_42_10 (3).webp',
+    destination: 'public/images/implantologie/guides',
+    name: 'imagerie-panoramique-implant',
+  },
+  {
+    source: 'the new 20 images/ChatGPT Image 13 juil. 2026, 11_42_10 (4).webp',
+    destination: 'public/images/implantologie/guides',
+    name: 'consultation-implant-modele',
+  },
+  {
+    source: 'the new 20 images/ChatGPT Image 13 juil. 2026, 11_42_10 (5).webp',
+    destination: 'public/images/implantologie/guides',
+    name: 'bilan-implant-patiente',
+  },
+  {
+    source: 'the new 20 images/ChatGPT Image 13 juil. 2026, 11_42_11 (6).webp',
+    destination: 'public/images/implantologie/guides',
+    name: 'analyse-imagerie-implant',
+  },
+  {
+    source: 'the new 20 images/ChatGPT Image 13 juil. 2026, 11_42_11 (7).webp',
+    destination: 'public/images/implantologie/guides',
+    name: 'remplacement-dent-manquante',
+  },
+  {
+    source: 'the new 20 images/ChatGPT Image 13 juil. 2026, 11_42_11 (8).webp',
+    destination: 'public/images/implantologie/guides',
+    name: 'entretien-suivi-implant',
+  },
+  {
+    source: 'the new 20 images/ChatGPT Image 13 juil. 2026, 11_42_12 (9).webp',
+    destination: 'public/images/implantologie/guides',
+    name: 'planification-implants-ecran',
+  },
+  {
+    source: 'the new 20 images/ChatGPT Image 13 juil. 2026, 11_42_12 (10).webp',
+    destination: 'public/images/implantologie/guides',
+    name: 'explication-implant-ecran',
+  },
 ]
 
 async function writeResponsiveAsset(asset) {

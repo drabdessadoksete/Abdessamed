@@ -5,22 +5,33 @@ Last reviewed: 2026-07-13
 ## Classification rules
 
 - `verified brand`: supplied clinic identity or logo that can be used as the clinic identity.
-- `generated illustration`: AI-created scene used only as editorial support with an explicit caption. It is never described as the real dentist, team, patient or clinic.
+- `generated illustration`: AI-created scene used as editorial support. Alt text and surrounding copy describe the clinical topic without identifying the depicted people or room as the real dentist, team, patient or clinic.
 - `documentary photograph`: real clinic photography whose origin and permission have been confirmed. None was supplied in the `new images` folder.
 - `development only`: retained in the workspace but intentionally not published because it could be mistaken for a real person or team.
 
-## Supplied folder
+## Original supplied folder
 
 | Source file | Dimensions | Classification | Decision | Public mapping |
 | --- | ---: | --- | --- | --- |
 | `18_44_18 (1).webp` | 1672×941 | Generated illustration | Used for the consultation context and multilingual home pages. | `/images/orthodontie/consultation/consultation-orthodontie-*` |
 | `18_44_18 (2).webp` | 1672×941 | Generated illustration | Used for implantology pages and guides. | `/images/implantologie/consultation/consultation-implantologie-*` |
 | `18_44_18 (3).webp` | 1122×1402 | Generated portrait/team scene | Development only. It could be mistaken for the real dentist or team. | Not published |
-| `18_44_19 (4).webp` | 1672×941 | Generated clinical-room illustration | Used only as a technology/environment illustration with a disclosure. | `/images/shared/technology/environnement-clinique-illustre-*` |
+| `18_44_19 (4).webp` | 1672×941 | Generated clinical-room illustration | Used only as a technology/environment scene. | `/images/shared/technology/environnement-clinique-illustre-*` |
 | `18_44_24 (1).webp` | 1672×941 | Generated illustration | Used for aligner explanation cards and treatment pages. | `/images/orthodontie/explanation/explication-aligneurs-*` |
 | `18_44_24 (2).webp` | 1122×1402 | Generated portrait/team scene | Development only. It could be mistaken for the real dentist or team. | Not published |
 | `18_44_24 (3).webp` | 1448×1086 | Generated waiting-room scene | Not published because it could be mistaken for the real clinic. | Not published |
 | `18_44_25 (4).webp` | 1672×941 | Generated scanner illustration | Used for orthodontie-invisible pages and guides. | `/images/orthodontie/scanner/scanner-intraoral-*` |
+
+## New 20-image set
+
+All 20 source images in `the new 20 images/` are 1122×1402 generated editorial scenes. They are published as responsive AVIF/WebP assets with neutral, topic-specific alt text and no patient-visible production disclaimer.
+
+| Set | Quantity | Public mapping | Primary uses |
+| --- | ---: | --- | --- |
+| Orthodontie and aligneurs | 10 | `/images/orthodontie/guides/` | First exchange, adult scan, planning, aligner model, consultation, explanation, follow-up, options and retention guides. |
+| Implantologie | 10 | `/images/implantologie/guides/` | Implant model, digital planning, panoramic imaging, assessment, missing-tooth options, maintenance and screen-based explanation guides. |
+
+Every `/blog/` URL has an explicit image assignment in `src/config/media.js`, and all 20 guide heroes are unique. The treatment pages, homepage pathways, guide carousel and gallery also use distinct assets instead of repeating one implant consultation image.
 
 ## Verified brand asset
 
@@ -28,7 +39,7 @@ Last reviewed: 2026-07-13
 
 ## Optimization
 
-`npm run media:prepare` creates responsive AVIF and WebP variants at practical breakpoints. Runtime images use `<picture>`, explicit dimensions, responsive `srcset`, lazy loading below the fold and high-priority loading only for the active hero visual.
+`npm run media:prepare` creates responsive AVIF and WebP variants at practical breakpoints. Runtime images use `<picture>`, explicit dimensions, route-specific focal points, responsive `srcset`, lazy loading below the fold and high-priority loading only for the active hero visual.
 
 ## Legacy image findings
 

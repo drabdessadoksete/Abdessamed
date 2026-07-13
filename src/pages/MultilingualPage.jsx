@@ -10,7 +10,7 @@ export default function MultilingualPage() {
   const route = multilingualRouteByPath.get(pathname.endsWith('/') ? pathname : `${pathname}/`)
   if (!route) return null
 
-  const asset = route.pageType === 'implant' ? media.implantConsultation : route.pageType === 'ortho' ? media.intraoralScanner : media.homeConsultation
+  const asset = route.pageType === 'implant' ? media.implantDigitalPlanning : route.pageType === 'ortho' ? media.orthoTeamExplanation : media.homeConsultation
   const alternates = getAlternatesForPageType(route.pageType)
   const schemaType = route.pageType === 'contact' ? 'ContactPage' : route.pageType === 'home' ? 'WebPage' : 'Service'
   const schema = {
@@ -45,7 +45,7 @@ export default function MultilingualPage() {
             <p>{route.intro}</p>
             <Link to={route.paths.contact} className="btn-accent">{route.labels.cta}</Link>
           </div>
-          <ResponsiveImage asset={asset} eager showCaption className="localized-hero__visual" imageClassName="localized-hero__image" />
+          <ResponsiveImage asset={asset} eager className="localized-hero__visual" imageClassName="localized-hero__image" />
         </div>
       </header>
 
