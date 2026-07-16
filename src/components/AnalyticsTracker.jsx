@@ -14,7 +14,11 @@ export default function AnalyticsTracker({ disabled = false }) {
   }, [])
 
   useEffect(() => {
-    if (choice !== 'all' || disabled) {
+    if (disabled) {
+      disableAnalytics({ clearStorage: false })
+      return undefined
+    }
+    if (choice !== 'all') {
       disableAnalytics()
       return undefined
     }

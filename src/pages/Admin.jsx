@@ -64,7 +64,7 @@ const pageMeta = {
   overview: { eyebrow: 'Tableau de bord', title: 'Bonjour, bienvenue au cabinet', description: 'Retrouvez l’essentiel de l’activité du site en un coup d’œil.' },
   appointments: { eyebrow: 'Patients', title: 'Pré-rendez-vous', description: 'Traitez les nouvelles demandes et suivez chaque rappel.' },
   messages: { eyebrow: 'Patients', title: 'Messages', description: 'Consultez les demandes envoyées depuis le formulaire de contact.' },
-  analytics: { eyebrow: 'Pilotage', title: 'Analytics', description: 'Comprenez les visites, les sources et les clics sans conserver de données individuelles.' },
+  analytics: { eyebrow: 'Pilotage', title: 'Analytics', description: 'Mesurez les visiteurs uniques consentis, leurs parcours pseudonymes et les clics dans le contexte réel de chaque page.' },
   services: { eyebrow: 'Contenu', title: 'Services', description: 'Mettez à jour les soins présentés sur le site.' },
   gallery: { eyebrow: 'Contenu', title: 'Galerie', description: 'Organisez les visuels du cabinet par spécialité.' },
 }

@@ -3,6 +3,8 @@ const allowedOrigins = new Set([
   'https://www.cabinetdentairesete.fr',
   'http://localhost:5173',
   'http://127.0.0.1:5173',
+  'http://localhost:4173',
+  'http://127.0.0.1:4173',
 ])
 
 const jsonHeaders = (origin: string | null) => ({
@@ -20,6 +22,7 @@ const allowedSources = new Set(['direct', 'google', 'bing', 'facebook', 'instagr
 const allowedClickKinds = new Set(['phone', 'email', 'map', 'appointment', 'contact', 'navigation', 'treatment', 'outbound', 'other'])
 const allowedConversions = new Set(['contact', 'pre_appointment', 'other'])
 const allowedViewports = new Set(['sm', 'md', 'lg', 'xl', 'other'])
+const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
 
 const pick = (value: unknown, allowed: Set<string>, fallback: string) =>
   typeof value === 'string' && allowed.has(value) ? value : fallback
@@ -84,6 +87,15 @@ const numberBucket = (value: unknown, maximum: number) => {
   return value
 }
 
+const normalizeUuid = (value: unknown) =>
+  typeof value === 'string' && uuidPattern.test(value) ? value.toLowerCase() : null
+
+const hashIdentifier = async (value: string) => {
+  const input = new TextEncoder().encode(`cabinet-analytics-v2:${value}`)
+  const digest = await crypto.subtle.digest('SHA-256', input)
+  return [...new Uint8Array(digest)].map((byte) => byte.toString(16).padStart(2, '0')).join('')
+}
+
 Deno.serve(async (request) => {
   const origin = request.headers.get('origin')
   const headers = jsonHeaders(origin)
@@ -114,6 +126,13 @@ Deno.serve(async (request) => {
   const pagePath = normalizePath(payload.pagePath)
   if (!pagePath) return new Response(JSON.stringify({ ok: false }), { status: 400, headers })
 
+  const eventId = normalizeUuid(payload.eventId)
+  const visitorId = normalizeUuid(payload.visitorId)
+  const sessionId = normalizeUuid(payload.sessionId)
+  if (!eventId || !visitorId || !sessionId) {
+    return new Response(JSON.stringify({ ok: false }), { status: 400, headers })
+  }
+
   const { device, os, browser } = classifyUserAgent(request.headers.get('user-agent') || '')
   const headerCountry = request.headers.get('cf-ipcountry')
     || request.headers.get('x-country-code')
@@ -122,7 +141,10 @@ Deno.serve(async (request) => {
 
   const args = {
     p_consent: true,
+    p_event_id: eventId,
     p_event: String(payload.event),
+    p_visitor_hash: await hashIdentifier(visitorId),
+    p_session_hash: await hashIdentifier(sessionId),
     p_page_path: pagePath,
     p_source: pick(payload.source, allowedSources, 'other'),
     p_device: device,
@@ -136,6 +158,8 @@ Deno.serve(async (request) => {
     p_viewport: pick(payload.viewport, allowedViewports, 'other'),
     p_x_bucket: numberBucket(payload.xBucket, 19),
     p_y_bucket: numberBucket(payload.yBucket, 31),
+    p_x_ratio: numberBucket(payload.xRatio, 10000),
+    p_y_ratio: numberBucket(payload.yRatio, 10000),
   }
 
   const supabaseUrl = Deno.env.get('SUPABASE_URL')
@@ -145,7 +169,7 @@ Deno.serve(async (request) => {
   }
 
   try {
-    const result = await fetch(`${supabaseUrl}/rest/v1/rpc/record_web_analytics`, {
+    const result = await fetch(`${supabaseUrl}/rest/v1/rpc/record_web_analytics_v2`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

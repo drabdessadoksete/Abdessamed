@@ -29,6 +29,7 @@ export default function App() {
   const normalizedPath = trailingSlash(location.pathname)
   const canonicalUrl = absoluteUrl(normalizedPath)
   const isPrivate = normalizedPath.startsWith('/admin/') || normalizedPath.startsWith('/login/')
+  const isAnalyticsPreview = new URLSearchParams(location.search).get('analytics-preview') === '1'
   const isPreAppointment = normalizedPath === '/pre-rendez-vous/'
   const isLegacyActuality = normalizedPath.startsWith('/actualities/') && normalizedPath !== '/actualities/'
   const language = routeLanguage(normalizedPath)
@@ -59,7 +60,7 @@ export default function App() {
 
   return (
     <div className="public-site min-h-screen bg-background text-foreground">
-      <AnalyticsTracker disabled={isPrivate} />
+      <AnalyticsTracker disabled={isPrivate || isAnalyticsPreview} />
       <a href="#main-content" className="skip-link">Aller au contenu principal</a>
       <ScrollReveal pathname={location.pathname} />
       <Helmet htmlAttributes={{ lang: language }} defaultTitle="Cabinet dentaire à Sète | Dr Abdessadok">
@@ -95,7 +96,7 @@ export default function App() {
       </main>
       <MobileBookingBar pathname={location.pathname} />
       <Footer />
-      {!isPrivate && <ConsentBanner />}
+      {!isPrivate && !isAnalyticsPreview && <ConsentBanner />}
     </div>
   )
 }

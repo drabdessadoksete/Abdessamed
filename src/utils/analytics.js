@@ -1,10 +1,12 @@
 import { ingestAnalytics } from '../services/analytics'
-import { clearAnalyticsCookies, getConsentChoice } from './consent'
+import { clearAnalyticsCookies, getConsentChoice, getOrCreateAnalyticsVisitorId } from './consent'
 
 const GA_MEASUREMENT_ID = 'G-RPVFM7QQT6'
 const SESSION_TIMEOUT_MS = 30 * 60 * 1000
 const LAST_ACTIVITY_KEY = 'cabinet_analytics_last_activity'
+const SESSION_ID_KEY = 'cabinet_analytics_session_v1'
 const SOURCE_KEY = 'cabinet_analytics_source'
+const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
 
 const allowedEvents = new Set([
   'pre_appointment_click',
@@ -24,8 +26,52 @@ let gaLoaded = false
 let geoPromise
 let lastPageKey = ''
 let lastPageTime = 0
+let memorySessionId = null
+let memoryLastActivity = 0
 
 const hasAnalyticsConsent = () => getConsentChoice() === 'all'
+
+function randomUuid() {
+  if (globalThis.crypto?.randomUUID) return globalThis.crypto.randomUUID()
+  if (!globalThis.crypto?.getRandomValues) return null
+  const bytes = new Uint8Array(16)
+  globalThis.crypto.getRandomValues(bytes)
+  bytes[6] = (bytes[6] & 0x0f) | 0x40
+  bytes[8] = (bytes[8] & 0x3f) | 0x80
+  const hex = [...bytes].map((value) => value.toString(16).padStart(2, '0')).join('')
+  return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`
+}
+
+function trackingIdentity() {
+  const visitorId = getOrCreateAnalyticsVisitorId()
+  if (!visitorId) return null
+
+  const now = Date.now()
+  let sessionId = memorySessionId
+  let previousActivity = memoryLastActivity
+  try {
+    sessionId = window.localStorage.getItem(SESSION_ID_KEY)
+    previousActivity = Number(window.localStorage.getItem(LAST_ACTIVITY_KEY) || 0)
+  } catch {
+    // Storage can be unavailable in hardened browser modes.
+  }
+
+  const isNewSession = !uuidPattern.test(sessionId || '') || !previousActivity || now - previousActivity > SESSION_TIMEOUT_MS
+  if (isNewSession) sessionId = randomUuid()
+  if (!sessionId) return null
+
+  memorySessionId = sessionId
+  memoryLastActivity = now
+
+  try {
+    window.localStorage.setItem(SESSION_ID_KEY, sessionId)
+    window.localStorage.setItem(LAST_ACTIVITY_KEY, String(now))
+  } catch {
+    // The in-memory identity still makes this event measurable.
+  }
+
+  return { visitorId, sessionId, isNewSession }
+}
 
 const canonicalPath = (value = window.location.pathname) => {
   const path = String(value || '/').split(/[?#]/, 1)[0].replace(/\/{2,}/g, '/')
@@ -78,7 +124,7 @@ export function enableAnalytics() {
   }
 }
 
-export function disableAnalytics() {
+export function disableAnalytics({ clearStorage = true } = {}) {
   if (typeof window === 'undefined') return
   window[`ga-disable-${GA_MEASUREMENT_ID}`] = true
   if (typeof window.gtag === 'function') {
@@ -91,7 +137,12 @@ export function disableAnalytics() {
   }
   lastPageKey = ''
   lastPageTime = 0
-  clearAnalyticsCookies()
+  if (clearStorage) {
+    memorySessionId = null
+    memoryLastActivity = 0
+    geoPromise = undefined
+    clearAnalyticsCookies()
+  }
 }
 
 function detectSource() {
@@ -158,13 +209,18 @@ async function getCoarseLocation() {
   return geoPromise
 }
 
-async function sendAggregate(event, parameters = {}) {
+async function sendAggregate(event, parameters = {}, identity) {
   if (!hasAnalyticsConsent()) return false
+  const resolvedIdentity = identity || trackingIdentity()
+  if (!resolvedIdentity) return false
   const geo = await getCoarseLocation()
   if (!hasAnalyticsConsent()) return false
   return ingestAnalytics({
     consent: true,
+    eventId: randomUuid(),
     event,
+    visitorId: resolvedIdentity.visitorId,
+    sessionId: resolvedIdentity.sessionId,
     pagePath: canonicalPath(parameters.pagePath),
     source: detectSource(),
     country: geo.country,
@@ -175,15 +231,15 @@ async function sendAggregate(event, parameters = {}) {
     viewport: getViewportClass(),
     xBucket: parameters.xBucket ?? null,
     yBucket: parameters.yBucket ?? null,
+    xRatio: parameters.xRatio ?? null,
+    yRatio: parameters.yRatio ?? null,
   })
 }
 
 function startOrContinueSession(pagePath) {
-  const now = Date.now()
-  let previous = 0
-  try { previous = Number(window.sessionStorage.getItem(LAST_ACTIVITY_KEY) || 0) } catch { /* no-op */ }
-  if (!previous || now - previous > SESSION_TIMEOUT_MS) void sendAggregate('session_start', { pagePath })
-  try { window.sessionStorage.setItem(LAST_ACTIVITY_KEY, String(now)) } catch { /* no-op */ }
+  const identity = trackingIdentity()
+  if (identity?.isNewSession) void sendAggregate('session_start', { pagePath }, identity)
+  return identity
 }
 
 export function trackPageView(pathname = window.location.pathname, title = document.title) {
@@ -194,8 +250,9 @@ export function trackPageView(pathname = window.location.pathname, title = docum
   if (lastPageKey === pagePath && now - lastPageTime < 1000) return
   lastPageKey = pagePath
   lastPageTime = now
-  startOrContinueSession(pagePath)
-  void sendAggregate('page_view', { pagePath })
+  const identity = startOrContinueSession(pagePath)
+  if (!identity) return
+  void sendAggregate('page_view', { pagePath }, identity)
   window.gtag?.('event', 'page_view', {
     page_title: String(title || '').slice(0, 120),
     page_path: pagePath,
@@ -262,15 +319,20 @@ export function trackClick(event, pathname = window.location.pathname) {
   const pageY = Number.isFinite(event.pageY) ? event.pageY : event.clientY + window.scrollY
   const xBucket = Math.max(0, Math.min(19, Math.floor((pageX / width) * 20)))
   const yBucket = Math.max(0, Math.min(31, Math.floor((pageY / height) * 32)))
+  const xRatio = Math.max(0, Math.min(10000, Math.round((pageX / width) * 10000)))
+  const yRatio = Math.max(0, Math.min(10000, Math.round((pageY / height) * 10000)))
 
-  startOrContinueSession(pathname)
+  const identity = startOrContinueSession(pathname)
+  if (!identity) return
   void sendAggregate('click', {
     pagePath: pathname,
     clickKind: clickKind(element),
     element: elementIdentity(element),
     xBucket,
     yBucket,
-  })
+    xRatio,
+    yRatio,
+  }, identity)
 }
 
 /**
@@ -285,6 +347,7 @@ export function trackEvent(name, parameters = {}) {
 
   if (name === 'form_success') {
     const conversionKind = safeParameters.form === 'pre_appointment' ? 'pre_appointment' : 'contact'
-    void sendAggregate('conversion', { pagePath: window.location.pathname, conversionKind })
+    const identity = startOrContinueSession(window.location.pathname)
+    if (identity) void sendAggregate('conversion', { pagePath: window.location.pathname, conversionKind }, identity)
   }
 }

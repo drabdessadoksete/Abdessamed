@@ -1,5 +1,11 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { getAnalyticsDashboard, getAnalyticsHeatmap, pruneAnalytics } from '../../services/analytics'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import {
+  getAnalyticsDashboard,
+  getAnalyticsHeatmap,
+  getAnalyticsVisitorJourney,
+  getAnalyticsVisitors,
+  pruneAnalytics,
+} from '../../services/analytics'
 
 const panel = 'rounded-[1.4rem] border border-[#dfe7e2] bg-white shadow-[0_18px_55px_rgba(28,49,42,.07)]'
 const number = new Intl.NumberFormat('fr-FR')
@@ -26,7 +32,7 @@ const conversionLabels = { contact: 'Message envoyé', pre_appointment: 'Pré-re
 
 const emptyData = {
   granularity: 'hour',
-  summary: { sessions: 0, pageviews: 0, clicks: 0, conversions: 0 },
+  summary: { visitors: 0, sessions: 0, pageviews: 0, clicks: 0, conversions: 0 },
   timeline: [], pages: [],
   dimensions: { source: [], device: [], os: [], browser: [], country: [], region: [], element: [], click_kind: [], conversion: [] },
 }
@@ -53,9 +59,13 @@ export default function AnalyticsAdmin() {
   const [period, setPeriod] = useState('30d')
   const [activeRange, setActiveRange] = useState(() => rangeFor('30d'))
   const [data, setData] = useState(emptyData)
+  const [visitors, setVisitors] = useState([])
+  const [selectedVisitor, setSelectedVisitor] = useState('')
+  const [journey, setJourney] = useState(null)
+  const [journeyLoading, setJourneyLoading] = useState(false)
   const [heatmap, setHeatmap] = useState({ points: [], elements: [], clickKinds: [] })
   const [selectedPage, setSelectedPage] = useState('/')
-  const [heatDevice, setHeatDevice] = useState('')
+  const [heatDevice, setHeatDevice] = useState('desktop')
   const [heatKind, setHeatKind] = useState('')
   const [loading, setLoading] = useState(true)
   const [heatLoading, setHeatLoading] = useState(false)
@@ -65,6 +75,7 @@ export default function AnalyticsAdmin() {
   const mounted = useRef(true)
   const dashboardRequest = useRef(0)
   const heatmapRequest = useRef(0)
+  const journeyRequest = useRef(0)
 
   const loadDashboard = useCallback(async ({ prune = false, quiet = false } = {}) => {
     const requestId = ++dashboardRequest.current
@@ -74,12 +85,17 @@ export default function AnalyticsAdmin() {
     const nextRange = rangeFor(period)
     try {
       if (prune) await pruneAnalytics()
-      const nextData = await getAnalyticsDashboard(nextRange.from, nextRange.to)
+      const [nextData, nextVisitors] = await Promise.all([
+        getAnalyticsDashboard(nextRange.from, nextRange.to),
+        getAnalyticsVisitors(nextRange.from, nextRange.to),
+      ])
       if (!mounted.current || requestId !== dashboardRequest.current) return
       const normalized = { ...emptyData, ...nextData, summary: { ...emptyData.summary, ...nextData?.summary }, dimensions: { ...emptyData.dimensions, ...nextData?.dimensions } }
       setData(normalized)
+      setVisitors(nextVisitors)
       setActiveRange(nextRange)
       setSelectedPage((current) => normalized.pages.some((page) => page.page_path === current) ? current : normalized.pages[0]?.page_path || '/')
+      setSelectedVisitor((current) => nextVisitors.some((visitor) => visitor.visitorId === current) ? current : nextVisitors[0]?.visitorId || '')
       setUpdatedAt(new Date())
     } catch {
       if (mounted.current && requestId === dashboardRequest.current) setError('Les statistiques n’ont pas pu être chargées. Vérifiez que la migration Analytics est déployée.')
@@ -114,6 +130,26 @@ export default function AnalyticsAdmin() {
   useEffect(() => { loadHeatmap() }, [loadHeatmap])
 
   useEffect(() => {
+    if (!selectedVisitor) {
+      setJourney(null)
+      return undefined
+    }
+    const requestId = ++journeyRequest.current
+    setJourneyLoading(true)
+    getAnalyticsVisitorJourney(selectedVisitor, activeRange.from, activeRange.to)
+      .then((result) => {
+        if (mounted.current && requestId === journeyRequest.current) setJourney(result)
+      })
+      .catch(() => {
+        if (mounted.current && requestId === journeyRequest.current) setJourney(null)
+      })
+      .finally(() => {
+        if (mounted.current && requestId === journeyRequest.current) setJourneyLoading(false)
+      })
+    return undefined
+  }, [activeRange, selectedVisitor])
+
+  useEffect(() => {
     const timer = window.setInterval(() => loadDashboard({ quiet: true }), 30000)
     return () => window.clearInterval(timer)
   }, [loadDashboard])
@@ -122,7 +158,8 @@ export default function AnalyticsAdmin() {
   const clickRate = summary.pageviews ? summary.clicks / summary.pageviews : 0
   const conversionRate = summary.sessions ? summary.conversions / summary.sessions : 0
   const cards = [
-    { label: 'Sessions consenties', value: summary.sessions, icon: 'sessions', detail: 'Démarrages de session acceptés', tone: 'bg-[#e8f2ed] text-[#214e3e]' },
+    { label: 'Visiteurs uniques', value: summary.visitors, icon: 'sessions', detail: 'Navigateurs consentis distincts', tone: 'bg-[#e8f2ed] text-[#214e3e]' },
+    { label: 'Sessions', value: summary.sessions, icon: 'sessions', detail: '30 min d’inactivité = nouvelle session', tone: 'bg-[#eef3ee] text-[#3d6656]' },
     { label: 'Pages vues', value: summary.pageviews, icon: 'views', detail: `${summary.sessions ? (summary.pageviews / summary.sessions).toFixed(1).replace('.', ',') : '0'} par session`, tone: 'bg-[#edf1f5] text-[#476274]' },
     { label: 'Clics', value: summary.clicks, icon: 'click', detail: `${percent.format(clickRate)} des pages vues`, tone: 'bg-[#f5f0e5] text-[#856938]' },
     { label: 'Conversions', value: summary.conversions, icon: 'conversion', detail: `${percent.format(conversionRate)} des sessions`, tone: 'bg-[#f3edf4] text-[#745578]' },
@@ -142,7 +179,7 @@ export default function AnalyticsAdmin() {
 
       {error ? <p role="alert" className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm font-medium text-red-700">{error}</p> : null}
 
-      <div className="grid gap-4 sm:grid-cols-2 2xl:grid-cols-4">
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-5">
         {cards.map((card) => <article key={card.label} className={`${panel} flex items-center gap-4 p-5`}><span className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl ${card.tone}`}><Icon name={card.icon} /></span><div className="min-w-0"><p className="text-3xl font-black tracking-[-.05em]">{loading ? '—' : number.format(card.value || 0)}</p><h2 className="mt-0.5 text-xs font-black text-[#53625b]">{card.label}</h2><p className="mt-1 truncate text-[.68rem] text-[#8a9690]">{card.detail}</p></div></article>)}
       </div>
 
@@ -152,27 +189,47 @@ export default function AnalyticsAdmin() {
           <div className="mt-6"><TimelineChart rows={data.timeline} granularity={data.granularity} loading={loading} /></div>
         </section>
         <section className={`${panel} p-5 sm:p-7`}>
-          <SectionTitle title="Pages les plus vues" subtitle="Classement exact sur la période" />
-          <div className="mt-5 space-y-2.5">
-            {data.pages.length ? data.pages.slice(0, 8).map((page, index) => <button type="button" key={page.page_path} onClick={() => setSelectedPage(page.page_path)} className={`flex w-full items-center gap-3 rounded-xl border p-3 text-left transition ${selectedPage === page.page_path ? 'border-[#a8bdb3] bg-[#f3f7f4]' : 'border-[#e5ebe7] hover:bg-[#fafbf9]'}`}><span className="w-5 text-center text-[.65rem] font-black text-[#a0aaa5]">{index + 1}</span><span className="min-w-0 flex-1 truncate text-xs font-bold">{pageLabel(page.page_path)}</span><strong className="text-sm">{number.format(page.pageviews)}</strong></button>) : <Empty label="Aucune page vue sur cette période." />}
+            <SectionTitle title="Pages les plus vues" subtitle="Vues et visiteurs distincts sur la période" />
+            <div className="mt-5 space-y-2.5">
+            {data.pages.length ? data.pages.slice(0, 8).map((page, index) => <button type="button" key={page.page_path} onClick={() => setSelectedPage(page.page_path)} className={`flex w-full items-center gap-3 rounded-xl border p-3 text-left transition ${selectedPage === page.page_path ? 'border-[#a8bdb3] bg-[#f3f7f4]' : 'border-[#e5ebe7] hover:bg-[#fafbf9]'}`}><span className="w-5 text-center text-[.65rem] font-black text-[#a0aaa5]">{index + 1}</span><span className="min-w-0 flex-1"><strong className="block truncate text-xs">{pageLabel(page.page_path)}</strong><span className="mt-0.5 block text-[.64rem] font-semibold text-[#89958f]">{number.format(page.visitors || 0)} visiteur{Number(page.visitors) !== 1 ? 's' : ''}</span></span><strong className="text-sm">{number.format(page.pageviews)} vues</strong></button>) : <Empty label="Aucune page vue sur cette période." />}
           </div>
         </section>
       </div>
 
       <section className={`${panel} overflow-hidden`}>
         <div className="border-b border-[#e4eae6] p-5 sm:p-7">
+          <SectionTitle title="Parcours des visiteurs uniques" subtitle="Identifiants pseudonymes propres à un navigateur consentant · jamais reliés aux formulaires ou aux dossiers patients" />
+        </div>
+        <div className="grid min-h-[30rem] lg:grid-cols-[.72fr_1.28fr]">
+          <div className="max-h-[42rem] overflow-y-auto border-b border-[#e4eae6] p-3 lg:border-b-0 lg:border-r">
+            {visitors.length ? visitors.map((visitor) => (
+              <button key={visitor.visitorId} type="button" onClick={() => setSelectedVisitor(visitor.visitorId)} className={`mb-2 w-full rounded-2xl border p-4 text-left transition ${selectedVisitor === visitor.visitorId ? 'border-[#9bb5a8] bg-[#edf5f0] shadow-sm' : 'border-[#e3e9e5] bg-white hover:bg-[#fafbf9]'}`}>
+                <span className="flex items-center justify-between gap-3"><strong className="text-sm">{visitor.label}</strong><time className="text-[.64rem] font-bold text-[#89958f]">{formatDateTime(visitor.lastSeen)}</time></span>
+                <span className="mt-2 block truncate text-xs font-semibold text-[#586860]">{pageLabel(visitor.entryPage)} → {pageLabel(visitor.lastPage)}</span>
+                <span className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-[.66rem] font-bold text-[#7b8982]"><span>{number.format(visitor.sessions)} session{Number(visitor.sessions) !== 1 ? 's' : ''}</span><span>{number.format(visitor.pageviews)} pages</span><span>{number.format(visitor.clicks)} clics</span></span>
+              </button>
+            )) : <Empty label="Les visiteurs uniques apparaîtront ici après le déploiement du nouveau suivi et leur consentement." />}
+          </div>
+          <div className="p-5 sm:p-7">
+            <VisitorJourney journey={journey} loading={journeyLoading} />
+          </div>
+        </div>
+      </section>
+
+      <section className={`${panel} overflow-hidden`}>
+        <div className="border-b border-[#e4eae6] p-5 sm:p-7">
           <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
-            <SectionTitle title="Carte de chaleur des clics" subtitle="Position agrégée des clics sur la page, sans capture d’écran ni donnée visiteur." />
+            <SectionTitle title="Carte de chaleur contextualisée" subtitle="Clics consentis superposés à la vraie mise en page, sans enregistrement vidéo ni contenu saisi." />
             <div className="grid gap-2 sm:grid-cols-3">
               <Select label="Page" value={selectedPage} onChange={setSelectedPage} options={(data.pages.length ? data.pages : [{ page_path: '/' }]).map((item) => ({ value: item.page_path, label: pageLabel(item.page_path) }))} />
-              <Select label="Appareil" value={heatDevice} onChange={setHeatDevice} options={[{ value: '', label: 'Tous' }, ...Object.entries(deviceLabels).map(([value, label]) => ({ value, label }))]} />
+              <Select label="Mise en page" value={heatDevice} onChange={setHeatDevice} options={['desktop', 'tablet', 'mobile'].map((value) => ({ value, label: deviceLabels[value] }))} />
               <Select label="Type de clic" value={heatKind} onChange={setHeatKind} options={[{ value: '', label: 'Tous' }, ...Object.entries(clickLabels).map(([value, label]) => ({ value, label }))]} />
             </div>
           </div>
         </div>
         <div className="grid gap-0 xl:grid-cols-[1.25fr_.75fr]">
           <div className="border-b border-[#e4eae6] p-5 sm:p-7 xl:border-b-0 xl:border-r">
-            <Heatmap points={heatmap.points || []} loading={heatLoading} />
+            <Heatmap points={heatmap.points || []} loading={heatLoading} pagePath={selectedPage} device={heatDevice} />
           </div>
           <div className="p-5 sm:p-7">
             <SectionTitle title="Boutons les plus cliqués" subtitle={`Sur ${pageLabel(selectedPage)} · carte limitée aux 90 derniers jours`} />
@@ -195,7 +252,7 @@ export default function AnalyticsAdmin() {
 
       <aside className="flex flex-col gap-4 rounded-[1.4rem] border border-[#d6e4dc] bg-[#edf5f0] p-5 text-[#254237] sm:flex-row sm:items-center sm:p-6">
         <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-white text-[#214e3e] shadow-sm"><Icon name="privacy" /></span>
-        <div><h2 className="text-sm font-black">Statistiques agrégées et privées</h2><p className="mt-1 text-xs leading-5 text-[#60736a]">Aucun nom, téléphone, message, adresse IP, identifiant visiteur ou parcours individuel n’est stocké. Le rafraîchissement supprime les agrégats expirés : 400 jours pour les tendances et 90 jours pour la carte de clics.</p></div>
+        <div><h2 className="text-sm font-black">Parcours pseudonymes, séparés des données patients</h2><p className="mt-1 text-xs leading-5 text-[#60736a]">Un identifiant aléatoire est créé uniquement après consentement puis haché côté serveur. Aucun nom, téléphone, message, contenu de formulaire ou IP n’est stocké ici, et aucun rapprochement n’est fait avec les rendez-vous. Parcours : 13 mois maximum. Coordonnées de clics : 90 jours.</p></div>
       </aside>
     </div>
   )
@@ -219,20 +276,64 @@ function TimelineChart({ rows, granularity, loading }) {
   const width = 760
   const height = 250
   const pad = { left: 16, right: 14, top: 18, bottom: 35 }
-  const max = Math.max(1, ...rows.flatMap((row) => [Number(row.pageviews), Number(row.sessions)]))
+  const max = Math.max(1, ...rows.flatMap((row) => [Number(row.pageviews), Number(row.sessions), Number(row.visitors)]))
   const x = (index) => pad.left + (index / Math.max(1, rows.length - 1)) * (width - pad.left - pad.right)
   const y = (value) => height - pad.bottom - (Number(value) / max) * (height - pad.top - pad.bottom)
   const points = (metric) => rows.map((row, index) => `${x(index)},${y(row[metric])}`).join(' ')
   const ticks = [0, Math.floor((rows.length - 1) / 2), rows.length - 1].filter((value, index, values) => values.indexOf(value) === index)
 
-  return <div><div className="mb-4 flex flex-wrap gap-4 text-[.68rem] font-black text-[#65726c]"><span className="inline-flex items-center gap-2"><i className="h-2.5 w-2.5 rounded-full bg-[#214e3e]" />Pages vues</span><span className="inline-flex items-center gap-2"><i className="h-2.5 w-2.5 rounded-full bg-[#c09850]" />Sessions</span></div><svg viewBox={`0 0 ${width} ${height}`} className="h-auto w-full" role="img" aria-label="Évolution des pages vues et sessions"><defs><linearGradient id="analytics-area" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#214e3e" stopOpacity=".2" /><stop offset="1" stopColor="#214e3e" stopOpacity="0" /></linearGradient></defs>{[0, .25, .5, .75, 1].map((step) => <line key={step} x1={pad.left} x2={width - pad.right} y1={pad.top + step * (height - pad.top - pad.bottom)} y2={pad.top + step * (height - pad.top - pad.bottom)} stroke="#e6ece8" strokeWidth="1" />)}<polygon points={`${x(0)},${height - pad.bottom} ${points('pageviews')} ${x(rows.length - 1)},${height - pad.bottom}`} fill="url(#analytics-area)" /><polyline points={points('pageviews')} fill="none" stroke="#214e3e" strokeWidth="3" strokeLinejoin="round" strokeLinecap="round" /><polyline points={points('sessions')} fill="none" stroke="#c09850" strokeWidth="2.5" strokeLinejoin="round" strokeLinecap="round" />{ticks.map((index) => <text key={index} x={x(index)} y={height - 8} textAnchor={index === 0 ? 'start' : index === rows.length - 1 ? 'end' : 'middle'} fill="#7b8982" fontSize="11" fontWeight="700">{formatChartDate(rows[index].bucket_start, granularity)}</text>)}</svg></div>
+  return <div><div className="mb-4 flex flex-wrap gap-4 text-[.68rem] font-black text-[#65726c]"><span className="inline-flex items-center gap-2"><i className="h-2.5 w-2.5 rounded-full bg-[#214e3e]" />Pages vues</span><span className="inline-flex items-center gap-2"><i className="h-2.5 w-2.5 rounded-full bg-[#c09850]" />Sessions</span><span className="inline-flex items-center gap-2"><i className="h-2.5 w-2.5 rounded-full bg-[#607c9c]" />Visiteurs uniques</span></div><svg viewBox={`0 0 ${width} ${height}`} className="h-auto w-full" role="img" aria-label="Évolution des pages vues, sessions et visiteurs uniques"><defs><linearGradient id="analytics-area" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#214e3e" stopOpacity=".2" /><stop offset="1" stopColor="#214e3e" stopOpacity="0" /></linearGradient></defs>{[0, .25, .5, .75, 1].map((step) => <line key={step} x1={pad.left} x2={width - pad.right} y1={pad.top + step * (height - pad.top - pad.bottom)} y2={pad.top + step * (height - pad.top - pad.bottom)} stroke="#e6ece8" strokeWidth="1" />)}<polygon points={`${x(0)},${height - pad.bottom} ${points('pageviews')} ${x(rows.length - 1)},${height - pad.bottom}`} fill="url(#analytics-area)" /><polyline points={points('pageviews')} fill="none" stroke="#214e3e" strokeWidth="3" strokeLinejoin="round" strokeLinecap="round" /><polyline points={points('sessions')} fill="none" stroke="#c09850" strokeWidth="2.5" strokeLinejoin="round" strokeLinecap="round" /><polyline points={points('visitors')} fill="none" stroke="#607c9c" strokeWidth="2.5" strokeDasharray="5 5" strokeLinejoin="round" strokeLinecap="round" />{ticks.map((index) => <text key={index} x={x(index)} y={height - 8} textAnchor={index === 0 ? 'start' : index === rows.length - 1 ? 'end' : 'middle'} fill="#7b8982" fontSize="11" fontWeight="700">{formatChartDate(rows[index].bucket_start, granularity)}</text>)}</svg></div>
 }
 
-function Heatmap({ points, loading }) {
-  if (loading) return <div className="aspect-[5/4] animate-pulse rounded-2xl bg-[#f3f6f4]" />
+const previewWidths = { desktop: 1440, tablet: 768, mobile: 390, other: 1024 }
+
+function Heatmap({ points, loading, pagePath, device }) {
+  const frameRef = useRef(null)
+  const containerRef = useRef(null)
+  const baseWidth = previewWidths[device] || previewWidths.desktop
+  const [frameHeight, setFrameHeight] = useState(device === 'mobile' ? 4200 : 3600)
+  const [scale, setScale] = useState(0.5)
+
+  const measureFrame = useCallback(() => {
+    const frame = frameRef.current
+    const container = containerRef.current
+    if (container) setScale(Math.min(1, container.clientWidth / baseWidth))
+    try {
+      const root = frame?.contentDocument?.documentElement
+      const body = frame?.contentDocument?.body
+      const height = Math.max(root?.scrollHeight || 0, body?.scrollHeight || 0, 900)
+      if (height) setFrameHeight(height)
+    } catch {
+      // The same-origin production preview is expected; keep a safe fallback.
+    }
+  }, [baseWidth])
+
+  useEffect(() => {
+    setFrameHeight(device === 'mobile' ? 4200 : 3600)
+    const observer = typeof ResizeObserver === 'function' ? new ResizeObserver(measureFrame) : null
+    if (containerRef.current) observer?.observe(containerRef.current)
+    if (!observer) window.addEventListener('resize', measureFrame)
+    measureFrame()
+    return () => {
+      observer?.disconnect()
+      window.removeEventListener('resize', measureFrame)
+    }
+  }, [device, pagePath, measureFrame])
+
   const max = Math.max(1, ...points.map((point) => Number(point.clicks)))
   const total = points.reduce((sum, point) => sum + Number(point.clicks), 0)
-  return <div><div className="relative overflow-hidden rounded-2xl border border-[#dce6e1] bg-[linear-gradient(180deg,#f7faf8_0%,#eef4f0_100%)]"><svg viewBox="0 0 200 320" className="aspect-[5/8] max-h-[32rem] w-full" role="img" aria-label={`Carte de chaleur, ${number.format(total)} clics`}><defs><pattern id="heat-grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M10 0H0V10" fill="none" stroke="#cfdcd5" strokeWidth=".35" /></pattern><radialGradient id="heat-dot"><stop offset="0" stopColor="#e74b3c" stopOpacity=".95" /><stop offset=".45" stopColor="#e8a23c" stopOpacity=".72" /><stop offset="1" stopColor="#e8a23c" stopOpacity="0" /></radialGradient></defs><rect width="200" height="320" fill="url(#heat-grid)" />{points.map((point) => { const ratio = Number(point.clicks) / max; const radius = 5 + Math.sqrt(ratio) * 18; return <g key={`${point.x_bucket}-${point.y_bucket}`}><circle cx={Number(point.x_bucket) * 10 + 5} cy={Number(point.y_bucket) * 10 + 5} r={radius} fill="url(#heat-dot)" /><circle cx={Number(point.x_bucket) * 10 + 5} cy={Number(point.y_bucket) * 10 + 5} r={2.2 + ratio * 2} fill="#c43e32" opacity=".88" /></g> })}</svg><span className="absolute left-3 top-3 rounded-full bg-white/90 px-2.5 py-1 text-[.62rem] font-black text-[#63716a] shadow-sm">Haut de page</span><span className="absolute bottom-3 left-3 rounded-full bg-white/90 px-2.5 py-1 text-[.62rem] font-black text-[#63716a] shadow-sm">Bas de page</span></div><p className="mt-3 text-center text-xs font-bold text-[#718079]">{number.format(total)} clic{total !== 1 ? 's' : ''} représenté{total !== 1 ? 's' : ''}</p></div>
+  const previewSrc = `${pagePath}${pagePath.includes('?') ? '&' : '?'}analytics-preview=1`
+  const scaledWidth = Math.round(baseWidth * scale)
+  const scaledHeight = Math.max(520, Math.round(frameHeight * scale))
+
+  return <div><div ref={containerRef} className="relative max-h-[52rem] overflow-y-auto overflow-x-hidden rounded-2xl border border-[#dce6e1] bg-[#e8eeea] p-2" aria-label={`Carte de chaleur contextualisée, ${number.format(total)} clics`}><div className="relative mx-auto origin-top-left overflow-hidden bg-white shadow-sm" style={{ width: scaledWidth, height: scaledHeight }}><iframe ref={frameRef} src={previewSrc} title={`Prévisualisation de ${pageLabel(pagePath)}`} tabIndex="-1" aria-hidden="true" className="pointer-events-none absolute left-0 top-0 border-0 bg-white" style={{ width: baseWidth, height: frameHeight, transform: `scale(${scale})`, transformOrigin: 'top left' }} onLoad={() => { measureFrame(); window.setTimeout(measureFrame, 600); window.setTimeout(measureFrame, 2200) }} />{points.map((point) => { const ratio = Number(point.clicks) / max; const size = 30 + Math.sqrt(ratio) * 46; return <span key={`${point.x_ratio}-${point.y_ratio}`} title={`${number.format(point.clicks)} clic${Number(point.clicks) !== 1 ? 's' : ''}`} className="pointer-events-none absolute z-10 -translate-x-1/2 -translate-y-1/2 rounded-full border border-red-500/40" style={{ left: `${Number(point.x_ratio) / 100}%`, top: `${Number(point.y_ratio) / 100}%`, width: size, height: size, background: 'radial-gradient(circle, rgba(198,42,35,.95) 0 12%, rgba(239,117,35,.78) 30%, rgba(247,190,52,.46) 55%, rgba(247,190,52,0) 76%)', boxShadow: '0 0 18px rgba(226,83,35,.42)' }} /> })}{loading ? <span className="absolute inset-x-3 top-3 z-20 rounded-xl bg-white/90 px-4 py-3 text-center text-xs font-black text-[#52635c] shadow-sm backdrop-blur">Actualisation des clics…</span> : null}</div></div><div className="mt-3 flex flex-wrap items-center justify-between gap-2 text-xs font-bold text-[#718079]"><span>{deviceLabels[device] || device} · aperçu non interactif</span><span>{number.format(total)} clic{total !== 1 ? 's' : ''} représenté{total !== 1 ? 's' : ''}</span></div></div>
+}
+
+function VisitorJourney({ journey, loading }) {
+  if (loading) return <div className="h-80 animate-pulse rounded-2xl bg-[#f3f6f4]" />
+  if (!journey?.events?.length) return <Empty label="Sélectionnez un visiteur pour voir son parcours pseudonyme." />
+
+  return <div><div className="flex flex-col gap-3 border-b border-[#e4eae6] pb-5 sm:flex-row sm:items-start sm:justify-between"><div><p className="text-[.65rem] font-black uppercase tracking-[.14em] text-[#856938]">Parcours pseudonyme</p><h3 className="mt-1 text-xl font-black">{journey.label}</h3><p className="mt-1 text-xs text-[#718079]">Du {formatDateTime(journey.summary?.first_seen)} au {formatDateTime(journey.summary?.last_seen)}</p></div><div className="flex flex-wrap gap-2 text-[.68rem] font-black"><span className="rounded-full bg-[#edf5f0] px-3 py-1.5 text-[#214e3e]">{number.format(journey.summary?.sessions || 0)} sessions</span><span className="rounded-full bg-[#eef2f5] px-3 py-1.5 text-[#526b7d]">{number.format(journey.summary?.pageviews || 0)} pages</span><span className="rounded-full bg-[#f6f0e5] px-3 py-1.5 text-[#856938]">{number.format(journey.summary?.clicks || 0)} clics</span></div></div><ol className="mt-5 max-h-[32rem] space-y-2 overflow-y-auto pr-1">{journey.events.map((event, index) => <li key={`${event.occurredAt}-${event.sessionId}-${index}`} className="flex gap-3 rounded-xl border border-[#e5ebe7] bg-[#fbfcfa] p-3"><span className={`mt-0.5 h-2.5 w-2.5 shrink-0 rounded-full ${event.event === 'conversion' ? 'bg-violet-500' : event.event === 'click' ? 'bg-amber-500' : event.event === 'session_start' ? 'bg-sky-500' : 'bg-emerald-600'}`} /><span className="min-w-0 flex-1"><span className="flex flex-wrap items-center justify-between gap-2"><strong className="text-xs">{journeyEventLabel(event)}</strong><time className="text-[.64rem] font-bold text-[#8a9690]">{formatDateTime(event.occurredAt)}</time></span><span className="mt-1 block truncate text-[.7rem] font-semibold text-[#65746d]">{pageLabel(event.pagePath)} · session {event.sessionId}</span></span></li>)}</ol></div>
 }
 
 function BreakdownCard({ title, subtitle, rows = [], metric, labeler }) {
@@ -247,8 +348,24 @@ function RankedList({ rows = [], metric, labeler, empty }) {
 }
 
 function pageLabel(path) {
+  if (typeof path !== 'string' || !path) return 'Page inconnue'
   if (path === '/') return 'Accueil'
   return path.replace(/^\/+|\/+$/g, '').replaceAll('-', ' ').replaceAll('/', ' › ')
+}
+
+function journeyEventLabel(event) {
+  if (event.event === 'session_start') return 'Nouvelle session'
+  if (event.event === 'page_view') return 'Page consultée'
+  if (event.event === 'conversion') return `Conversion · ${conversionLabels[event.conversionKind] || 'Formulaire envoyé'}`
+  if (event.event === 'click') return `Clic · ${elementLabel(event.element)}`
+  return 'Activité'
+}
+
+function formatDateTime(value) {
+  if (!value) return '—'
+  const date = new Date(value)
+  if (Number.isNaN(date.getTime())) return '—'
+  return date.toLocaleString('fr-FR', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' })
 }
 
 function elementLabel(value) {

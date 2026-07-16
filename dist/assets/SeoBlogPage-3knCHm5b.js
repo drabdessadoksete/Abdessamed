@@ -1,0 +1,1 @@
+import{k as r,j as t}from"./index-B9b9pwD5.js";import{S as a}from"./SeoContentPage-BdnubOBk.js";import{g as n}from"./seoContent-noMzyzKe.js";import s from"./NotFound-CrH9PJRa.js";function f(){const{pathname:e}=r(),o=n(e);return o?t.jsx(a,{page:o,type:"blog"}):t.jsx(s,{})}export{f as default};

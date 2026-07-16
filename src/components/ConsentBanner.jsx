@@ -9,26 +9,26 @@ import {
 const copy = {
   fr: {
     kicker: 'Votre confidentialité', title: 'Cookies et mesure d’audience',
-    body: 'Avec votre accord, nous utilisons des statistiques agrégées pour améliorer le site. Aucun nom, téléphone, contenu de formulaire, identifiant visiteur ou adresse IP n’est conservé dans ces statistiques.',
-    details: 'Les données couvrent les pages consultées, les clics, la source de visite, le type d’appareil et une zone géographique approximative. Elles sont conservées au maximum 400 jours (90 jours pour la carte de clics). Google Analytics et nos statistiques restent désactivés avec le choix essentiel.',
+    body: 'Avec votre accord, un identifiant aléatoire distingue ce navigateur afin de mesurer les visiteurs uniques et leur parcours sur le site. Il n’est relié ni à votre identité, ni à une demande de rendez-vous.',
+    details: 'Nous enregistrons les pages consultées, les clics, la source, le type d’appareil et une zone géographique approximative. Jamais les noms, téléphones, messages, contenus de formulaire ou adresses IP. L’identifiant et les parcours sont conservés au maximum 13 mois, les positions de clics 90 jours. Google Analytics et nos statistiques restent désactivés avec le choix essentiel.',
     essential: 'Essentiels uniquement', accept: 'Tout accepter', more: 'Voir les détails', less: 'Masquer les détails', close: 'Fermer sans modifier',
   },
   en: {
     kicker: 'Your privacy', title: 'Cookies and audience measurement',
-    body: 'With your permission, we use aggregate statistics to improve the site. No name, phone number, form content, visitor identifier or IP address is retained in these statistics.',
-    details: 'Data covers pages, clicks, visit source, device type and an approximate area. It is retained for up to 400 days (90 days for the click map). Google Analytics and our statistics remain disabled with the essential choice.',
+    body: 'With your permission, a random identifier distinguishes this browser so we can measure unique visitors and their journey on the site. It is not linked to your identity or an appointment request.',
+    details: 'We record pages, clicks, source, device type and an approximate area—never names, phone numbers, messages, form contents or IP addresses. The identifier and journeys are kept for up to 13 months and click positions for 90 days. Google Analytics and our statistics remain disabled with the essential choice.',
     essential: 'Essentials only', accept: 'Accept all', more: 'View details', less: 'Hide details', close: 'Close without changes',
   },
   es: {
     kicker: 'Su privacidad', title: 'Cookies y medición de audiencia',
-    body: 'Con su permiso, utilizamos estadísticas agregadas para mejorar el sitio. No conservamos nombres, teléfonos, contenido de formularios, identificadores de visitantes ni direcciones IP.',
-    details: 'Los datos incluyen páginas, clics, origen de la visita, dispositivo y zona aproximada. Se conservan hasta 400 días (90 días para el mapa de clics). Google Analytics y nuestras estadísticas permanecen desactivados con la opción esencial.',
+    body: 'Con su permiso, un identificador aleatorio distingue este navegador para medir visitantes únicos y su recorrido por el sitio. No se vincula con su identidad ni con una solicitud de cita.',
+    details: 'Registramos páginas, clics, origen, dispositivo y zona aproximada; nunca nombres, teléfonos, mensajes, formularios ni direcciones IP. El identificador y los recorridos se conservan hasta 13 meses y las posiciones de clic durante 90 días. Google Analytics y nuestras estadísticas permanecen desactivados con la opción esencial.',
     essential: 'Solo esenciales', accept: 'Aceptar todo', more: 'Ver detalles', less: 'Ocultar detalles', close: 'Cerrar sin cambios',
   },
   de: {
     kicker: 'Ihre Privatsphäre', title: 'Cookies und Reichweitenmessung',
-    body: 'Mit Ihrer Zustimmung verwenden wir zusammengefasste Statistiken, um die Website zu verbessern. Namen, Telefonnummern, Formularinhalte, Besucherkennungen oder IP-Adressen werden nicht gespeichert.',
-    details: 'Erfasst werden Seiten, Klicks, Besuchsquelle, Gerätetyp und eine ungefähre Region. Die Aufbewahrung beträgt höchstens 400 Tage (90 Tage für die Klickkarte). Google Analytics und unsere Statistik bleiben bei der Auswahl „nur erforderlich“ deaktiviert.',
+    body: 'Mit Ihrer Zustimmung unterscheidet eine zufällige Kennung diesen Browser, um eindeutige Besucher und ihren Weg auf der Website zu messen. Sie wird weder mit Ihrer Identität noch mit einer Terminanfrage verknüpft.',
+    details: 'Erfasst werden Seiten, Klicks, Quelle, Gerätetyp und eine ungefähre Region – niemals Namen, Telefonnummern, Nachrichten, Formularinhalte oder IP-Adressen. Kennung und Verläufe werden höchstens 13 Monate, Klickpositionen 90 Tage gespeichert. Google Analytics und unsere Statistik bleiben bei „nur erforderlich“ deaktiviert.',
     essential: 'Nur erforderlich', accept: 'Alle akzeptieren', more: 'Details anzeigen', less: 'Details ausblenden', close: 'Ohne Änderung schließen',
   },
 }
