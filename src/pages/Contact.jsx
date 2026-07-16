@@ -9,6 +9,7 @@ const initialForm = { name: '', email: '', phone: '', message: '' }
 export default function Contact() {
   const [form, setForm] = useState(initialForm)
   const [status, setStatus] = useState('idle')
+  const [mapLoaded, setMapLoaded] = useState(false)
 
   const updateField = (event) => setForm((current) => ({ ...current, [event.target.name]: event.target.value }))
 
@@ -71,7 +72,7 @@ export default function Contact() {
               <p>Samedi et dimanche<br /><strong>Fermé</strong></p>
             </div>
             <div className="contact-map">
-              <iframe title="Localisation du cabinet dentaire à Sète" src={site.mapEmbedUrl} loading="lazy" referrerPolicy="no-referrer-when-downgrade" />
+              {mapLoaded ? <iframe title="Localisation du cabinet dentaire à Sète" src={site.mapEmbedUrl} loading="lazy" referrerPolicy="no-referrer-when-downgrade" /> : <button type="button" data-analytics-id="display_map" className="flex min-h-64 w-full flex-col items-center justify-center gap-3 rounded-2xl border border-[#d7e1dc] bg-[#eef3f0] p-6 text-center text-[#214e3e]" onClick={() => { setMapLoaded(true); trackEvent('map_click', { location: 'contact_embed' }) }}><span className="flex h-11 w-11 items-center justify-center rounded-full bg-white text-xl shadow-sm" aria-hidden="true">⌖</span><strong>Afficher la carte</strong><span className="max-w-sm text-xs font-medium leading-5 text-[#68776f]">La carte Google est chargée uniquement à votre demande.</span></button>}
               <a href={site.mapLink} target="_blank" rel="noopener noreferrer" className="text-link" onClick={() => trackEvent('map_click', { location: 'contact' })}>Ouvrir l’itinéraire <span aria-hidden="true">↗</span></a>
             </div>
           </div>

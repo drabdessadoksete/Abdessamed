@@ -23,7 +23,7 @@ const makeArticle = ({ slug, title, description, intro, sections, faq, links = [
   highlights: [
     'Information générale qui ne remplace pas un examen clinique',
     'Bénéfices, limites et alternatives abordés avec prudence',
-    'Contenu en attente de validation médicale par le praticien',
+    'Repères prudents sur les étapes et les questions à poser au praticien',
   ],
   sections,
   faq,

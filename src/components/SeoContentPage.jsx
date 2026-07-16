@@ -30,7 +30,7 @@ function breadcrumbSchema(page, type) {
     '@type': 'BreadcrumbList',
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: 'Accueil', item: absoluteUrl('/') },
-      { '@type': 'ListItem', position: 2, name: type === 'blog' ? 'Blog' : 'Services', item: absoluteUrl(type === 'blog' ? '/blog/' : '/services/') },
+      { '@type': 'ListItem', position: 2, name: type === 'blog' ? 'Guides' : 'Soins', item: absoluteUrl(type === 'blog' ? '/blog/' : '/services/') },
       { '@type': 'ListItem', position: 3, name: page.h1, item: absoluteUrl(page.url) },
     ],
   }
@@ -46,7 +46,7 @@ function primarySchema(page, type, image) {
       mainEntityOfPage: absoluteUrl(page.url),
       datePublished: page.datePublished,
       dateModified: page.dateModified,
-      author: { '@type': 'Organization', name: page.authorName, '@id': organizationSchema['@id'] },
+      author: { '@id': organizationSchema['@id'] },
       publisher: { '@id': organizationSchema['@id'] },
       image: absoluteUrl(image.fallback),
     }
@@ -59,7 +59,7 @@ function primarySchema(page, type, image) {
     description: page.metaDescription,
     url: absoluteUrl(page.url),
     provider: { '@id': dentistSchema['@id'] },
-    areaServed: page.menuGroup === 'locals' ? 'Sète et commune mentionnée pour l’accès au cabinet' : 'Sète et Bassin de Thau',
+    areaServed: 'Sète et Bassin de Thau',
   }
 }
 
@@ -130,11 +130,10 @@ function TreatmentEssentials({ page }) {
 }
 
 export default function SeoContentPage({ page, type = 'service' }) {
-  const relatedPages = getPagesByUrls(page.internalLinks).filter((related) => related.url !== page.url)
+  const relatedPages = getPagesByUrls(page.internalLinks).filter((related) => related.url !== page.url && related.indexable !== false)
   const asset = primaryAsset(page)
   const isArticle = type === 'blog'
   const isCityPage = page.menuGroup === 'locals'
-  const isInvisalignBrandPage = page.url === '/invisalign/'
   const schemas = [primarySchema(page, type, asset), breadcrumbSchema(page, type), faqSchema(page)].filter(Boolean)
 
   return (
@@ -147,7 +146,11 @@ export default function SeoContentPage({ page, type = 'service' }) {
         <meta property="og:type" content={isArticle ? 'article' : 'website'} />
         <meta property="og:image" content={absoluteUrl(asset.fallback)} />
         <meta property="og:image:alt" content={asset.alt} />
+        <meta property="og:image:width" content={String(asset.width)} />
+        <meta property="og:image:height" content={String(asset.height)} />
         <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:image" content={absoluteUrl(asset.fallback)} />
+        <meta name="robots" content={page.indexable === false ? 'noindex,follow' : 'index,follow,max-image-preview:large'} />
         {isArticle ? <meta property="article:published_time" content={page.datePublished} /> : null}
         {isArticle ? <meta property="article:modified_time" content={page.dateModified} /> : null}
         {schemas.map((schema, index) => <script key={index} type="application/ld+json">{JSON.stringify(schema)}</script>)}
@@ -179,7 +182,9 @@ export default function SeoContentPage({ page, type = 'service' }) {
             <span>Par {page.authorName}</span>
             <span>Publié le {new Date(page.datePublished).toLocaleDateString('fr-FR')}</span>
             <span>Mis à jour le {new Date(page.dateModified).toLocaleDateString('fr-FR')}</span>
-            <strong>Relecture clinique : en attente</strong>
+            {page.medicalReviewStatus === 'reviewed' && page.medicalReviewer
+              ? <strong>Relu par {page.medicalReviewer}</strong>
+              : <span>Information générale</span>}
           </div>
         </div>
       ) : null}
@@ -189,14 +194,7 @@ export default function SeoContentPage({ page, type = 'service' }) {
           {isCityPage ? (
             <aside className="content-disclosure">
               <strong>Le cabinet se situe à Sète.</strong>
-              <p>Cette page aide à préparer le déplacement depuis la commune mentionnée. Elle ne correspond pas à une adresse secondaire du cabinet et reste en attente d’une comparaison Search Console avant toute décision de consolidation.</p>
-            </aside>
-          ) : null}
-
-          {isInvisalignBrandPage ? (
-            <aside className="content-disclosure">
-              <strong>Le rôle distinct de cette page</strong>
-              <p>Cette page décrit spécifiquement la solution de marque Invisalign et son protocole. La page <Link to="/orthodontie-invisible-sete/">orthodontie invisible à Sète</Link> traite plus largement de l’indication clinique des aligneurs, quelle que soit la marque retenue.</p>
+              <p>Cette page prépare votre venue depuis le Bassin de Thau. Elle ne correspond pas à une adresse secondaire du cabinet.</p>
             </aside>
           ) : null}
 

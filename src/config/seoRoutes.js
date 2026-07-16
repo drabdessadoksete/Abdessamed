@@ -3,7 +3,7 @@ import { absoluteUrl, trailingSlash } from './site.js'
 import { multilingualRoutes } from './multilingualRoutes.js'
 
 export const staticSeoRoutes = [
-  { path: '/', title: 'Cabinet dentaire à Sète | Dr Abdessadok', description: "Cabinet dentaire à Sète : implantologie, orthodontie invisible et soins expliqués avec précision par le Dr Abdessamed Abdessadok.", h1: 'Votre sourire, traité avec précision et humanité.', type: 'home', language: 'fr', pageType: 'home', source: 'src/pages/Home.jsx' },
+  { path: '/', title: 'Dentiste à Sète | Cabinet du Dr Abdessadok', description: "Dentiste à Sète : soins dentaires, implantologie et orthodontie invisible au cabinet du Dr Abdessamed Abdessadok. Adresse, horaires et contact.", h1: 'Cabinet dentaire à Sète : précision et humanité.', type: 'home', language: 'fr', pageType: 'home', source: 'src/pages/Home.jsx' },
   { path: '/about/', title: 'À propos du Dr Abdessadok | Cabinet dentaire Sète', description: 'Parcours universitaire, qualifications et approche clinique du Dr Abdessamed Abdessadok, chirurgien-dentiste à Sète.', h1: 'Dr Abdessamed Abdessadok', type: 'about', language: 'fr', source: 'src/pages/About.jsx' },
   { path: '/services/', title: 'Soins dentaires, implantologie et aligneurs à Sète', description: 'Découvrez les soins du cabinet à Sète : implantologie, orthodontie invisible, prévention, soins conservateurs et prothèses dentaires.', h1: 'Des parcours adaptés au besoin clinique.', type: 'services', language: 'fr', source: 'src/pages/Services.jsx' },
   { path: '/gallery/', title: 'Galerie des parcours dentaires | Dr Abdessadok', description: 'Découvrez en images les parcours en implantologie, orthodontie invisible et technologie dentaire proposés par le cabinet à Sète.', h1: 'Voir pour mieux comprendre.', type: 'gallery', language: 'fr', source: 'src/pages/Gallery.jsx' },
@@ -19,6 +19,7 @@ const contentRoutes = [...servicePages, ...blogPages].map((page) => ({
   h1: page.h1,
   type: page.url.startsWith('/blog/') ? 'article' : 'treatment',
   language: 'fr',
+  indexable: page.indexable,
   pageType: page.url === '/orthodontie-invisible-sete/' ? 'ortho' : page.url === '/implantologie/' ? 'implant' : undefined,
   page,
   source: page.cluster === 'implantologie'

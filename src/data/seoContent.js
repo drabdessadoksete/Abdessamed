@@ -978,13 +978,339 @@ const baseServicePages = [
 ]
 
 const replacedPillarUrls = new Set(['/orthodontie-invisible-sete/'])
-const leadPillarUrls = new Set(['/invisalign/', '/prix-orthodontie-invisible-sete/', '/implantologie/'])
+const leadPillarUrls = new Set(['/prix-orthodontie-invisible-sete/', '/implantologie/'])
+const retiredServiceUrls = new Set([
+  '/invisalign/',
+  '/orthodontie-invisible-meze/',
+  '/invisalign-frontignan/',
+  '/invisalign-marseillan/',
+  '/orthodontie-invisible-agde/',
+  '/orthodontie-adulte-balaruc-les-bains/',
+])
+const retiredBlogUrls = new Set([
+  '/blog/prix-orthodontie-invisible-sete/',
+  '/blog/aligner-dents-avant-pose-implant/',
+  '/blog/orthodontie-sete-quand-consulter-alignement-dentaire/',
+  '/blog/orthodontie-invisible-sete-questions-avant-bilan/',
+  '/blog/verite-invisalign-taquets-temps-port-gene/',
+  '/blog/orthodontie-bassin-de-thau-suivi-sete/',
+])
+const contentRedirectTargets = {
+  '/invisalign/': '/orthodontie-invisible-sete/',
+  '/orthodontie-invisible-meze/': '/invisalign-bassin-de-thau/',
+  '/invisalign-frontignan/': '/invisalign-bassin-de-thau/',
+  '/invisalign-marseillan/': '/invisalign-bassin-de-thau/',
+  '/orthodontie-invisible-agde/': '/invisalign-bassin-de-thau/',
+  '/orthodontie-adulte-balaruc-les-bains/': '/invisalign-bassin-de-thau/',
+  '/blog/prix-orthodontie-invisible-sete/': '/prix-orthodontie-invisible-sete/',
+  '/blog/aligner-dents-avant-pose-implant/': '/blog/aligner-dents-avant-implant/',
+  '/blog/orthodontie-sete-quand-consulter-alignement-dentaire/': '/orthodontie-sete/',
+  '/blog/orthodontie-invisible-sete-questions-avant-bilan/': '/orthodontie-invisible-sete/',
+  '/blog/verite-invisalign-taquets-temps-port-gene/': '/blog/orthodontie-invisible-quotidien-repas-entretien-parole/',
+  '/blog/orthodontie-bassin-de-thau-suivi-sete/': '/invisalign-bassin-de-thau/',
+}
 
-export const servicePages = [
+const normalizeContentUrl = (url = '/') => url === '/' ? '/' : `${url.replace(/\/+$/, '')}/`
+const canonicalContentUrl = (url) => contentRedirectTargets[normalizeContentUrl(url)] || normalizeContentUrl(url)
+const uniqueUrls = (urls = []) => [...new Set(urls.map(canonicalContentUrl))]
+
+const servicePageOverrides = {
+  '/orthodontie-sete/': {
+    title: 'Orthodontie à Sète | Alignement dentaire',
+    metaDescription: 'Orthodontie à Sète : quand demander un bilan pour des dents chevauchées, des espaces ou une récidive, et quelles solutions peuvent être discutées.',
+    h1: 'Orthodontie à Sète : faire le point sur l’alignement dentaire',
+    intro: 'Des dents chevauchées, un espace visible ou des dents qui ont rebougé peuvent justifier un bilan. Cette page explique quand consulter et comment le cabinet étudie l’alignement avant de parler d’un appareil précis.',
+    highlights: [
+      'Une page générale sur l’alignement, distincte du guide consacré aux aligneurs transparents',
+      'Un examen de la bouche et de l’occlusion avant toute proposition',
+      'Des objectifs, contraintes et alternatives expliqués selon la situation',
+    ],
+    articleBody: null,
+    sections: [
+      {
+        heading: 'Quand demander un bilan d’orthodontie ?',
+        blocks: [{
+          subheading: 'Une gêne visible, fonctionnelle ou évolutive',
+          paragraphs: [
+            'Un chevauchement, un espace entre les dents, une récidive après un ancien appareil ou une modification progressive du sourire peuvent motiver un avis. La gêne ressentie ne permet toutefois pas, à elle seule, de choisir un traitement.',
+            'Le bilan sert à examiner les dents, les gencives, l’occlusion et les soins déjà réalisés. Il permet de préciser si une correction est utile, possible et cohérente avec la santé bucco-dentaire globale.',
+          ],
+        }],
+      },
+      {
+        heading: 'Quelles solutions peuvent être discutées ?',
+        blocks: [{
+          subheading: 'Le dispositif vient après l’indication',
+          paragraphs: [
+            'Selon les mouvements nécessaires, l’âge, l’état des tissus et la coopération attendue, le praticien peut discuter d’aligneurs transparents, d’un autre appareillage, d’une orientation ou de l’absence de traitement immédiat.',
+            'Si votre question concerne spécifiquement les gouttières transparentes ou Invisalign, le guide d’orthodontie invisible détaille le port, les taquets, le suivi et la contention.',
+          ],
+        }],
+      },
+      {
+        heading: 'Ce que le premier rendez-vous doit clarifier',
+        blocks: [{
+          subheading: 'Une décision compréhensible avant de commencer',
+          bullets: [
+            'La nature des mouvements dentaires à envisager',
+            'Les examens utiles et les éventuels soins préalables',
+            'Les bénéfices attendus, les limites et les alternatives',
+            'La durée estimée, le suivi, la contention et le devis',
+          ],
+        }],
+      },
+    ],
+    faq: [
+      { question: 'L’orthodontie concerne-t-elle aussi les adultes ?', answer: 'Oui, selon l’état des dents, des gencives, de l’occlusion et les mouvements recherchés. L’âge seul ne permet pas de conclure.' },
+      { question: 'Faut-il choisir des aligneurs avant le rendez-vous ?', answer: 'Non. Le bilan détermine d’abord ce qui doit être corrigé et quelles options peuvent convenir.' },
+      { question: 'Des dents qui ont rebougé peuvent-elles être réalignées ?', answer: 'Parfois. Il faut examiner l’origine et l’importance de la récidive ainsi que la stabilité envisageable.' },
+    ],
+    ctaTitle: 'Demander un bilan d’alignement à Sète',
+    ctaText: 'Un premier examen permet de distinguer votre gêne, les mouvements possibles et les options qui méritent réellement d’être discutées.',
+    ctaLabel: 'Demander un pré-rendez-vous',
+    internalLinks: ['/orthodontie-invisible-sete/', '/prix-orthodontie-invisible-sete/', '/implantologie/', '/about/'],
+  },
+  '/orthodontie-invisible-sete/': {
+    title: 'Orthodontie invisible à Sète | Dr Abdessadok',
+    metaDescription: 'Orthodontie invisible à Sète : bilan, aligneurs transparents, Invisalign, port quotidien, durée, suivi et contention au cabinet du Dr Abdessadok.',
+    h1: 'Orthodontie invisible à Sète : aligneurs et bilan',
+    intro: 'Les aligneurs transparents peuvent corriger certains désalignements de manière discrète, mais ils ne conviennent pas à toutes les situations. Le bilan au cabinet sert à vérifier l’indication, expliquer le quotidien et comparer les options.',
+    highlights: [
+      'Aligneurs transparents et solution Invisalign abordés selon l’indication clinique',
+      'Port, taquets, hygiène, suivi et contention expliqués avant la décision',
+      'Objectifs et limites définis à partir d’un examen, sans promesse de résultat',
+    ],
+    articleBody: null,
+    sections: [
+      {
+        heading: 'À qui les aligneurs transparents peuvent-ils convenir ?',
+        blocks: [{
+          subheading: 'Une indication à vérifier, pas une solution automatique',
+          paragraphs: [
+            'Les aligneurs peuvent être discutés pour certains chevauchements, espaces, récidives ou déplacements dentaires. Le type de mouvement, l’occlusion, l’état des gencives et la capacité à respecter le port quotidien influencent la décision.',
+            'Dans d’autres situations, un appareillage différent, des soins préalables ou une orientation peuvent être plus adaptés. Le choix ne repose donc pas uniquement sur la discrétion recherchée.',
+          ],
+        }],
+      },
+      {
+        heading: 'Comment se déroule le parcours au cabinet ?',
+        blocks: [
+          {
+            subheading: 'Bilan et planification',
+            paragraphs: ['Le premier rendez-vous précise votre demande et examine les dents, les gencives et l’occlusion. Des photographies, radiographies ou une empreinte numérique peuvent être indiquées pour compléter l’étude.'],
+          },
+          {
+            subheading: 'Aligneurs et contrôles',
+            paragraphs: ['Si le traitement est retenu, les étapes, le rythme de port et les rendez-vous de contrôle sont expliqués. Les aligneurs sont retirés pour les repas et l’hygiène, puis remis selon les consignes données.'],
+          },
+        ],
+      },
+      {
+        heading: 'Discrétion, taquets, durée et contention',
+        blocks: [{
+          subheading: 'Les contraintes à connaître avant de commencer',
+          paragraphs: [
+            'Un aligneur est discret, mais pas totalement invisible. De petits taquets peuvent être nécessaires sur certaines dents et une courte adaptation de la parole ou une sensation de pression peut survenir.',
+            'La durée varie selon les mouvements et la réponse au traitement. Après la phase active, une contention est généralement nécessaire pour limiter le risque que les dents ne rebougent.',
+          ],
+        }],
+      },
+      {
+        heading: 'Invisalign et autres aligneurs : quelle différence ?',
+        blocks: [{
+          subheading: 'La marque ne remplace pas le diagnostic',
+          paragraphs: ['Invisalign est une marque d’aligneurs transparents. La solution retenue dépend du cas, du protocole proposé et de la discussion avec le praticien ; l’essentiel reste la qualité du bilan, de la planification et du suivi.'],
+        }],
+      },
+    ],
+    faq: [
+      { question: 'Les aligneurs sont-ils vraiment invisibles ?', answer: 'Ils sont transparents et discrets, mais peuvent rester visibles de près. Des taquets peuvent aussi être nécessaires.' },
+      { question: 'Combien d’heures faut-il les porter ?', answer: 'Le rythme exact est défini par le praticien. Un port régulier est indispensable et les aligneurs sont généralement retirés pour manger et se brosser les dents.' },
+      { question: 'Combien de temps dure une orthodontie invisible ?', answer: 'La durée dépend des mouvements nécessaires, de la situation initiale et du respect du protocole. Une estimation individualisée est donnée après le bilan.' },
+      { question: 'Un devis peut-il être donné sans examen ?', answer: 'Un devis fiable nécessite un bilan, car la complexité, la durée et le protocole varient selon chaque situation.' },
+    ],
+    ctaTitle: 'Savoir si les aligneurs sont adaptés à votre situation',
+    ctaText: 'Le bilan permet d’examiner votre sourire, de comparer les options et d’expliquer le protocole avant toute décision.',
+    ctaLabel: 'Demander un bilan à Sète',
+    internalLinks: ['/orthodontie-sete/', '/prix-orthodontie-invisible-sete/', '/invisalign-bassin-de-thau/', '/implantologie/', '/about/'],
+  },
+  '/prix-orthodontie-invisible-sete/': {
+    menuLabel: 'Prix des aligneurs à Sète',
+    title: 'Prix orthodontie invisible à Sète | Devis',
+    metaDescription: 'Prix de l’orthodontie invisible à Sète : facteurs du devis, durée, aligneurs, contention et questions de remboursement à vérifier avant le bilan.',
+    h1: 'Prix de l’orthodontie invisible à Sète : devis et prise en charge',
+    intro: 'Il n’existe pas de prix unique pour un traitement par aligneurs. Le devis dépend de la situation initiale, des mouvements prévus, du protocole et du suivi nécessaire.',
+    highlights: [
+      'Un devis individualisé après examen et définition du protocole',
+      'Complexité, durée, nombre d’étapes et contention pris en compte',
+      'Remboursement à vérifier auprès de l’Assurance Maladie et de la complémentaire',
+    ],
+    articleBody: null,
+    sections: [
+      {
+        heading: 'Pourquoi le prix varie-t-il ?',
+        blocks: [{
+          subheading: 'Chaque plan de traitement est différent',
+          paragraphs: ['Le nombre et la difficulté des mouvements, la durée estimée, les contrôles, les éventuelles phases de finition et la contention peuvent modifier le devis. Une estimation sérieuse ne peut donc pas reposer sur une photo ou un tarif standard.'],
+          bullets: ['Bilan et examens nécessaires', 'Planification et nombre d’aligneurs', 'Durée et rendez-vous de suivi', 'Contention et contrôles après la phase active'],
+        }],
+      },
+      {
+        heading: 'Que doit expliquer le devis ?',
+        blocks: [{
+          subheading: 'Comprendre avant de décider',
+          paragraphs: ['Le cabinet présente le protocole envisagé, les étapes comprises et les conditions du suivi. Vous pouvez demander ce qui pourrait faire évoluer le plan ou entraîner une phase complémentaire avant de donner votre accord.'],
+        }],
+      },
+      {
+        heading: 'Remboursement et complémentaire santé',
+        blocks: [{
+          subheading: 'Vérifier votre situation personnelle',
+          paragraphs: ['Les règles de prise en charge et les garanties des complémentaires varient selon l’âge, la situation et le contrat. Le devis permet d’interroger directement les organismes concernés avant de commencer.'],
+        }],
+      },
+    ],
+    faq: [
+      { question: 'Peut-on connaître le prix par téléphone ?', answer: 'Le cabinet peut expliquer le fonctionnement général, mais un devis fiable nécessite un examen et un protocole défini.' },
+      { question: 'La contention est-elle comprise ?', answer: 'Cela dépend du devis proposé. Les éléments inclus et le suivi prévu doivent être vérifiés avant l’acceptation.' },
+      { question: 'La mutuelle rembourse-t-elle les aligneurs ?', answer: 'Cela dépend du contrat et de la situation. Envoyez le devis à votre complémentaire pour obtenir une réponse personnalisée.' },
+    ],
+    ctaTitle: 'Obtenir un devis adapté à votre situation',
+    ctaText: 'Le bilan permet de définir les mouvements, le protocole et les étapes nécessaires avant d’établir un devis compréhensible.',
+    ctaLabel: 'Demander un bilan',
+    internalLinks: ['/orthodontie-invisible-sete/', '/orthodontie-sete/', '/contact/'],
+  },
+  '/implantologie/': {
+    menuLabel: 'Implant dentaire à Sète',
+    title: 'Implant dentaire à Sète | Dr Abdessadok',
+    metaDescription: 'Implant dentaire à Sète : bilan, alternatives, chirurgie, cicatrisation et suivi expliqués par le cabinet du Dr Abdessamed Abdessadok.',
+    h1: 'Implant dentaire à Sète : bilan, pose et suivi',
+    intro: 'Un implant peut remplacer la racine d’une dent absente et soutenir une couronne ou une prothèse. Sa faisabilité dépend de l’état de santé, des tissus, de l’os disponible et du projet de restauration.',
+    highlights: [
+      'Bilan clinique et imagerie lorsqu’elle est indiquée',
+      'Implant, bridge, prothèse amovible ou abstention comparés selon le cas',
+      'Chirurgie, cicatrisation, restauration et maintenance expliquées par étapes',
+    ],
+    articleBody: null,
+    sections: [
+      {
+        heading: 'Quand un implant dentaire peut-il être envisagé ?',
+        blocks: [{
+          subheading: 'Remplacer une ou plusieurs dents absentes',
+          paragraphs: [
+            'L’implant est une option parmi plusieurs pour remplacer une dent. Il peut soutenir une couronne, un bridge ou contribuer à stabiliser une prothèse, selon la situation.',
+            'Il n’est pas indiqué automatiquement. L’examen tient compte de la santé générale, des médicaments, du tabagisme, des gencives, de l’hygiène, de l’occlusion et du volume osseux.',
+          ],
+        }],
+      },
+      {
+        heading: 'Le bilan avant la pose',
+        blocks: [{
+          subheading: 'Planifier à partir de la future dent',
+          paragraphs: [
+            'Le praticien examine l’espace à restaurer et les dents voisines. Une radiographie ou une imagerie en trois dimensions peut être demandée lorsqu’elle répond à une question clinique.',
+            'Le bilan sert aussi à comparer les alternatives, identifier les soins préalables et expliquer les risques propres à votre situation avant le consentement et le devis.',
+          ],
+        }],
+      },
+      {
+        heading: 'Pose, cicatrisation et restauration',
+        blocks: [{
+          subheading: 'Un parcours qui peut nécessiter plusieurs étapes',
+          paragraphs: [
+            'La chirurgie est le plus souvent réalisée sous anesthésie locale. Le protocole, les suites et le nombre de rendez-vous varient selon les tissus et le projet prothétique.',
+            'Une période de cicatrisation est généralement nécessaire avant la restauration définitive. Les contrôles permettent de vérifier l’évolution et de décider du moment adapté pour poursuivre.',
+          ],
+        }],
+      },
+      {
+        heading: 'Risques, entretien et suivi',
+        blocks: [{
+          subheading: 'Aucune durée ne peut être garantie',
+          paragraphs: [
+            'Comme tout acte chirurgical, l’implantologie comporte des risques et des limites qui doivent être expliqués pour votre situation. Une douleur croissante, un saignement persistant ou un signe inhabituel après l’intervention justifie de rappeler le cabinet.',
+            'À long terme, le brossage, l’hygiène entre les dents, les contrôles et la gestion des facteurs de risque restent indispensables autour de l’implant et de sa restauration.',
+          ],
+        }],
+      },
+    ],
+    faq: [
+      { question: 'La pose d’un implant est-elle douloureuse ?', answer: 'L’anesthésie locale vise à éviter la douleur pendant l’intervention. Les sensations et les suites varient selon le geste et la personne.' },
+      { question: 'Un implant est-il toujours possible ?', answer: 'Non. La faisabilité dépend notamment de la santé, des tissus, de l’anatomie et du projet de restauration.' },
+      { question: 'Combien de temps faut-il prévoir ?', answer: 'Le nombre d’étapes et la cicatrisation varient. Une estimation ne peut être donnée qu’après le bilan.' },
+      { question: 'Quelles alternatives existent ?', answer: 'Selon le cas, un bridge, une prothèse amovible ou l’absence de remplacement immédiat peuvent aussi être discutés.' },
+    ],
+    ctaTitle: 'Faire le point sur une dent manquante à Sète',
+    ctaText: 'Le bilan permet de comparer les solutions, d’évaluer la faisabilité et de comprendre les étapes avant toute décision.',
+    ctaLabel: 'Demander un bilan implantaire',
+    internalLinks: ['/orthodontie-invisible-sete/', '/orthodontie-sete/', '/about/', '/contact/'],
+  },
+  '/invisalign-bassin-de-thau/': {
+    menuLabel: 'Bassin de Thau',
+    menuDescription: 'Informations pratiques pour préparer un suivi d’orthodontie invisible au cabinet de Sète depuis le Bassin de Thau.',
+    badge: 'Accès au cabinet · Bassin de Thau',
+    title: 'Orthodontie invisible – Bassin de Thau | Sète',
+    metaDescription: 'Orthodontie invisible dans le Bassin de Thau : informations pratiques pour consulter au cabinet du Dr Abdessadok à Sète depuis les communes voisines.',
+    h1: 'Orthodontie invisible dans le Bassin de Thau : suivi à Sète',
+    intro: 'Le cabinet se trouve uniquement à Sète. Cette page rassemble les informations utiles aux patients du Bassin de Thau qui envisagent un bilan ou un suivi par aligneurs transparents sur place.',
+    highlights: [
+      'Une seule adresse : 10 boulevard Danièle Casanova à Sète',
+      'Un suivi organisé au cabinet après vérification de l’indication',
+      'Adresse, horaires et contact centralisés avant votre déplacement',
+    ],
+    articleBody: null,
+    sections: [
+      {
+        heading: 'Un traitement suivi au cabinet de Sète',
+        blocks: [{
+          subheading: 'Prévoir le bilan puis les contrôles',
+          paragraphs: ['Un traitement par aligneurs demande généralement plusieurs rendez-vous. Le premier bilan évalue les mouvements, l’occlusion et l’état bucco-dentaire ; les contrôles servent ensuite à suivre l’évolution et à adapter le parcours si nécessaire.'],
+        }],
+      },
+      {
+        heading: 'Préparer votre venue depuis le Bassin de Thau',
+        blocks: [{
+          subheading: 'Mèze, Frontignan, Marseillan, Balaruc-les-Bains ou Agde',
+          paragraphs: ['Avant de vous déplacer, consultez la page contact pour vérifier l’adresse et les horaires, ou appelez le cabinet si votre demande est urgente. Le pré-rendez-vous téléphonique peut aider à orienter une demande, mais ne remplace pas l’examen sur place.'],
+        }],
+      },
+      {
+        heading: 'Comprendre les aligneurs avant le rendez-vous',
+        blocks: [{
+          subheading: 'Indication, quotidien et devis',
+          paragraphs: ['Le guide principal d’orthodontie invisible explique les aligneurs, Invisalign, les taquets, le port quotidien, les limites et la contention. Une page séparée détaille les facteurs qui influencent le devis.'],
+        }],
+      },
+    ],
+    faq: [
+      { question: 'Le cabinet possède-t-il une adresse dans une autre commune ?', answer: 'Non. Les consultations ont lieu au 10 boulevard Danièle Casanova, 34200 Sète.' },
+      { question: 'Peut-on savoir à distance si les aligneurs conviennent ?', answer: 'Non. Un examen clinique est nécessaire pour vérifier l’indication et discuter les options.' },
+      { question: 'Où vérifier les horaires et l’accès ?', answer: 'La page contact centralise l’adresse, la carte, le téléphone et les horaires du cabinet.' },
+    ],
+    ctaTitle: 'Préparer votre bilan au cabinet de Sète',
+    ctaText: 'Consultez les informations d’accès ou demandez un pré-rendez-vous pour orienter votre première demande.',
+    ctaLabel: 'Voir l’adresse et les horaires',
+    ctaHref: '/contact/',
+    internalLinks: ['/orthodontie-invisible-sete/', '/prix-orthodontie-invisible-sete/', '/contact/'],
+  },
+}
+
+const rawServicePages = [
   ...baseServicePages.filter((page) => leadPillarUrls.has(page.url)),
   ...generatedOrthodontiePillars,
   ...baseServicePages.filter((page) => !leadPillarUrls.has(page.url) && !replacedPillarUrls.has(page.url)),
 ]
+
+export const servicePages = rawServicePages
+  .filter((page) => !retiredServiceUrls.has(normalizeContentUrl(page.url)))
+  .map((page) => {
+    const normalizedUrl = normalizeContentUrl(page.url)
+    const merged = { ...page, ...(servicePageOverrides[normalizedUrl] || {}), url: normalizedUrl }
+    return {
+      ...merged,
+      internalLinks: uniqueUrls(merged.internalLinks).filter((url) => url !== normalizedUrl),
+    }
+  })
 
 const rawBlogPages = [
   ...generatedOrthodontieArticles,
@@ -1256,20 +1582,24 @@ const rawBlogPages = [
   },
 ]
 
-const duplicatePriceArticle = '/blog/prix-orthodontie-invisible-sete/'
-
 export const blogPages = [...rawBlogPages, ...implantologyArticles]
-  .filter((page) => `${page.url.replace(/\/+$/, '')}/` !== duplicatePriceArticle)
-  .map((page) => ({
-    authorName: 'Équipe éditoriale du cabinet',
-    medicalReviewStatus: 'pending',
-    medicalReviewer: null,
-    datePublished: page.datePublished || '2026-07-12',
-    dateModified: page.dateModified || '2026-07-13',
-    ...page,
-    url: `${page.url.replace(/\/+$/, '')}/`,
-    internalLinks: (page.internalLinks || []).map((url) => url === duplicatePriceArticle ? '/prix-orthodontie-invisible-sete/' : url),
-  }))
+  .filter((page) => !retiredBlogUrls.has(normalizeContentUrl(page.url)))
+  .map((page) => {
+    const medicalReviewStatus = page.medicalReviewStatus || 'pending'
+    const medicalReviewer = page.medicalReviewer || null
+    const normalizedUrl = normalizeContentUrl(page.url)
+    return {
+      authorName: 'Équipe éditoriale du cabinet',
+      datePublished: page.datePublished || '2026-07-12',
+      dateModified: page.dateModified || '2026-07-13',
+      ...page,
+      medicalReviewStatus,
+      medicalReviewer,
+      indexable: medicalReviewStatus === 'reviewed' && Boolean(medicalReviewer),
+      url: normalizedUrl,
+      internalLinks: uniqueUrls(page.internalLinks).filter((url) => url !== normalizedUrl),
+    }
+  })
 
 const allPages = [...servicePages, ...blogPages]
 
@@ -1281,5 +1611,5 @@ export function getPageByUrl(url) {
 }
 
 export function getPagesByUrls(urls = []) {
-  return urls.map((url) => pageLookup[url]).filter(Boolean)
+  return uniqueUrls(urls).map((url) => pageLookup[url]).filter(Boolean)
 }

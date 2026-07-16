@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import logo from '../assets/Favicon/android-chrome-192x192.png'
+import AnalyticsAdmin from '../components/admin/AnalyticsAdmin'
 import {
   addGalleryItem,
   createService,
@@ -25,6 +26,7 @@ const secondaryButton = 'inline-flex min-h-10 items-center justify-center gap-2 
 
 const iconPaths = {
   overview: <><path d="M4 13h6V4H4v9Zm0 7h6v-4H4v4Zm10 0h6v-9h-6v9Zm0-12h6V4h-6v4Z" /></>,
+  analytics: <><path d="M4 20V10M10 20V4M16 20v-7M22 20H2" /><path d="m4 8 6-5 6 8 5-5" /></>,
   appointments: <><path d="M7 2v3M17 2v3M3 9h18M5 4h14a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z" /><path d="m9 15 2 2 4-5" /></>,
   messages: <><path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v8Z" /><path d="M8 9h8M8 13h5" /></>,
   services: <><path d="M4 7h16M7 3v4M17 3v4M6 11h4v4H6zM14 11h4v4h-4zM6 18h4M14 18h4" /></>,
@@ -50,17 +52,19 @@ function Icon({ name, className = 'h-5 w-5' }) {
 }
 
 const navigation = [
-  { key: 'overview', label: 'Vue d’ensemble', icon: 'overview' },
-  { key: 'appointments', label: 'Pré-rendez-vous', icon: 'appointments', countKey: 'appointments' },
-  { key: 'messages', label: 'Messages', icon: 'messages', countKey: 'messages' },
-  { key: 'services', label: 'Services', icon: 'services' },
-  { key: 'gallery', label: 'Galerie', icon: 'gallery' },
+  { key: 'overview', label: 'Vue d’ensemble', icon: 'overview', group: 'management' },
+  { key: 'appointments', label: 'Pré-rendez-vous', icon: 'appointments', countKey: 'appointments', group: 'management' },
+  { key: 'messages', label: 'Messages', icon: 'messages', countKey: 'messages', group: 'management' },
+  { key: 'analytics', label: 'Analytics', icon: 'analytics', group: 'management' },
+  { key: 'services', label: 'Services', icon: 'services', group: 'content' },
+  { key: 'gallery', label: 'Galerie', icon: 'gallery', group: 'content' },
 ]
 
 const pageMeta = {
   overview: { eyebrow: 'Tableau de bord', title: 'Bonjour, bienvenue au cabinet', description: 'Retrouvez l’essentiel de l’activité du site en un coup d’œil.' },
   appointments: { eyebrow: 'Patients', title: 'Pré-rendez-vous', description: 'Traitez les nouvelles demandes et suivez chaque rappel.' },
   messages: { eyebrow: 'Patients', title: 'Messages', description: 'Consultez les demandes envoyées depuis le formulaire de contact.' },
+  analytics: { eyebrow: 'Pilotage', title: 'Analytics', description: 'Comprenez les visites, les sources et les clics sans conserver de données individuelles.' },
   services: { eyebrow: 'Contenu', title: 'Services', description: 'Mettez à jour les soins présentés sur le site.' },
   gallery: { eyebrow: 'Contenu', title: 'Galerie', description: 'Organisez les visuels du cabinet par spécialité.' },
 }
@@ -71,7 +75,10 @@ const handleLogout = async () => {
 }
 
 export default function Admin() {
-  const [tab, setTab] = useState('overview')
+  const [searchParams, setSearchParams] = useSearchParams()
+  const requestedTab = searchParams.get('section')
+  const initialTab = navigation.some((item) => item.key === requestedTab) ? requestedTab : 'overview'
+  const [tab, setTab] = useState(initialTab)
   const [menuOpen, setMenuOpen] = useState(false)
   const [counts, setCounts] = useState({ appointments: 0, messages: 0 })
   const meta = pageMeta[tab]
@@ -87,8 +94,14 @@ export default function Admin() {
 
   useEffect(() => { refreshCounts() }, [])
 
+  useEffect(() => {
+    const nextTab = navigation.some((item) => item.key === requestedTab) ? requestedTab : 'overview'
+    setTab(nextTab)
+  }, [requestedTab])
+
   const navigate = (key) => {
     setTab(key)
+    setSearchParams(key === 'overview' ? {} : { section: key })
     setMenuOpen(false)
   }
 
@@ -110,11 +123,11 @@ export default function Admin() {
         <div className="flex-1 overflow-y-auto px-4 py-6">
           <p className="px-3 text-[.65rem] font-black uppercase tracking-[.2em] text-[#d8c59c]/60">Gestion</p>
           <nav className="mt-3 space-y-1.5">
-            {navigation.slice(0, 3).map((item) => <NavButton key={item.key} item={item} active={tab === item.key} count={counts[item.countKey]} onClick={() => navigate(item.key)} />)}
+            {navigation.filter((item) => item.group === 'management').map((item) => <NavButton key={item.key} item={item} active={tab === item.key} count={counts[item.countKey]} onClick={() => navigate(item.key)} />)}
           </nav>
           <p className="mt-8 px-3 text-[.65rem] font-black uppercase tracking-[.2em] text-[#d8c59c]/60">Site & contenu</p>
           <nav className="mt-3 space-y-1.5">
-            {navigation.slice(3).map((item) => <NavButton key={item.key} item={item} active={tab === item.key} onClick={() => navigate(item.key)} />)}
+            {navigation.filter((item) => item.group === 'content').map((item) => <NavButton key={item.key} item={item} active={tab === item.key} onClick={() => navigate(item.key)} />)}
             <Link to="/admin/actualities/" className="group flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-semibold text-white/70 transition hover:bg-white/10 hover:text-white"><Icon name="articles" className="h-[1.15rem] w-[1.15rem]" /><span className="flex-1">Actualités</span><Icon name="chevron" className="h-4 w-4 opacity-40 transition group-hover:translate-x-0.5" /></Link>
           </nav>
         </div>
@@ -146,6 +159,7 @@ export default function Admin() {
               {tab === 'overview' && <OverviewAdmin onNavigate={navigate} />}
               {tab === 'appointments' && <AppointmentsAdmin onChanged={refreshCounts} />}
               {tab === 'messages' && <MessagesAdmin onChanged={refreshCounts} />}
+              {tab === 'analytics' && <AnalyticsAdmin />}
               {tab === 'services' && <ServicesAdmin />}
               {tab === 'gallery' && <GalleryAdmin />}
             </motion.div>
@@ -209,7 +223,7 @@ function OverviewAdmin({ onNavigate }) {
       <aside className={`${panelClass} overflow-hidden`}>
         <div className="bg-[#214e3e] p-6 text-white"><p className="text-[.65rem] font-black uppercase tracking-[.18em] text-[#d8c59c]">Accès rapide</p><h2 className="mt-2 text-xl font-bold">Gérer le site</h2><p className="mt-2 text-sm leading-6 text-white/60">Les actions les plus fréquentes, sans chercher dans les menus.</p></div>
         <div className="space-y-2 p-4">
-          {[['appointments', 'appointments', 'Traiter les pré-rendez-vous'], ['messages', 'messages', 'Lire les messages'], ['services', 'services', 'Modifier les services'], ['gallery', 'gallery', 'Ajouter une image']].map(([key, icon, label]) => <button key={key} type="button" onClick={() => onNavigate(key)} className="flex w-full items-center gap-3 rounded-xl p-3 text-left text-sm font-bold transition hover:bg-[#f3f6f4]"><span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#edf3f0] text-[#214e3e]"><Icon name={icon} className="h-[1.05rem] w-[1.05rem]" /></span><span className="flex-1">{label}</span><Icon name="chevron" className="h-4 w-4 text-[#9ba8a2]" /></button>)}
+          {[['appointments', 'appointments', 'Traiter les pré-rendez-vous'], ['messages', 'messages', 'Lire les messages'], ['analytics', 'analytics', 'Voir les statistiques'], ['services', 'services', 'Modifier les services'], ['gallery', 'gallery', 'Ajouter une image']].map(([key, icon, label]) => <button key={key} type="button" onClick={() => onNavigate(key)} className="flex w-full items-center gap-3 rounded-xl p-3 text-left text-sm font-bold transition hover:bg-[#f3f6f4]"><span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#edf3f0] text-[#214e3e]"><Icon name={icon} className="h-[1.05rem] w-[1.05rem]" /></span><span className="flex-1">{label}</span><Icon name="chevron" className="h-4 w-4 text-[#9ba8a2]" /></button>)}
         </div>
       </aside>
     </div>

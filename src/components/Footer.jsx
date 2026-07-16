@@ -2,6 +2,7 @@ import { Link, useLocation } from 'react-router-dom'
 import { media } from '../config/media'
 import { getLanguageNavigation, routeLanguage } from '../config/multilingualRoutes'
 import { site } from '../config/site'
+import { openConsentSettings } from '../utils/consent'
 
 export default function Footer() {
   const { pathname } = useLocation()
@@ -15,7 +16,7 @@ export default function Footer() {
         [localizedNav.labels.implant, localizedNav.paths.implant],
         [localizedNav.labels.contact, localizedNav.paths.contact],
       ]
-    : [['À propos', '/about/'], ['Soins', '/services/'], ['Guides', '/blog/'], ['Contact', '/contact/']]
+    : [['Implant dentaire', '/implantologie/'], ['Orthodontie invisible', '/orthodontie-invisible-sete/'], ['Soins', '/services/'], ['À propos', '/about/'], ['Guides', '/blog/'], ['Contact', '/contact/']]
 
   return (
     <footer className="authority-footer">
@@ -39,7 +40,7 @@ export default function Footer() {
         </div>
         <div className="authority-footer__legal">
           <p>© {new Date().getFullYear()} {site.practiceName}</p>
-          <p>Informations générales : aucun contenu ne remplace un examen clinique.</p>
+          <div><p>Informations générales : aucun contenu ne remplace un examen clinique.</p><button type="button" onClick={openConsentSettings}>Gérer mes cookies</button></div>
         </div>
       </div>
     </footer>

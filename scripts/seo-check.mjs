@@ -182,11 +182,22 @@ for (const route of sitemapRoutes.filter((item) => item.pageType)) {
   }
 }
 
+for (const route of seoRoutes.filter((item) => item.indexable === false)) {
+  const pathname = route.path
+  const file = await fileForPath(pathname)
+  if (!(await exists(file))) { fail(`${pathname}: noindex route has no generated HTML`); continue }
+  const html = await fs.readFile(file, 'utf8')
+  if (!/noindex/i.test(metaOf(html, 'robots'))) fail(`${pathname}: configured noindex route is missing noindex`)
+  if (sitemapUrls.includes(absoluteUrl(pathname))) fail(`${pathname}: configured noindex route appears in the sitemap`)
+}
+
 const guideAssets = new Map()
 for (const page of blogPages) {
   const pathname = trailingSlash(page.url)
   const route = seoRouteByPath.get(pathname)
-  const html = htmlByPath.get(pathname)
+  const html = route?.indexable === false
+    ? await fs.readFile(await fileForPath(pathname), 'utf8').catch(() => '')
+    : htmlByPath.get(pathname)
   const asset = mediaByRoute[pathname]
 
   if (!page.url.startsWith('/blog/') || !page.url.endsWith('/')) fail(`${page.url}: guide URL must use /blog/ and a trailing slash`)
@@ -194,7 +205,8 @@ for (const page of blogPages) {
   if (!asset) fail(`${pathname}: guide has no dedicated image mapping`)
   if (asset && guideAssets.has(asset.fallback)) fail(`${pathname}: guide repeats the image assigned to ${guideAssets.get(asset.fallback)}`)
   if (asset) guideAssets.set(asset.fallback, pathname)
-  if (!sitemapUrls.includes(absoluteUrl(pathname))) fail(`${pathname}: guide is absent from the sitemap`)
+  if (route?.indexable === false && sitemapUrls.includes(absoluteUrl(pathname))) fail(`${pathname}: pending guide appears in the sitemap`)
+  if (route?.indexable !== false && !sitemapUrls.includes(absoluteUrl(pathname))) fail(`${pathname}: indexable guide is absent from the sitemap`)
   if (!html) fail(`${pathname}: guide initial HTML was not generated`)
   if (html && h1Of(html) !== page.h1) fail(`${pathname}: generated guide H1 does not match its content record`)
   if (html && canonicalOf(html) !== absoluteUrl(pathname)) fail(`${pathname}: generated guide canonical is not self-referencing`)
@@ -207,7 +219,16 @@ if (!/noindex,follow/i.test(metaOf(preHtml, 'robots'))) fail(`${preAppointmentPa
 if (sitemapUrls.includes(absoluteUrl(preAppointmentPath))) fail(`${preAppointmentPath}: noindex URL appears in sitemap`)
 results.push({ URL: preAppointmentPath, Status: 200, Canonical: canonicalOf(preHtml), Robots: metaOf(preHtml, 'robots'), H1: h1Of(preHtml), Sitemap: 'no', Result: 'PASS' })
 
-for (const [legacy, target] of [['/actualities/', '/blog/'], ['/actualites/', '/blog/'], ['/blog/prix-orthodontie-invisible-sete/', '/prix-orthodontie-invisible-sete/']]) {
+for (const [legacy, target] of [
+  ['/actualities/', '/blog/'],
+  ['/actualites/', '/blog/'],
+  ['/invisalign/', '/orthodontie-invisible-sete/'],
+  ['/blog/prix-orthodontie-invisible-sete/', '/prix-orthodontie-invisible-sete/'],
+  ['/blog/aligner-dents-avant-pose-implant/', '/blog/aligner-dents-avant-implant/'],
+  ['/blog/orthodontie-sete-quand-consulter-alignement-dentaire/', '/orthodontie-sete/'],
+  ['/blog/orthodontie-invisible-sete-questions-avant-bilan/', '/orthodontie-invisible-sete/'],
+  ['/blog/verite-invisalign-taquets-temps-port-gene/', '/blog/orthodontie-invisible-quotidien-repas-entretien-parole/'],
+]) {
   const redirect = matchRedirect(legacy, redirectRules)
   if (!redirect || redirect.status !== 301 || redirect.to !== target) fail(`${legacy}: expected one-hop 301 to ${target}`)
   if (sitemapUrls.includes(absoluteUrl(legacy))) fail(`${legacy}: redirected URL appears in sitemap`)

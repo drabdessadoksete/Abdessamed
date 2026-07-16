@@ -91,6 +91,9 @@ enabled = true
 # The maximum length in bytes of HTTP request headers. (default: 4096)
 # max_header_length = 4096
 
+[functions.analytics-ingest]
+verify_jwt = true
+
 [studio]
 enabled = true
 # Port to use for Supabase Studio.

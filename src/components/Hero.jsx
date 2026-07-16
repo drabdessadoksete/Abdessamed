@@ -53,9 +53,9 @@ export default function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.72, ease: [0.22, 1, 0.36, 1] }}
         >
-          <span className="section-kicker mb-5">Cabinet dentaire à Sète</span>
+          <span className="section-kicker mb-5">Dr Abdessamed Abdessadok</span>
           <h1 id="home-hero-title" className="max-w-[14ch] text-4xl font-bold leading-[0.98] text-white sm:text-5xl md:text-7xl">
-            Votre sourire, traité avec <span className="gold-underline">précision</span> et humanité.
+            Cabinet dentaire à Sète : <span className="gold-underline">précision</span> et humanité.
           </h1>
           <p className="mt-6 max-w-2xl text-base leading-7 text-white/80 sm:text-lg md:text-xl md:leading-8">
             Implantologie et orthodontie invisible, avec une technologie précise et surtout le temps de vous expliquer chaque étape.

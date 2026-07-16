@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom'
 import Hero from '../components/Hero'
 import ResponsiveImage from '../components/ResponsiveImage'
 import CTA from '../components/CTA'
-import ReviewsMarquee from '../components/ReviewsMarquee'
 import SmileViewSimulator from '../components/SmileViewSimulator'
 import { media, mediaSlots } from '../config/media'
 import { site } from '../config/site'
@@ -74,15 +73,17 @@ export default function Home() {
   return (
     <>
       <Helmet>
-        <title>Cabinet dentaire à Sète | Dr Abdessadok</title>
-        <meta name="description" content="Cabinet dentaire à Sète : implantologie, orthodontie invisible et soins expliqués avec précision par le Dr Abdessamed Abdessadok." />
+        <title>Dentiste à Sète | Cabinet du Dr Abdessadok</title>
+        <meta name="description" content="Dentiste à Sète : soins dentaires, implantologie et orthodontie invisible au cabinet du Dr Abdessamed Abdessadok. Adresse, horaires et contact." />
         <meta property="og:image" content={`${site.url}${media.homeConsultation.fallback}`} />
+        <meta property="og:image:alt" content={media.homeConsultation.alt} />
+        <meta property="og:image:width" content={String(media.homeConsultation.width)} />
+        <meta property="og:image:height" content={String(media.homeConsultation.height)} />
+        <meta name="twitter:image" content={`${site.url}${media.homeConsultation.fallback}`} />
         <script type="application/ld+json">{JSON.stringify(faqSchema)}</script>
       </Helmet>
 
       <Hero />
-
-      <ReviewsMarquee />
 
       <section className="trust-band" aria-labelledby="trust-title">
         <div className="container-max">
@@ -193,11 +194,11 @@ export default function Home() {
           <div>
             <span className="section-kicker">Ressources patient</span>
             <h2 id="education-title">Préparer votre consultation avec des réponses nuancées.</h2>
-            <p>Des guides relus avant publication, datés et reliés aux pages de soins correspondantes.</p>
+            <p>Des guides pédagogiques datés et reliés aux pages de soins correspondantes.</p>
           </div>
           <div className="education-links">
             <Link to="/prix-orthodontie-invisible-sete/"><span>Budget et devis</span><strong>Comprendre le prix des aligneurs</strong><b aria-hidden="true">→</b></Link>
-            <Link to="/blog/aligner-dents-avant-implant/"><span>Parcours coordonné</span><strong>Aligner les dents avant un implant ?</strong><b aria-hidden="true">→</b></Link>
+            <Link to="/orthodontie-sete/"><span>Alignement dentaire</span><strong>Quand demander un bilan d’orthodontie ?</strong><b aria-hidden="true">→</b></Link>
             <Link to="/blog/"><span>Bibliothèque</span><strong>Consulter tous les guides dentaires</strong><b aria-hidden="true">→</b></Link>
           </div>
         </div>

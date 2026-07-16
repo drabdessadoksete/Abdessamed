@@ -13,7 +13,7 @@ export const site = {
     postalCode: '34200',
     addressCountry: 'FR',
   },
-  coordinates: { latitude: 43.402, longitude: 3.7 },
+  coordinates: { latitude: 43.4063256, longitude: 3.6944853 },
   openingHours: [
     { days: ['Monday', 'Tuesday', 'Thursday', 'Friday'], opens: '08:00', closes: '12:00' },
     { days: ['Monday', 'Tuesday', 'Thursday', 'Friday'], opens: '14:00', closes: '17:00' },
@@ -28,7 +28,7 @@ export const site = {
   consultationLanguages: ['fr'],
   areaServed: ['Sète', 'Bassin de Thau', 'Mèze', 'Frontignan', 'Marseillan', 'Balaruc-les-Bains', 'Agde'],
   profiles: [
-    'https://share.google/nd3kQPUbq8Rs5tZ3y',
+    'https://maps.app.goo.gl/UALfaQYvaAV5otoq9',
     'https://www.doctolib.fr/dentiste/sete/abdessamed-abdessadok-levallois-perret',
   ],
 }
@@ -64,12 +64,13 @@ export const dentistSchema = {
   url: `${site.url}/`,
   telephone: site.telephone,
   email: site.email,
-  image: `${site.url}/android-chrome-512x512.png`,
+  image: `${site.url}/images/orthodontie/consultation/consultation-orthodontie-1672.webp`,
+  logo: `${site.url}/images/shared/brand/cabinet-logo-768.webp`,
   address: postalAddressSchema,
   geo: { '@type': 'GeoCoordinates', ...site.coordinates },
+  hasMap: site.mapLink,
   openingHoursSpecification: openingHoursSchema,
   sameAs: site.profiles,
-  priceRange: '€€',
 }
 
 export const dentistPersonSchema = {
@@ -86,6 +87,6 @@ export const organizationSchema = {
   '@id': `${site.url}/#organization`,
   name: site.practiceName,
   url: `${site.url}/`,
-  logo: `${site.url}/android-chrome-512x512.png`,
+  logo: `${site.url}/images/shared/brand/cabinet-logo-768.webp`,
   sameAs: site.profiles,
 }
