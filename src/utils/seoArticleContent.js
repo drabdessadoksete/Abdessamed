@@ -18,7 +18,13 @@ function isListUnit(lines) {
   )
 }
 
-export function buildArticleBodyBlocks(articleBody = '') {
+export function buildArticleBodyBlocks(articleBody) {
+  if (articleBody == null) return []
+
+  if (typeof articleBody !== 'string') {
+    throw new TypeError(`articleBody must be a string or null; received ${typeof articleBody}`)
+  }
+
   const units = articleBody
     .replace(/\r/g, '')
     .split(/\n\s*\n/u)
