@@ -239,8 +239,8 @@ const appointmentStatuses = {
 
 const appointmentSpecialties = {
   'pre-rendez-vous-telephonique': 'Pré-rendez-vous téléphonique',
-  implantologie: 'Implantologie',
-  orthodontie: 'Orthodontie invisible',
+  implantologie: 'Pré-rendez-vous implantologie',
+  orthodontie: 'Pré-rendez-vous orthodontie invisible',
 }
 
 const getAppointmentSpecialtyLabel = (specialty) => appointmentSpecialties[specialty] || specialty || 'Besoin non renseigné'

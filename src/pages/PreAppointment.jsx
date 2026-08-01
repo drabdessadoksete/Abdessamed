@@ -7,10 +7,16 @@ import { trackEvent } from '../utils/analytics'
 
 const specialties = [
   {
-    value: 'pre-rendez-vous-telephonique',
-    eyebrow: 'Pré-rendez-vous téléphonique',
-    title: 'Pré-rendez-vous téléphonique',
-    description: 'Pour déterminer votre besoin en santé bucco-dentaire et vous orienter vers un rendez-vous adapté au cabinet.',
+    value: 'implantologie',
+    eyebrow: 'Implantologie',
+    title: 'Pré-rendez-vous implantologie',
+    description: 'Pour parler d’une dent absente, d’un implant dentaire ou d’une solution de remplacement adaptée à votre situation.',
+  },
+  {
+    value: 'orthodontie',
+    eyebrow: 'Orthodontie invisible',
+    title: 'Pré-rendez-vous orthodontie invisible',
+    description: 'Pour parler de l’alignement de vos dents et savoir si un traitement par aligneurs peut correspondre à votre besoin.',
   },
 ]
 
@@ -28,7 +34,7 @@ const initialForm = {
 export default function PreAppointment() {
   const [searchParams] = useSearchParams()
   const requestedSpecialty = searchParams.get('specialite')
-  const initialSpecialty = specialties.some((item) => item.value === requestedSpecialty) ? requestedSpecialty : 'pre-rendez-vous-telephonique'
+  const initialSpecialty = specialties.some((item) => item.value === requestedSpecialty) ? requestedSpecialty : ''
   const [specialty, setSpecialty] = useState(initialSpecialty)
   const [form, setForm] = useState(initialForm)
   const [status, setStatus] = useState('idle')
@@ -44,8 +50,8 @@ export default function PreAppointment() {
   const submit = async (event) => {
     event.preventDefault()
     setError('')
-    if (!form.name.trim() || !form.phone.trim() || !form.consent) {
-      setError('Merci de renseigner votre nom, votre téléphone et votre consentement.')
+    if (!specialty || !form.name.trim() || !form.phone.trim() || !form.consent) {
+      setError('Merci de choisir votre besoin, puis de renseigner votre nom, votre téléphone et votre consentement.')
       return
     }
 
@@ -86,8 +92,8 @@ export default function PreAppointment() {
   return (
     <section className="section min-h-screen">
       <Helmet>
-        <title>Pré-rendez-vous téléphonique à Sète | Dr Abdessadok</title>
-        <meta name="description" content="Demandez un pré-rendez-vous téléphonique avec le cabinet du Dr Abdessadok à Sète pour déterminer votre besoin en santé bucco-dentaire et être orienté vers un rendez-vous adapté." />
+        <title>Pré-rendez-vous implantologie ou orthodontie | Dr Abdessadok</title>
+        <meta name="description" content="Demandez un pré-rendez-vous téléphonique en implantologie ou en orthodontie invisible avec le cabinet du Dr Abdessadok à Sète." />
         <meta name="robots" content="noindex,follow" />
       </Helmet>
 
@@ -111,21 +117,23 @@ export default function PreAppointment() {
           <form onSubmit={submit} className="card overflow-hidden" noValidate>
             <div className="border-b border-rolexGreen/10 bg-white px-5 py-6 sm:px-8">
               <p className="text-xs font-black uppercase tracking-[0.18em] text-rolexGold">1 · Votre besoin</p>
-              <fieldset className="mt-5">
+              <fieldset className="mt-5" aria-required="true">
                 <legend className="sr-only">Déterminez votre besoin</legend>
-                {specialties.map((item) => {
-                  const selected = specialty === item.value
-                  return (
-                    <label key={item.value} className={`block w-full cursor-pointer rounded-2xl border p-5 transition ${selected ? 'border-rolexGreen bg-rolexGreen/5 shadow-[0_0_0_3px_rgba(33,78,62,.08)]' : 'border-rolexGreen/10 bg-surface hover:border-rolexGold/35'}`}>
-                      <input type="radio" name="specialty" value={item.value} checked={selected} onChange={() => setSpecialty(item.value)} className="sr-only" />
-                      <span className="text-[0.68rem] font-black uppercase tracking-[0.16em] text-rolexGold">{item.eyebrow}</span>
-                      <span className="mt-2 block text-xl font-bold">{item.title}</span>
-                      <span className="mt-2 block text-sm leading-6 text-muted">{item.description}</span>
-                      <span className="mt-3 block text-sm font-medium leading-6 text-muted">Ce pré-rendez-vous téléphonique gratuit de 5 minutes permet de mieux comprendre votre besoin et de vous orienter vers un rendez-vous adapté au cabinet.</span>
-                      <span className={`mt-4 inline-flex h-6 w-6 items-center justify-center rounded-full border ${selected ? 'border-rolexGreen bg-rolexGreen text-white' : 'border-rolexGreen/20'}`} aria-hidden="true">{selected ? '✓' : ''}</span>
-                    </label>
-                  )
-                })}
+                <div className="grid gap-4 md:grid-cols-2">
+                  {specialties.map((item) => {
+                    const selected = specialty === item.value
+                    return (
+                      <label key={item.value} className={`flex h-full cursor-pointer flex-col rounded-2xl border p-5 transition focus-within:border-rolexGold ${selected ? 'border-rolexGreen bg-rolexGreen/5 shadow-[0_0_0_3px_rgba(33,78,62,.08)]' : 'border-rolexGreen/10 bg-surface hover:border-rolexGold/35'}`}>
+                        <input type="radio" name="specialty" value={item.value} checked={selected} onChange={() => setSpecialty(item.value)} className="sr-only" required />
+                        <span className="text-[0.68rem] font-black uppercase tracking-[0.16em] text-rolexGold">{item.eyebrow}</span>
+                        <span className="mt-2 block text-xl font-bold">{item.title}</span>
+                        <span className="mt-2 block text-sm leading-6 text-muted">{item.description}</span>
+                        <span className="mt-3 block text-sm font-medium leading-6 text-muted">Pré-rendez-vous téléphonique gratuit de 5 minutes pour préciser votre besoin et organiser le premier bilan adapté.</span>
+                        <span className="mt-auto pt-4"><span className={`inline-flex h-6 w-6 items-center justify-center rounded-full border ${selected ? 'border-rolexGreen bg-rolexGreen text-white' : 'border-rolexGreen/20'}`} aria-hidden="true">{selected ? '✓' : ''}</span></span>
+                      </label>
+                    )
+                  })}
+                </div>
               </fieldset>
             </div>
 
