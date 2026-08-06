@@ -71,7 +71,7 @@ const localizedContent = {
       intro: 'For urgent pain, call the practice directly. Do not send sensitive medical information by email.',
       sections: [
         { title: 'Address', text: 'Ground floor, 10 boulevard Danièle Casanova, 34200 Sète, France.' },
-        { title: 'Telephone and email', text: '+33 4 22 91 05 94 · drabdessadoksete@gmail.com' },
+        { title: 'Telephone and email', text: '+33 4 22 91 05 94 · cabinetdentairesete@outlook.fr', email: 'cabinetdentairesete@outlook.fr', phone: '+33422910594' },
         { title: 'Opening hours', text: 'Monday, Tuesday, Thursday and Friday: 08:00–12:00 and 14:00–17:00. Wednesday: 08:00–12:00.' },
       ],
     },
@@ -121,7 +121,7 @@ const localizedContent = {
       intro: 'En caso de dolor urgente, llame directamente a la clínica. No envíe información médica sensible por correo electrónico.',
       sections: [
         { title: 'Dirección', text: 'Planta baja, 10 boulevard Danièle Casanova, 34200 Sète, Francia.' },
-        { title: 'Teléfono y correo', text: '+33 4 22 91 05 94 · drabdessadoksete@gmail.com' },
+        { title: 'Teléfono y correo', text: '+33 4 22 91 05 94 · cabinetdentairesete@outlook.fr', email: 'cabinetdentairesete@outlook.fr', phone: '+33422910594' },
         { title: 'Horarios', text: 'Lunes, martes, jueves y viernes: 08:00–12:00 y 14:00–17:00. Miércoles: 08:00–12:00.' },
       ],
     },
@@ -171,7 +171,7 @@ const localizedContent = {
       intro: 'Bei akuten Schmerzen rufen Sie die Praxis direkt an. Senden Sie keine sensiblen medizinischen Angaben per E-Mail.',
       sections: [
         { title: 'Adresse', text: 'Erdgeschoss, 10 boulevard Danièle Casanova, 34200 Sète, Frankreich.' },
-        { title: 'Telefon und E-Mail', text: '+33 4 22 91 05 94 · drabdessadoksete@gmail.com' },
+        { title: 'Telefon und E-Mail', text: '+33 4 22 91 05 94 · cabinetdentairesete@outlook.fr', email: 'cabinetdentairesete@outlook.fr', phone: '+33422910594' },
         { title: 'Öffnungszeiten', text: 'Montag, Dienstag, Donnerstag und Freitag: 08:00–12:00 und 14:00–17:00. Mittwoch: 08:00–12:00.' },
       ],
     },

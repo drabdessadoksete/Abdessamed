@@ -60,7 +60,15 @@ export default function MultilingualPage() {
               <article key={section.title}>
                 <span>{String(index + 1).padStart(2, '0')}</span>
                 <h2>{section.title}</h2>
-                <p>{section.text}</p>
+                {section.email ? (
+                  <p>
+                    {section.phone ? <a href={`tel:${section.phone}`}>+33 4 22 91 05 94</a> : null}
+                    {section.phone ? ' · ' : null}
+                    <a href={`mailto:${section.email}`}>{section.email}</a>
+                  </p>
+                ) : (
+                  <p>{section.text}</p>
+                )}
                 {section.linkType ? <Link to={route.paths[section.linkType]}>{route.labels.learn} →</Link> : null}
               </article>
             ))}

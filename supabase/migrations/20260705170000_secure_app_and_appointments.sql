@@ -9,7 +9,7 @@ where role = 'admin';
 insert into public.users (id, role)
 select id, 'admin'
 from auth.users
-where lower(email) = lower('drabdessadoksete@gmail.com')
+where lower(email) in (lower('drabdessadoksete@gmail.com'), lower('cabinetdentairesete@outlook.fr'))
 on conflict (id) do update set role = excluded.role;
 
 alter table public.users

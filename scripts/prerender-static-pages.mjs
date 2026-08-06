@@ -141,7 +141,7 @@ function header(route) {
 }
 
 function footer() {
-  return `<footer class="authority-footer"><div class="container-max authority-footer__grid"><div class="authority-footer__brand"><img src="${media.logo.fallback}" alt="${escapeHtml(media.logo.alt)}"><p>Informations générales : aucun contenu ne remplace un examen clinique.</p></div><div><h2>Soins principaux</h2><nav aria-label="Soins principaux"><a href="/implantologie/">Implant dentaire à Sète</a><a href="/orthodontie-invisible-sete/">Orthodontie invisible à Sète</a></nav></div><div><h2>Contact</h2><address>${escapeHtml(site.address.streetAddress)}<br>${site.address.postalCode} ${site.address.addressLocality}<a href="tel:${site.telephone}">${site.telephoneDisplay}</a></address></div></div></footer>`
+  return `<footer class="authority-footer"><div class="container-max authority-footer__grid"><div class="authority-footer__brand"><img src="${media.logo.fallback}" alt="${escapeHtml(media.logo.alt)}"><p>Informations générales : aucun contenu ne remplace un examen clinique.</p></div><div><h2>Soins principaux</h2><nav aria-label="Soins principaux"><a href="/implantologie/">Implant dentaire à Sète</a><a href="/orthodontie-invisible-sete/">Orthodontie invisible à Sète</a></nav></div><div><h2>Contact</h2><address>${escapeHtml(site.address.streetAddress)}<br>${site.address.postalCode} ${site.address.addressLocality}<a href="tel:${site.telephone}">${site.telephoneDisplay}</a><a href="mailto:${site.email}">${escapeHtml(site.email)}</a></address></div></div></footer>`
 }
 
 function breadcrumbsHtml(route) {
@@ -187,7 +187,12 @@ function localizedPage(route) {
   const asset = routeAsset(route)
   const hero = `<header class="localized-hero"><div class="container-max localized-hero__grid"><div><span class="section-kicker section-kicker--light">${escapeHtml(route.eyebrow)}</span><h1>${escapeHtml(route.h1)}</h1><p>${escapeHtml(route.intro)}</p><a class="btn-accent" href="${nav.paths.contact}">${escapeHtml(nav.labels.cta)}</a></div><div class="localized-hero__visual">${responsiveImage(asset, true)}</div></div></header>`
   const notice = `<aside class="language-disclosure"><div class="container-max"><strong>${escapeHtml(route.label)}</strong><p>${escapeHtml(route.notice)}</p></div></aside>`
-  const sections = `<section class="authority-section localized-content"><div class="container-max"><div class="localized-content__grid">${route.sections.map((section, index) => `<article><span>${String(index + 1).padStart(2, '0')}</span><h2>${escapeHtml(section.title)}</h2><p>${escapeHtml(section.text)}</p>${section.linkType ? `<a href="${nav.paths[section.linkType]}">${escapeHtml(nav.labels.learn)} →</a>` : ''}</article>`).join('')}</div></div></section>`
+  const sections = `<section class="authority-section localized-content"><div class="container-max"><div class="localized-content__grid">${route.sections.map((section, index) => {
+    const textHtml = section.email
+      ? `${section.phone ? `<a href="tel:${escapeHtml(section.phone)}">+33 4 22 91 05 94</a> · ` : ''}<a href="mailto:${escapeHtml(section.email)}">${escapeHtml(section.email)}</a>`
+      : escapeHtml(section.text)
+    return `<article><span>${String(index + 1).padStart(2, '0')}</span><h2>${escapeHtml(section.title)}</h2><p>${textHtml}</p>${section.linkType ? `<a href="${nav.paths[section.linkType]}">${escapeHtml(nav.labels.learn)} →</a>` : ''}</article>`
+  }).join('')}</div></div></section>`
   return shell(route, `${hero}${notice}${sections}`)
 }
 

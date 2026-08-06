@@ -4,7 +4,7 @@ export const site = {
   dentistName: 'Dr Abdessamed Abdessadok',
   telephone: '+33422910594',
   telephoneDisplay: '04 22 91 05 94',
-  email: 'drabdessadoksete@gmail.com',
+  email: 'cabinetdentairesete@outlook.fr',
   mapLink: 'https://maps.app.goo.gl/UALfaQYvaAV5otoq9',
   mapEmbedUrl: 'https://maps.google.com/maps?q=RDC%2C%2010%20Bd%20Dani%C3%A8le%20Casanova%2C%2034200%20S%C3%A8te&t=&z=16&ie=UTF8&iwloc=&output=embed',
   address: {
