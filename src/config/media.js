@@ -132,6 +132,18 @@ export const mediaByRoute = {
   '/orthodontie-adulte-balaruc-les-bains/': media.orthoAdultScan,
   '/invisalign-bassin-de-thau/': media.orthoMirrorResult,
 
+  '/prix-implant-dentaire-sete/': media.implantAssessment,
+  '/remboursement-implant-dentaire/': media.implantCloseModel,
+  '/implant-ou-bridge/': media.implantMissingTooth,
+  '/greffe-osseuse-implant/': media.implantImaging,
+  '/plusieurs-dents-manquantes/': media.implantModel,
+  '/peur-du-dentiste-implant/': media.implantConsultation,
+  '/implant-dentaire-balaruc-les-bains/': media.implantImageReview,
+  '/implant-dentaire-frontignan/': media.implantScreenPlanning,
+  '/implant-dentaire-meze/': media.implantScreenExplanation,
+  '/remboursement-orthodontie-adulte/': media.orthoAdultScan,
+  '/contention-apres-aligneurs/': media.orthoRetention,
+
   '/blog/orthodontie-sete-quand-consulter-alignement-dentaire/': media.orthoFirstExchange,
   '/blog/orthodontie-adulte-sete-questions-avant-traitement/': media.orthoAdultScan,
   '/blog/dents-chevauchees-espaces-visibles-correction-sete/': media.orthoPlanning,

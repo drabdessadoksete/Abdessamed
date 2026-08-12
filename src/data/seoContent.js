@@ -1,6 +1,7 @@
 import { generatedOrthodontieArticles } from './generatedOrthodontieArticles.js'
 import { generatedOrthodontiePillars } from './generatedOrthodontiePillars.js'
 import { implantologyArticles } from './implantologyArticles.js'
+import { decisionPages } from './decisionPages.js'
 
 const baseServicePages = [
   {
@@ -1014,6 +1015,18 @@ const normalizeContentUrl = (url = '/') => url === '/' ? '/' : `${url.replace(/\
 const canonicalContentUrl = (url) => contentRedirectTargets[normalizeContentUrl(url)] || normalizeContentUrl(url)
 const uniqueUrls = (urls = []) => [...new Set(urls.map(canonicalContentUrl))]
 
+// Route every CTA to the pre-appointment funnel pre-tagged with its treatment, so a
+// submission can be attributed to the cluster that produced it. Explicit ctaHref wins.
+const implantUrlPattern = /implant|greffe-osseuse|dents-manquantes|bridge|peur-du-dentiste/
+const preAppointmentHref = (page) => {
+  if (page.ctaHref) return page.ctaHref
+  const url = normalizeContentUrl(page.url)
+  const cluster = page.cluster === 'implantologie' || (!page.cluster && implantUrlPattern.test(url))
+    ? 'implantologie'
+    : 'orthodontie'
+  return `/pre-rendez-vous/?specialite=${cluster}`
+}
+
 const servicePageOverrides = {
   '/orthodontie-sete/': {
     title: 'Orthodontie à Sète | Alignement dentaire',
@@ -1068,7 +1081,8 @@ const servicePageOverrides = {
     ctaTitle: 'Demander un bilan d’alignement à Sète',
     ctaText: 'Un premier examen permet de distinguer votre gêne, les mouvements possibles et les options qui méritent réellement d’être discutées.',
     ctaLabel: 'Demander un pré-rendez-vous',
-    internalLinks: ['/orthodontie-invisible-sete/', '/prix-orthodontie-invisible-sete/', '/implantologie/', '/about/'],
+    ctaHref: '/pre-rendez-vous/?specialite=orthodontie',
+    internalLinks: ['/orthodontie-invisible-sete/', '/prix-orthodontie-invisible-sete/', '/contention-apres-aligneurs/', '/remboursement-orthodontie-adulte/', '/implantologie/'],
   },
   '/orthodontie-invisible-sete/': {
     title: 'Orthodontie invisible à Sète | Dr Abdessadok',
@@ -1131,8 +1145,9 @@ const servicePageOverrides = {
     ],
     ctaTitle: 'Savoir si les aligneurs sont adaptés à votre situation',
     ctaText: 'Le bilan permet d’examiner votre sourire, de comparer les options et d’expliquer le protocole avant toute décision.',
-    ctaLabel: 'Demander un bilan à Sète',
-    internalLinks: ['/orthodontie-sete/', '/prix-orthodontie-invisible-sete/', '/invisalign-bassin-de-thau/', '/implantologie/', '/about/'],
+    ctaLabel: 'Demander un pré-rendez-vous',
+    ctaHref: '/pre-rendez-vous/?specialite=orthodontie',
+    internalLinks: ['/orthodontie-sete/', '/prix-orthodontie-invisible-sete/', '/contention-apres-aligneurs/', '/remboursement-orthodontie-adulte/', '/invisalign-bassin-de-thau/', '/implantologie/'],
   },
   '/prix-orthodontie-invisible-sete/': {
     menuLabel: 'Prix des aligneurs à Sète',
@@ -1177,8 +1192,8 @@ const servicePageOverrides = {
     ],
     ctaTitle: 'Obtenir un devis adapté à votre situation',
     ctaText: 'Le bilan permet de définir les mouvements, le protocole et les étapes nécessaires avant d’établir un devis compréhensible.',
-    ctaLabel: 'Demander un bilan',
-    internalLinks: ['/orthodontie-invisible-sete/', '/orthodontie-sete/', '/contact/'],
+    ctaLabel: 'Demander un pré-rendez-vous',
+    internalLinks: ['/orthodontie-invisible-sete/', '/remboursement-orthodontie-adulte/', '/contention-apres-aligneurs/', '/orthodontie-sete/', '/contact/'],
   },
   '/implantologie/': {
     menuLabel: 'Implant dentaire à Sète',
@@ -1187,9 +1202,9 @@ const servicePageOverrides = {
     h1: 'Implant dentaire à Sète : bilan, pose et suivi',
     intro: 'Un implant peut remplacer la racine d’une dent absente et soutenir une couronne ou une prothèse. Sa faisabilité dépend de l’état de santé, des tissus, de l’os disponible et du projet de restauration.',
     highlights: [
-      'Bilan clinique et imagerie lorsqu’elle est indiquée',
-      'Implant, bridge, prothèse amovible ou abstention comparés selon le cas',
-      'Chirurgie, cicatrisation, restauration et maintenance expliquées par étapes',
+      'L’indication est vérifiée par un examen : un implant n’est pas la réponse automatique à une dent absente',
+      'Le bridge, la prothèse amovible et l’abstention sont comparés avec vous avant toute décision',
+      'Le parcours s’étale sur plusieurs mois et aucune durée de vie ne peut être garantie',
     ],
     articleBody: null,
     sections: [
@@ -1204,22 +1219,84 @@ const servicePageOverrides = {
         }],
       },
       {
-        heading: 'Le bilan avant la pose',
-        blocks: [{
-          subheading: 'Planifier à partir de la future dent',
-          paragraphs: [
-            'Le praticien examine l’espace à restaurer et les dents voisines. Une radiographie ou une imagerie en trois dimensions peut être demandée lorsqu’elle répond à une question clinique.',
-            'Le bilan sert aussi à comparer les alternatives, identifier les soins préalables et expliquer les risques propres à votre situation avant le consentement et le devis.',
-          ],
-        }],
+        heading: 'Les alternatives : bridge, prothèse amovible ou abstention',
+        blocks: [
+          {
+            subheading: 'Comparer avant de choisir',
+            paragraphs: [
+              'Une dent absente peut être remplacée de plusieurs façons, et l’implant n’est pas systématiquement la solution la plus adaptée. Le bilan sert précisément à poser les options côte à côte, avec leurs contraintes respectives.',
+            ],
+            bullets: [
+              'Le bridge s’appuie sur les dents voisines et suppose de les préparer, ce qui se discute selon leur état.',
+              'La prothèse amovible reste une solution moins invasive, parfois indiquée lorsque plusieurs dents manquent ou que la chirurgie n’est pas envisageable.',
+              'L’abstention peut être raisonnable dans certaines situations, notamment pour une dent de sagesse ou lorsque l’équilibre de la mastication n’est pas compromis.',
+              'L’implant évite de toucher aux dents adjacentes mais demande une chirurgie, une cicatrisation et une maintenance à long terme.',
+            ],
+          },
+          {
+            subheading: 'Une décision qui vous appartient',
+            paragraphs: [
+              'Le praticien expose les bénéfices attendus, les limites et les risques de chaque option pour votre cas. Le devis et le consentement interviennent une fois ces éléments compris, sans engagement au premier rendez-vous.',
+            ],
+          },
+        ],
       },
       {
-        heading: 'Pose, cicatrisation et restauration',
+        heading: 'Le parcours au cabinet',
+        blocks: [
+          {
+            subheading: 'Bilan, imagerie et planification',
+            paragraphs: [
+              'Le praticien examine l’espace à restaurer, les dents voisines, les gencives et l’occlusion. Une radiographie ou une imagerie en trois dimensions peut être demandée lorsqu’elle répond à une question clinique précise, notamment sur le volume osseux disponible.',
+              'La planification part de la future dent : sa position guide celle de l’implant. Des soins préalables, comme le traitement d’une gencive inflammatoire, peuvent être nécessaires avant d’envisager la chirurgie.',
+            ],
+          },
+          {
+            subheading: 'Pose et cicatrisation',
+            paragraphs: [
+              'La chirurgie est le plus souvent réalisée sous anesthésie locale. Le protocole, les suites et le nombre de rendez-vous varient selon les tissus et le projet prothétique.',
+              'Une période de cicatrisation est généralement nécessaire avant la restauration définitive. Les contrôles permettent de vérifier l’évolution et de décider du moment adapté pour poursuivre.',
+            ],
+          },
+          {
+            subheading: 'Restauration et contrôles',
+            paragraphs: [
+              'La couronne ou la prothèse est réalisée une fois la cicatrisation jugée suffisante. Des ajustements de l’occlusion peuvent être nécessaires, puis un rythme de contrôle est défini avec vous.',
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'Ce qui peut contre-indiquer ou compliquer',
+        blocks: [
+          {
+            subheading: 'Des facteurs à évaluer au cas par cas',
+            paragraphs: [
+              'Certains éléments ne ferment pas définitivement la porte à un implant, mais modifient le pronostic, le protocole ou le calendrier. Ils sont examinés avant toute proposition.',
+            ],
+            bullets: [
+              'Le tabagisme, qui influence la cicatrisation des tissus et le suivi à long terme.',
+              'Un diabète déséquilibré, à distinguer d’un diabète suivi et stabilisé.',
+              'Une parodontite active ou une hygiène insuffisante, qui demandent d’être traitées en amont.',
+              'Un volume osseux jugé insuffisant, qui peut conduire à discuter une greffe osseuse ou une autre solution.',
+              'Certains traitements médicaux, notamment ceux agissant sur le tissu osseux, qui nécessitent un échange avec votre médecin.',
+            ],
+          },
+          {
+            subheading: 'Pourquoi ces questions sont posées',
+            paragraphs: [
+              'Le questionnaire médical et l’examen ne servent pas à écarter des patients, mais à choisir un protocole réaliste et à vous exposer honnêtement les incertitudes propres à votre situation.',
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'Traçabilité du matériel posé',
         blocks: [{
-          subheading: 'Un parcours qui peut nécessiter plusieurs étapes',
+          subheading: 'Savoir ce qui a été posé, et pouvoir le retrouver',
           paragraphs: [
-            'La chirurgie est le plus souvent réalisée sous anesthésie locale. Le protocole, les suites et le nombre de rendez-vous varient selon les tissus et le projet prothétique.',
-            'Une période de cicatrisation est généralement nécessaire avant la restauration définitive. Les contrôles permettent de vérifier l’évolution et de décider du moment adapté pour poursuivre.',
+            'Chaque dispositif implantaire posé est enregistré dans votre dossier et une carte d’implant vous est remise. Elle mentionne la référence du matériel utilisé, information utile si un praticien doit intervenir plus tard, y compris ailleurs.',
+            'Le cabinet travaille notamment avec des implants BioTech Dental, de fabrication française. Le choix du matériel reste un élément technique du plan de traitement : il ne remplace ni le diagnostic, ni la planification, ni le suivi.',
           ],
         }],
       },
@@ -1235,15 +1312,31 @@ const servicePageOverrides = {
       },
     ],
     faq: [
-      { question: 'La pose d’un implant est-elle douloureuse ?', answer: 'L’anesthésie locale vise à éviter la douleur pendant l’intervention. Les sensations et les suites varient selon le geste et la personne.' },
-      { question: 'Un implant est-il toujours possible ?', answer: 'Non. La faisabilité dépend notamment de la santé, des tissus, de l’anatomie et du projet de restauration.' },
-      { question: 'Combien de temps faut-il prévoir ?', answer: 'Le nombre d’étapes et la cicatrisation varient. Une estimation ne peut être donnée qu’après le bilan.' },
-      { question: 'Quelles alternatives existent ?', answer: 'Selon le cas, un bridge, une prothèse amovible ou l’absence de remplacement immédiat peuvent aussi être discutés.' },
+      { question: 'La pose d’un implant est-elle douloureuse ?', answer: 'L’anesthésie locale vise à éviter la douleur pendant l’intervention. Les sensations et les suites varient selon le geste et la personne, et les consignes post-opératoires vous sont expliquées à l’avance.' },
+      { question: 'Un implant est-il toujours possible ?', answer: 'Non. La faisabilité dépend notamment de la santé générale, des tissus, de l’anatomie, du volume osseux et du projet de restauration. C’est l’objet du bilan.' },
+      { question: 'Combien de temps faut-il prévoir ?', answer: 'Le nombre d’étapes et la durée de cicatrisation varient selon les situations, et le parcours s’étale généralement sur plusieurs mois. Une estimation ne peut être donnée qu’après le bilan.' },
+      { question: 'Quelles alternatives existent ?', answer: 'Selon le cas, un bridge, une prothèse amovible ou l’absence de remplacement immédiat peuvent aussi être discutés. Chaque option a ses contraintes, exposées lors du bilan.' },
+      { question: 'Que se passe-t-il si je n’ai pas assez d’os ?', answer: 'Un volume osseux insuffisant ne signifie pas nécessairement qu’aucun implant n’est envisageable. Une greffe osseuse, une modification du plan ou une autre solution de remplacement peuvent être discutées après imagerie.' },
+      { question: 'Un implant est-il remboursé ?', answer: 'L’implant lui-même n’est pas pris en charge par l’Assurance Maladie. La couronne posée sur l’implant peut faire l’objet d’une prise en charge partielle, et les garanties des complémentaires varient selon les contrats.' },
     ],
     ctaTitle: 'Faire le point sur une dent manquante à Sète',
     ctaText: 'Le bilan permet de comparer les solutions, d’évaluer la faisabilité et de comprendre les étapes avant toute décision.',
-    ctaLabel: 'Demander un bilan implantaire',
-    internalLinks: ['/orthodontie-invisible-sete/', '/orthodontie-sete/', '/about/', '/contact/'],
+    ctaLabel: 'Demander un pré-rendez-vous',
+    ctaHref: '/pre-rendez-vous/?specialite=implantologie',
+    internalLinks: [
+      '/prix-implant-dentaire-sete/',
+      '/remboursement-implant-dentaire/',
+      '/implant-ou-bridge/',
+      '/greffe-osseuse-implant/',
+      '/plusieurs-dents-manquantes/',
+      '/peur-du-dentiste-implant/',
+      '/blog/remplacer-dent-manquante-solutions/',
+      '/blog/bilan-imagerie-avant-implant/',
+      '/blog/etapes-pose-implant-dentaire/',
+      '/blog/implant-dentaire-douleur-anesthesie-cicatrisation/',
+      '/blog/entretien-duree-vie-implant-dentaire/',
+      '/blog/aligner-dents-avant-implant/',
+    ],
   },
   '/invisalign-bassin-de-thau/': {
     menuLabel: 'Bassin de Thau',
@@ -1299,6 +1392,7 @@ const rawServicePages = [
   ...baseServicePages.filter((page) => leadPillarUrls.has(page.url)),
   ...generatedOrthodontiePillars,
   ...baseServicePages.filter((page) => !leadPillarUrls.has(page.url) && !replacedPillarUrls.has(page.url)),
+  ...decisionPages,
 ]
 
 export const servicePages = rawServicePages
@@ -1308,6 +1402,7 @@ export const servicePages = rawServicePages
     const merged = { ...page, ...(servicePageOverrides[normalizedUrl] || {}), url: normalizedUrl }
     return {
       ...merged,
+      ctaHref: preAppointmentHref(merged),
       internalLinks: uniqueUrls(merged.internalLinks).filter((url) => url !== normalizedUrl),
     }
   })
@@ -1505,47 +1600,102 @@ const rawBlogPages = [
     badge: 'Article blog',
     title: 'Faut-il aligner ses dents avant de poser un implant ?',
     metaDescription:
-      "Aligner ses dents avant un implant : un article de liaison entre orthodontie invisible et implantologie pour comprendre la logique d'une rehabilitation du sourire.",
+      'Aligner ses dents avant un implant : pourquoi l’ordre des étapes se discute, dans quels cas l’alignement précède la pose et ce que cela change pour le calendrier.',
     h1: 'Faut-il aligner ses dents avant de poser un implant ?',
     intro:
-      "Cette question apparait souvent chez les patients qui ont a la fois une preoccupation esthetique et une dent manquante. L'objectif de cet article n'est pas de tout melanger, mais d'expliquer dans quels cas l'alignement dentaire peut preceder un implant afin de construire une rehabilitation du sourire plus coherent.",
+      'Lorsqu’une dent manque et que les autres se sont déplacées, la question de l’ordre des étapes se pose réellement. Aligner d’abord n’est ni une règle, ni une option superflue : c’est un choix qui dépend de l’espace disponible et de la position des dents voisines.',
     highlights: [
-      "Article passerelle entre les deux expertises du cabinet",
-      'Explication chronologique simple et non anxiogène',
-      'Liens utiles vers les guides Invisalign et implantologie',
+      'L’espace laissé par une dent absente se referme parfois avec le temps',
+      'Aligner avant de poser allonge le parcours mais peut conditionner la faisabilité',
+      'Les deux traitements ne sont pas systématiquement nécessaires : le bilan tranche',
     ],
     sections: [
       {
-        heading: 'Pourquoi la chronologie du traitement compte',
+        heading: 'Pourquoi l’ordre des étapes se pose',
         blocks: [
           {
-            subheading: 'Chaque etape doit servir le resultat final',
+            subheading: 'Un implant occupe un espace précis',
             paragraphs: [
-              "Lorsqu'une dent est manquante et que les autres dents sont desalignees, il peut etre utile d'etudier d'abord la position ideale des dents restantes. Dans certains cas, un alignement discret permet de preparer un espace plus coherent avant un remplacement implantaire.",
-              "Cette logique est tres differente d'un simple collage de solutions. Elle repose sur un raisonnement clinique : d'abord organiser, puis restaurer lorsque cela sert le projet global du sourire.",
+              'Un implant se place dans une position déterminée à l’avance, celle qui permettra à la future couronne de s’intégrer correctement dans l’arcade et de supporter la mastication. Cette position dépend directement de l’espace laissé par les dents voisines.',
+              'Si cet espace est insuffisant, mal orienté ou refermé, poser l’implant sans le corriger conduirait à une restauration mal positionnée. L’ordre des étapes n’est donc pas une question de préférence esthétique, mais de faisabilité.',
+            ],
+          },
+          {
+            subheading: 'Ce qui se passe après une extraction',
+            paragraphs: [
+              'Une dent absente laisse un espace que les dents voisines peuvent progressivement combler en basculant, et que la dent antagoniste peut chercher à occuper en s’égressant.',
+              'Ces déplacements sont lents et souvent inaperçus. Plus l’absence est ancienne, plus la question de rouvrir ou de réorganiser l’espace est susceptible de se poser avant d’envisager un remplacement.',
             ],
           },
         ],
       },
       {
-        heading: "Quand l'orthodontie invisible peut-elle etre utile avant l implant ?",
+        heading: 'Les situations où l’alignement précède la pose',
         blocks: [
           {
-            subheading: 'Retrouver une architecture plus favorable',
+            subheading: 'Quand l’espace doit être retrouvé',
             paragraphs: [
-              "Selon les cas, les aligneurs transparents peuvent aider a repositionner certaines dents, a harmoniser l'alignement et a preparer une rehabilitation plus propre sur le plan esthetique et fonctionnel. Cela ne signifie pas que tous les patients ont besoin des deux traitements, mais que cette sequence peut parfois etre la plus logique.",
+              'Lorsque les dents voisines ont basculé dans l’espace vide, un traitement d’alignement peut permettre de les redresser et de restituer la largeur nécessaire à la future dent. Sans cette étape, l’implant ne pourrait pas être positionné correctement.',
+            ],
+          },
+          {
+            subheading: 'Quand un traitement d’alignement est déjà envisagé',
+            paragraphs: [
+              'Si vous consultez pour un désalignement et qu’une dent manque également, il est souvent cohérent de traiter l’alignement d’abord : les mouvements dentaires prévus modifieraient de toute façon la position de l’espace à restaurer.',
+              'Dans certains protocoles, l’implant déjà posé peut d’ailleurs servir d’ancrage stable pour des mouvements orthodontiques. C’est une raison supplémentaire de définir la chronologie avant de commencer, et non en cours de route.',
+            ],
+          },
+          {
+            subheading: 'Quand l’alignement n’apporte rien',
+            paragraphs: [
+              'Si l’espace est conservé, les dents voisines bien positionnées et l’occlusion satisfaisante, aligner avant de poser n’a pas d’intérêt. Ajouter une étape à un parcours déjà long sans bénéfice attendu ne se justifie pas.',
             ],
           },
         ],
       },
       {
-        heading: 'Une coordination qui doit rester lisible pour le patient',
+        heading: 'Ce que cela change concrètement',
         blocks: [
           {
-            subheading: 'Mieux comprendre pour mieux decider',
+            subheading: 'Le calendrier',
             paragraphs: [
-              "Quand un patient entend a la fois parler de gouttieres, d'alignement, d'implant et de dent manquante, il peut vite avoir l'impression que tout devient flou. Le role du cabinet est justement d'apporter de la lisibilite : expliquer ce qui est prioritaire, ce qui peut attendre, et pourquoi une etape precede parfois l'autre.",
-              "Cet article sert donc de pont semantique et clinique entre deux expertises du cabinet, sans les confondre. Il aide les patients a comprendre qu'une rehabilitation globale du sourire se pense dans le bon ordre.",
+              'Un traitement d’alignement suivi d’un parcours implantaire s’étale nécessairement plus longtemps que l’un des deux pris isolément. Cette durée est annoncée dès la planification pour que vous puissiez en tenir compte.',
+              'Un dispositif provisoire peut accompagner cette période afin de préserver la fonction et l’apparence pendant les phases intermédiaires.',
+            ],
+          },
+          {
+            subheading: 'La contention',
+            paragraphs: [
+              'Après un alignement, une contention est nécessaire pour éviter que les dents ne reviennent vers leur position antérieure — ce qui refermerait l’espace préparé pour l’implant. Cette phase fait donc partie intégrante du plan, et non d’une option laissée à l’appréciation.',
+            ],
+          },
+          {
+            subheading: 'Le devis',
+            paragraphs: [
+              'Deux traitements distincts donnent lieu à des devis distincts, avec des règles de prise en charge différentes. Les demander séparément permet de comprendre ce que recouvre chaque phase avant de vous engager sur l’ensemble.',
+            ],
+          },
+        ],
+      },
+      {
+        heading: 'Comment la décision se prend',
+        blocks: [
+          {
+            subheading: 'Ce que le bilan examine',
+            bullets: [
+              'La largeur réelle de l’espace disponible, mesurée et non estimée à l’œil.',
+              'L’inclinaison des dents voisines et l’égression éventuelle de la dent antagoniste.',
+              'L’ancienneté de l’absence et l’état de l’os dans la zone.',
+              'L’occlusion d’ensemble et les mouvements qui seraient nécessaires.',
+              'La santé des gencives, qui conditionne les deux traitements.',
+              'Vos priorités et le temps que vous pouvez consacrer au parcours.',
+            ],
+          },
+          {
+            subheading: 'Une séquence expliquée avant de commencer',
+            paragraphs: [
+              'Entendre parler d’aligneurs, de contention, de chirurgie et de couronne au cours du même rendez-vous peut donner une impression de complexité. Le rôle du bilan est de rendre cette séquence lisible : ce qui est prioritaire, ce qui peut attendre, et pourquoi une étape en précède une autre.',
+              'Vous repartez avec cette chronologie et les devis correspondants. Rien ne vous est demandé sur place.',
             ],
           },
         ],
@@ -1555,29 +1705,39 @@ const rawBlogPages = [
       {
         question: 'Doit-on toujours aligner les dents avant un implant ?',
         answer:
-          "Non. Cela depend du cas clinique. Dans certaines situations, cette sequence peut etre utile ; dans d'autres, elle n'est pas necessaire.",
+          'Non. Cette séquence se justifie lorsque l’espace disponible est insuffisant ou que les dents voisines ont basculé. Si l’espace est conservé et l’occlusion satisfaisante, elle n’apporte rien.',
       },
       {
-        question: 'Pourquoi ne pas poser directement l implant ?',
+        question: 'Pourquoi ne pas poser l’implant directement ?',
         answer:
-          "Parce que dans certains cas, il est plus logique d'optimiser d'abord la position des dents et la coherence du sourire avant la restauration finale.",
+          'Parce qu’un implant occupe une position définitive. S’il est posé dans un espace insuffisant ou mal orienté, la couronne ne pourra pas s’intégrer correctement, et corriger ensuite est nettement plus difficile.',
       },
       {
-        question: 'Cet article concerne-t-il surtout les cas complexes ?',
+        question: 'Combien de temps faut-il prévoir pour les deux traitements ?',
         answer:
-          "Oui, il s'adresse surtout aux patients qui ont a la fois une preoccupation d'alignement et un besoin de remplacement de dent manquante.",
+          'La durée cumulée dépend des mouvements nécessaires puis des délais de cicatrisation implantaire. Elle est estimée lors de la planification, une fois la séquence définie.',
+      },
+      {
+        question: 'Peut-on porter des aligneurs si un implant est déjà posé ?',
+        answer:
+          'Un implant ne se déplace pas comme une dent naturelle. Cela ne rend pas l’orthodontie impossible, mais impose d’en tenir compte dans la planification des mouvements. Signalez tout implant déjà présent dès le bilan.',
+      },
+      {
+        question: 'Faut-il deux devis distincts ?',
+        answer:
+          'Oui. Il s’agit de deux traitements différents, avec des règles de prise en charge propres. Des devis séparés permettent de comprendre ce que recouvre chaque phase.',
       },
     ],
-    ctaTitle: 'Faire le point sur une rehabilitation plus globale',
+    ctaTitle: 'Faire le point sur l’ordre des étapes',
     ctaText:
-      "Si vous avez une dent manquante et un sourire que vous aimeriez aussi harmoniser, un bilan permet de clarifier le bon ordre des etapes et les options qui ont du sens pour vous.",
-    ctaLabel: 'Demander une evaluation globale',
-    internalLinks: ['/invisalign/', '/implantologie/', '/orthodontie-adulte-balaruc-les-bains/'],
+      'Si une dent vous manque et que l’alignement vous préoccupe également, un bilan permet de mesurer l’espace disponible et de définir la chronologie qui a du sens pour vous.',
+    ctaLabel: 'Demander un pré-rendez-vous',
+    internalLinks: ['/implantologie/', '/orthodontie-invisible-sete/', '/implant-ou-bridge/', '/contention-apres-aligneurs/', '/plusieurs-dents-manquantes/'],
     keywords: [
       'aligner dents avant implant',
       'implant et orthodontie invisible',
-      'dent manquante et invisalign',
-      'rehabilitation du sourire',
+      'dent manquante et alignement',
+      'ordre des etapes implant orthodontie',
     ],
   },
 ]
@@ -1597,6 +1757,7 @@ export const blogPages = [...rawBlogPages, ...implantologyArticles]
       medicalReviewer,
       indexable: medicalReviewStatus === 'reviewed' && Boolean(medicalReviewer),
       url: normalizedUrl,
+      ctaHref: preAppointmentHref(page),
       internalLinks: uniqueUrls(page.internalLinks).filter((url) => url !== normalizedUrl),
     }
   })

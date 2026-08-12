@@ -71,6 +71,33 @@ function schemasFor(route) {
   const webPage = { '@type': 'WebPage', '@id': `${url}#webpage`, url, name: route.title, description: route.description, primaryImageOfPage: { '@id': primaryImage['@id'] }, inLanguage: language }
   const breadcrumb = breadcrumbSchema(route)
 
+  // Patient-facing clinical pages are MedicalWebPage rather than plain WebPage.
+  // lastReviewed/reviewedBy assert a named practitioner checked the content, so they are
+  // emitted only where the content data records a completed review.
+  const reviewed = route.page?.medicalReviewStatus === 'reviewed' && Boolean(route.page?.medicalReviewer)
+  const medicalWebPage = {
+    ...webPage,
+    '@type': 'MedicalWebPage',
+    about: { '@id': dentistSchema['@id'] },
+    audience: { '@type': 'MedicalAudience', audienceType: 'Patient' },
+    ...(route.type === 'article' ? { specialty: 'https://schema.org/Dentistry' } : {}),
+    ...(reviewed ? { lastReviewed: route.page.dateModified, reviewedBy: { '@id': dentistPersonSchema['@id'] } } : {}),
+  }
+
+  // FAQPage must mirror the FAQ rendered on the page, so it is built from the same source.
+  const faq = route.page?.faq?.length
+    ? {
+      '@type': 'FAQPage',
+      '@id': `${url}#faq`,
+      isPartOf: { '@id': webPage['@id'] },
+      mainEntity: route.page.faq.map((item) => ({
+        '@type': 'Question',
+        name: item.question,
+        acceptedAnswer: { '@type': 'Answer', text: item.answer },
+      })),
+    }
+    : null
+
   if (route.type === 'home') return [
     dentistSchema,
     dentistPersonSchema,
@@ -84,9 +111,10 @@ function schemasFor(route) {
 
   if (route.type === 'treatment') return [
     { '@type': 'Service', '@id': `${url}#service`, name: route.h1, description: route.description, url, provider: { '@id': dentistSchema['@id'] }, areaServed: 'Sète, France' },
-    webPage,
+    medicalWebPage,
     primaryImage,
     breadcrumb,
+    faq,
   ].filter(Boolean)
 
   if (route.type === 'article') return [
@@ -104,9 +132,10 @@ function schemasFor(route) {
     },
     organizationSchema,
     dentistPersonSchema,
-    webPage,
+    medicalWebPage,
     primaryImage,
     breadcrumb,
+    faq,
   ].filter(Boolean)
 
   if (route.type === 'contact') return [
@@ -171,7 +200,7 @@ function corePage(route) {
       ],
     },
     about: { eyebrow: 'Le praticien et le cabinet', intro: 'Parcours universitaire, qualifications déclarées et approche clinique du Dr Abdessamed Abdessadok.', sections: site.qualifications.map((item) => ['Qualification', item]) },
-    services: { eyebrow: 'Les soins du cabinet', intro: 'Chaque parcours commence par un bilan clinique et une discussion des alternatives.', sections: [['Implant dentaire', 'Évaluation d’une dent manquante et des solutions de remplacement.', '/implantologie/'], ['Orthodontie invisible', 'Étude de l’alignement, de l’occlusion et des aligneurs.', '/orthodontie-invisible-sete/'], ['Soins dentaires', 'Prévention, soins conservateurs, prothèses et urgences.']] },
+    services: { eyebrow: 'Les soins du cabinet', intro: 'Chaque parcours commence par un bilan clinique et une discussion des alternatives.', sections: [['Implant dentaire', 'Évaluation d’une dent manquante et des solutions de remplacement.', '/implantologie/'], ['Orthodontie invisible', 'Étude de l’alignement, de l’occlusion et des aligneurs.', '/orthodontie-invisible-sete/'], ['Soins dentaires', 'Prévention, soins conservateurs, prothèses et urgences : contactez le cabinet pour décrire votre besoin.', '/contact/']] },
     gallery: { eyebrow: 'Parcours en images', intro: 'Des scènes pédagogiques autour des consultations, de l’implantologie et des aligneurs pour mieux comprendre chaque parcours.', sections: [['Consultation', 'Écouter et expliquer avant de proposer une option.'], ['Implantologie', 'Visualiser les solutions de remplacement et les étapes du parcours.'], ['Orthodontie invisible', 'Comprendre le scanner, le port des aligneurs et le suivi.'], ['Technologie', 'Présenter les outils numériques sans garantie de résultat.']] },
     contact: { eyebrow: 'Nous joindre', intro: `${site.address.streetAddress}, ${site.address.postalCode} ${site.address.addressLocality}. Téléphone : ${site.telephoneDisplay}.`, sections: [['Adresse et accès', 'Rez-de-chaussée, au centre de Sète.'], ['Horaires', 'Lundi, mardi, jeudi et vendredi : 08:00–12:00 et 14:00–17:00. Mercredi : 08:00–12:00.'], ['Message non urgent', 'Ne transmettez pas de données médicales sensibles par le formulaire.']] },
     preAppointment: { eyebrow: 'Pré-rendez-vous téléphonique', intro: 'Un échange gratuit de 5 minutes pour déterminer votre besoin en implantologie ou en orthodontie invisible et vous orienter vers un rendez-vous adapté au cabinet.', sections: [['Choisissez votre besoin', 'Sélectionnez un pré-rendez-vous en implantologie ou en orthodontie invisible.'], ['Laissez vos coordonnées', 'Le cabinet utilise vos coordonnées uniquement pour répondre à la demande.']] },

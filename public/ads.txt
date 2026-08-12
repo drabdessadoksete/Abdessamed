@@ -1,1 +1,3 @@
-google.com, pub-3033810778497063, DIRECT, f08c47fec0942fa0
+# Aucun vendeur autorisé. Ce site est celui d'un cabinet de chirurgie dentaire
+# et ne diffuse aucune publicité (art. R.4127-215 du Code de la santé publique).
+# L'association AdSense précédente (pub-3033810778497063) a été retirée.

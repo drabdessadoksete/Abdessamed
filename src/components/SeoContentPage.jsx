@@ -24,6 +24,27 @@ function faqSchema(page) {
   }
 }
 
+// MedicalWebPage classifies the page; lastReviewed/reviewedBy assert that a named
+// practitioner checked it. Only emit those two when the content data actually records a
+// completed review — claiming one otherwise would be a false statement about the praticien.
+function medicalWebPageSchema(page, type) {
+  const reviewed = page.medicalReviewStatus === 'reviewed' && Boolean(page.medicalReviewer)
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'MedicalWebPage',
+    '@id': `${absoluteUrl(page.url)}#webpage`,
+    url: absoluteUrl(page.url),
+    name: page.title,
+    description: page.metaDescription,
+    inLanguage: 'fr',
+    isPartOf: { '@id': `${absoluteUrl('/')}#website` },
+    about: { '@id': dentistSchema['@id'] },
+    audience: { '@type': 'MedicalAudience', audienceType: 'Patient' },
+    ...(type === 'blog' ? { specialty: 'https://schema.org/Dentistry' } : {}),
+    ...(reviewed ? { lastReviewed: page.dateModified, reviewedBy: { '@id': dentistPersonSchema['@id'] } } : {}),
+  }
+}
+
 function breadcrumbSchema(page, type) {
   return {
     '@context': 'https://schema.org',
@@ -134,7 +155,7 @@ export default function SeoContentPage({ page, type = 'service' }) {
   const asset = primaryAsset(page)
   const isArticle = type === 'blog'
   const isCityPage = page.menuGroup === 'locals'
-  const schemas = [primarySchema(page, type, asset), breadcrumbSchema(page, type), faqSchema(page)].filter(Boolean)
+  const schemas = [primarySchema(page, type, asset), medicalWebPageSchema(page, type), breadcrumbSchema(page, type), faqSchema(page)].filter(Boolean)
 
   return (
     <>

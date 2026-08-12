@@ -76,6 +76,16 @@ async function directStatus(pathname, redirectRules) {
   return await exists(await fileForPath(pathname)) ? 200 : 404
 }
 
+// schema.org subtypes satisfy a requirement for their parent: a page typed MedicalWebPage
+// is a WebPage. Keep this in sync with the types emitted by prerender-static-pages.mjs.
+const schemaSubtypes = {
+  WebPage: ['MedicalWebPage', 'ContactPage', 'CollectionPage', 'ItemPage', 'AboutPage'],
+}
+
+function satisfiesSchema(required, types) {
+  return types.includes(required) || (schemaSubtypes[required] || []).some((subtype) => types.includes(subtype))
+}
+
 function requiredSchema(route) {
   if (route.type === 'home') return ['Dentist', 'Organization', 'WebSite', 'WebPage']
   if (route.type === 'localizedHome') return ['WebPage', 'BreadcrumbList']
@@ -133,7 +143,7 @@ for (const url of sitemapUrls) {
   if (canonicalSet.has(canonical)) fail(`${pathname}: duplicate canonical ${canonical}`)
   canonicalSet.add(canonical)
   if (htmlLanguage(html) !== (route.language || 'fr')) fail(`${pathname}: HTML lang does not match route language`)
-  for (const type of requiredSchema(route)) if (!types.includes(type)) fail(`${pathname}: required ${type} schema missing`)
+  for (const type of requiredSchema(route)) if (!satisfiesSchema(type, types)) fail(`${pathname}: required ${type} schema missing`)
 
   if (/Maillage interne|Mots-cl[eé]s travaill[eé]s|Blog d.autorit[eé]|Cluster prioritaire|Page pilier|city swap|signal s[eé]mantique/i.test(stripTags(html))) {
     fail(`${pathname}: patient-visible SEO strategy terminology remains`)
