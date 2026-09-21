@@ -5,6 +5,7 @@ import { mediaByRoute } from '../src/config/media.js'
 import { getAlternatesForPageType } from '../src/config/multilingualRoutes.js'
 import { absoluteUrl, trailingSlash } from '../src/config/site.js'
 import { blogPages } from '../src/data/seoContent.js'
+import { gscCases } from './gsc-url-cases.mjs'
 
 const distDir = path.resolve('dist')
 const failures = []
@@ -270,6 +271,20 @@ if (!/noindex/i.test(metaOf(notFoundHtml, 'robots'))) fail('404 document is not 
 if (canonicalOf(notFoundHtml)) fail('404 document must not declare a canonical')
 if (h1Of(notFoundHtml) === homepageH1) fail('404 document contains homepage H1')
 results.push({ URL: unknownPath, Status: unknownStatus, Canonical: '', Robots: metaOf(notFoundHtml, 'robots'), H1: h1Of(notFoundHtml), Sitemap: 'no', Result: 'PASS' })
+
+// Cloudflare ignores rewrites to /index.html as potential normalization loops.
+// Regression coverage for the two actual UUID addresses reported in GSC.
+for (const { url } of gscCases.filter((item) => new URL(item.url).pathname.startsWith('/actualities/'))) {
+  const pathname = new URL(url).pathname
+  const rewrite = matchRedirect(pathname, redirectRules)
+  if (rewrite?.status !== 200 || rewrite.to !== '/legacy-actuality/') {
+    fail(`${pathname}: expected an internal rewrite to the clean legacy shell URL`)
+    continue
+  }
+  const shell = await fs.readFile(await fileForPath(rewrite.to), 'utf8').catch(() => '')
+  if (!/noindex/i.test(metaOf(shell, 'robots'))) fail(`${pathname}: legacy rewrite has no working noindex shell`)
+  if (sitemapUrls.includes(url)) fail(`${pathname}: legacy URL appears in sitemap`)
+}
 
 // Check full server-rendered content and linked entities, including noindex guides.
 for (const route of seoRoutes) {

@@ -2,6 +2,7 @@ import { generatedOrthodontieArticles } from './generatedOrthodontieArticles.js'
 import { generatedOrthodontiePillars } from './generatedOrthodontiePillars.js'
 import { implantologyArticles } from './implantologyArticles.js'
 import { decisionPages } from './decisionPages.js'
+import { isArticleIndexable } from './articleIndexingApprovals.js'
 
 const baseServicePages = [
   {
@@ -1755,7 +1756,7 @@ export const blogPages = [...rawBlogPages, ...implantologyArticles]
       ...page,
       medicalReviewStatus,
       medicalReviewer,
-      indexable: medicalReviewStatus === 'reviewed' && Boolean(medicalReviewer),
+      indexable: isArticleIndexable({ url: normalizedUrl, medicalReviewStatus, medicalReviewer }),
       url: normalizedUrl,
       ctaHref: preAppointmentHref(page),
       internalLinks: uniqueUrls(page.internalLinks).filter((url) => url !== normalizedUrl),

@@ -1,6 +1,6 @@
 # Content and route decisions
 
-Last reviewed: 2026-07-13
+Last updated: 2026-09-21
 
 ## Consolidated now
 
@@ -9,11 +9,11 @@ Last reviewed: 2026-07-13
 | `/actualities/` and `/actualites/` | 301 | `/blog/` | One public guide hub. Legacy database-backed `/actualities/:id` content remains reachable through a noindex compatibility shell. |
 | `/blog/prix-orthodontie-invisible-sete/` | 301 | `/prix-orthodontie-invisible-sete/` | The price pillar is the single canonical resource. The duplicate article was removed from sitemap and client routing. |
 
-## Kept separate pending evidence
+## Current treatment consolidation
 
-`/invisalign/` remains distinct from `/orthodontie-invisible-sete/`. The first page explains the branded Invisalign protocol; the second covers clear-aligner candidacy and treatment more generally. No Search Console export was supplied, so a redirect would be evidence-free.
+The current routing consolidates `/invisalign/` into `/orthodontie-invisible-sete/`. Older orthodontics city variants for Frontignan, Mèze, Marseillan, Agde and Balaruc-les-Bains redirect to `/invisalign-bassin-de-thau/`. The full maintained mapping is in `scripts/generate-redirects.mjs`.
 
-Nearby-city pages remain indexable for now. Each page explicitly states that the clinic is in Sète and does not claim a second location. No additional city page was created. Impressions, clicks, queries, position and backlinks must be compared in Search Console before keeping, merging or redirecting them.
+Existing implant pages for Frontignan, Balaruc-les-Bains and Mèze remain indexable. Each page states that the clinic is in Sète and does not claim a second location. No additional city page was created in the September GSC fix.
 
 ## Patient-facing language
 
@@ -33,4 +33,6 @@ New implantology articles use:
 - medical review status: `pending`
 - reviewer: none until the dentist confirms review
 
-The article schema does not claim `reviewedBy` while review remains pending.
+On 21 September 2026 the owner confirmed the dentists' approval of the 15 existing articles. `src/data/articleIndexingApprovals.js` explicitly lists them for indexing, bringing the sitemap to 49 URLs. New unapproved articles retain the review gate. Clinical content and publication/modification dates are unchanged.
+
+The confirmation did not identify a reviewer or an actual review date. Those attribution fields remain unset; the article schema does not invent `reviewedBy` or `lastReviewed`. The existing `pending` review field records that incomplete attribution and no longer blocks the separately approved URLs.

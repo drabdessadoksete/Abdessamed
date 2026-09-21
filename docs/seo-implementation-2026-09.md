@@ -4,7 +4,7 @@
 
 Implemented in the local project and rebuilt `dist`. Production, business listings, Search Console, Bing, GA administration and Supabase have not been changed. No messages, review requests or outreach were sent.
 
-The acquisition focus is invisible orthodontics and implants in Sète and the Bassin de Thau. Regional/national visibility should come through the existing useful educational resources and a clear invitation to consult in Sète. The supplied clinical text, identity, address, phone, qualifications, treatment scope and existing review/indexability decisions were preserved. No new location pages or medical claims were created.
+The acquisition focus is invisible orthodontics and implants in Sète and the Bassin de Thau. Regional/national visibility should come through the existing useful educational resources and a clear invitation to consult in Sète. The supplied clinical text, identity, address, phone, qualifications and treatment scope were preserved. Following the owner's confirmation of the dentists' approval on 21 September, the 15 existing articles are now eligible for indexing. No new location pages or medical claims were created.
 
 Read [the sourced research report](seo-research-2026-09.md) for search intent, sampled competitors and platform guidance. Search impressions, rankings, bookings and conversion improvements have not been measured; these require production account data and an observation period.
 
@@ -34,13 +34,15 @@ Commands:
 
 ```sh
 npm run seo:check
-node --test src/utils/*.test.js
+npm test
 git diff --check
 ```
 
-The SEO checks cover 50 public routes, 34 sitemap URLs, the existing 15 review-pending articles and pre-appointment exclusions, plus private shells and the 404 document. They check initial titles/H1s, canonicals, languages/reciprocal alternates, required structured-data types, resolved entity references, image files, internal links, anchor targets, preservation of clinical body text, safe POST form markup, and routing configuration. Unit checks cover restored article lines, heading anchors, and referral classification including malformed/impersonating hosts.
+The SEO checks cover 50 public routes, 49 sitemap URLs including the 15 approved articles, and pre-appointment exclusions, plus private shells and the 404 document. They check initial titles/H1s, canonicals, languages/reciprocal alternates, required structured-data types, resolved entity references, image files, internal links, anchor targets, preservation of clinical body text, safe POST form markup, and routing configuration. The eight unit checks cover article approvals, restored article lines, heading anchors, and referral classification including malformed/impersonating hosts.
 
-These are build and source checks. The in-app browser returned no available backend, so visual/browser interaction verification was not available. No live patient request was submitted and the SQL migration was not executed against a database. Hosting-specific HTTP behaviour and production crawl access remain to be verified after deployment. There is no measured Lighthouse or Core Web Vitals score in this report.
+The subsequent GSC fix also passed 89 HTTP checks against Cloudflare's local Wrangler 4.135.0 runner. This reproduced the rejected legacy rewrite before the fix and verified its clean destination afterward. A read-only production baseline was captured; the new deployment and the outstanding dashboard host redirect must be checked again with `npm run seo:live`. See [GSC evidence and validation instructions](gsc-2026-09-21-evidence.md).
+
+The in-app browser returned no available backend, so visual/browser interaction verification was not available. No live patient request was submitted and the SQL migration was not executed against a database. There is no measured Lighthouse or Core Web Vitals score in this report.
 
 ## Deployment order
 
@@ -58,6 +60,6 @@ Capture a baseline before deployment and compare equal periods, accounting for s
 
 AI source attribution only observes an available referrer or explicit source label after analytics consent. It misses apps that suppress referrers, unclicked citations and other unobservable exposure. Google and Bing AI citation reports provide complementary evidence where available.
 
-The 15 clinical blog articles remain noindex under the pre-existing review gate. Actual practitioner review is the next step for making them eligible for wider informational discovery. Update the source review records only after that review occurs; do not edit generated content files directly. Existing indexable decision pages already provide a route to broader informational queries.
+The 15 clinical blog articles are now indexable through the explicit approval list in `src/data/articleIndexingApprovals.js`. The owner confirmed the dentists' agreement; a named reviewer and actual clinical review date were not supplied, so no such attribution was invented. Future articles still require their own approval or an identified completed review. Existing editorial dates and clinical text are unchanged.
 
 First geographic priority: Sète, Frontignan, Balaruc-les-Bains, Mèze and the wider Bassin de Thau. Existing guidance also serves Marseillan and Agde. Hérault, Occitanie, southern France and national educational visibility are secondary goals, with the actual Sète consultation/follow-up location kept clear.

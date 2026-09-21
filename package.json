@@ -8,6 +8,8 @@
     "media:prepare": "node scripts/prepare-media.mjs",
     "build": "node scripts/generate-orthodontie-articles.mjs && node scripts/generate-orthodontie-pillars.mjs && node scripts/validate-seo-content.mjs && node scripts/generate-sitemap.mjs && node scripts/generate-redirects.mjs && node scripts/generate-llms.mjs && vite build && node scripts/prerender-static-pages.mjs",
     "seo:check": "npm run build && node scripts/seo-check.mjs",
+    "seo:live": "node scripts/check-gsc-live.mjs --check",
+    "test": "node --test src/utils/*.test.js src/data/*.test.js",
     "preview": "vite preview",
     "server": "node server/index.js"
   },

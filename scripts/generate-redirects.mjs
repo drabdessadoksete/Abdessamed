@@ -31,7 +31,9 @@ const redirects = [
   '/actualites/ /blog/ 301',
   ...retiredRedirects,
   ...canonicalRedirects,
-  '/actualities/* /legacy-actuality/index.html 200',
+  // Use the clean directory URL: Pages normalizes /index.html before serving.
+  // Keep the original article ID in the browser for React Router.
+  '/actualities/* /legacy-actuality/ 200',
   '/actualites/* /blog/ 301',
 ]
 

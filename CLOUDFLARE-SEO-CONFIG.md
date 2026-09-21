@@ -4,9 +4,13 @@ The repository handles route prerendering, trailing-slash canonicals, slashless-
 
 The generated `_redirects` file contains canonical trailing-slash rules, the `/actualities/` and `/actualites/` hub redirects, and the duplicate price-article redirect. Existing `/actualities/:id` links are internally rewritten to a noindex React shell so database-backed articles remain accessible until they can be migrated to stable `/blog/` slugs.
 
+The rewrite destination must be `/legacy-actuality/`, not `/legacy-actuality/index.html`: Wrangler 4.135.0 rejected the latter as a potential loop and returned 404 for both GSC article IDs. The clean destination passed the local HTTP checks while preserving the original article ID in the address bar.
+
 ## 1. Redirect `www` to the apex domain
 
 In **Rules > Redirect Rules**, create a **Single Redirect**:
+
+This remains outstanding: the 21 September live check returned `200` on `www` with an apex canonical. Deploying the repository does not create a dashboard redirect. Host redirects are not supported by the Pages `_redirects` file. [Cloudflare redirect documentation](https://developers.cloudflare.com/pages/configuration/redirects/).
 
 - Rule name: `Canonical host - www to apex`
 - Match: Hostname equals `www.cabinetdentairesete.fr`
@@ -44,3 +48,11 @@ curl -I 'https://cabinetdentairesete.fr/a-random-url-that-does-not-exist/'
 ```
 
 Expected: one permanent redirect for `www`, direct `200` for `/contact/`, one `301` from `/contact` to `/contact/`, and `404` for the unknown URL.
+
+Run the complete public HTTP check after deploying and applying the host rule:
+
+```sh
+npm run seo:live -- --output=/tmp/gsc-after-deploy.json
+```
+
+It checks all 43 visible GSC examples, all public canonical routes, the sitemap, query preservation, HTTPS/host normalization and a real missing page (89 distinct requests in total). The two private legacy shells must remain noindex; approved articles must not be noindex. It exits unsuccessfully if the deployed site does not match the source. Passing these checks verifies the HTTP responses, not Google's eventual indexing decision.
