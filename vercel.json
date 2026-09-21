@@ -1,8 +1,8 @@
 {
   "rewrites": [
     {
-      "source": "/(.*)",
-      "destination": "/index.html"
+      "source": "/actualities/:path+",
+      "destination": "/legacy-actuality/index.html"
     }
   ],
   "headers": [
@@ -32,6 +32,153 @@
         }
       ]
     }
+  ],
+  "trailingSlash": true,
+  "redirects": [
+    {
+      "source": "/actualities",
+      "destination": "/blog/",
+      "permanent": true
+    },
+    {
+      "source": "/actualities/",
+      "destination": "/blog/",
+      "permanent": true
+    },
+    {
+      "source": "/actualites",
+      "destination": "/blog/",
+      "permanent": true
+    },
+    {
+      "source": "/actualites/",
+      "destination": "/blog/",
+      "permanent": true
+    },
+    {
+      "source": "/invisalign",
+      "destination": "/orthodontie-invisible-sete/",
+      "permanent": true
+    },
+    {
+      "source": "/invisalign/",
+      "destination": "/orthodontie-invisible-sete/",
+      "permanent": true
+    },
+    {
+      "source": "/orthodontie-invisible-meze",
+      "destination": "/invisalign-bassin-de-thau/",
+      "permanent": true
+    },
+    {
+      "source": "/orthodontie-invisible-meze/",
+      "destination": "/invisalign-bassin-de-thau/",
+      "permanent": true
+    },
+    {
+      "source": "/invisalign-frontignan",
+      "destination": "/invisalign-bassin-de-thau/",
+      "permanent": true
+    },
+    {
+      "source": "/invisalign-frontignan/",
+      "destination": "/invisalign-bassin-de-thau/",
+      "permanent": true
+    },
+    {
+      "source": "/invisalign-marseillan",
+      "destination": "/invisalign-bassin-de-thau/",
+      "permanent": true
+    },
+    {
+      "source": "/invisalign-marseillan/",
+      "destination": "/invisalign-bassin-de-thau/",
+      "permanent": true
+    },
+    {
+      "source": "/orthodontie-invisible-agde",
+      "destination": "/invisalign-bassin-de-thau/",
+      "permanent": true
+    },
+    {
+      "source": "/orthodontie-invisible-agde/",
+      "destination": "/invisalign-bassin-de-thau/",
+      "permanent": true
+    },
+    {
+      "source": "/orthodontie-adulte-balaruc-les-bains",
+      "destination": "/invisalign-bassin-de-thau/",
+      "permanent": true
+    },
+    {
+      "source": "/orthodontie-adulte-balaruc-les-bains/",
+      "destination": "/invisalign-bassin-de-thau/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/prix-orthodontie-invisible-sete",
+      "destination": "/prix-orthodontie-invisible-sete/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/prix-orthodontie-invisible-sete/",
+      "destination": "/prix-orthodontie-invisible-sete/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/aligner-dents-avant-pose-implant",
+      "destination": "/blog/aligner-dents-avant-implant/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/aligner-dents-avant-pose-implant/",
+      "destination": "/blog/aligner-dents-avant-implant/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/orthodontie-sete-quand-consulter-alignement-dentaire",
+      "destination": "/orthodontie-sete/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/orthodontie-sete-quand-consulter-alignement-dentaire/",
+      "destination": "/orthodontie-sete/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/orthodontie-invisible-sete-questions-avant-bilan",
+      "destination": "/orthodontie-invisible-sete/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/orthodontie-invisible-sete-questions-avant-bilan/",
+      "destination": "/orthodontie-invisible-sete/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/verite-invisalign-taquets-temps-port-gene",
+      "destination": "/blog/orthodontie-invisible-quotidien-repas-entretien-parole/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/verite-invisalign-taquets-temps-port-gene/",
+      "destination": "/blog/orthodontie-invisible-quotidien-repas-entretien-parole/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/orthodontie-bassin-de-thau-suivi-sete",
+      "destination": "/invisalign-bassin-de-thau/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/orthodontie-bassin-de-thau-suivi-sete/",
+      "destination": "/invisalign-bassin-de-thau/",
+      "permanent": true
+    },
+    {
+      "source": "/actualites/:path*",
+      "destination": "/blog/",
+      "permanent": true
+    }
   ]
 }
-

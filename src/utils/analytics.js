@@ -1,4 +1,4 @@
-import { ingestAnalytics } from '../services/analytics'
+import { analyticsSources, classifyAnalyticsSource } from './analyticsSource'
 import { clearAnalyticsCookies, getConsentChoice, getOrCreateAnalyticsVisitorId } from './consent'
 
 const GA_MEASUREMENT_ID = 'G-RPVFM7QQT6'
@@ -28,6 +28,7 @@ let lastPageKey = ''
 let lastPageTime = 0
 let memorySessionId = null
 let memoryLastActivity = 0
+let analyticsClient
 
 const hasAnalyticsConsent = () => getConsentChoice() === 'all'
 
@@ -83,19 +84,43 @@ const isPrivatePath = (value) => {
   return path === '/login' || path.startsWith('/login/') || path === '/admin' || path.startsWith('/admin/')
 }
 
+const trackingDisabled = (pathname = window.location.pathname) => (
+  isPrivatePath(pathname) || new URLSearchParams(window.location.search).get('analytics-preview') === '1'
+)
+
+const parameterValues = {
+  form: new Set(['pre_appointment', 'contact']),
+  location: new Set(['home_hero', 'home_location', 'final_cta', 'navigation', 'mobile_navigation', 'mobile_bar', 'footer', 'contact', 'contact_embed', 'booking', 'booking_success', 'booking_error', 'content_hero', 'content_aside', 'content_footer', 'content_end', 'treatment_hero']),
+  from: new Set(['fr', 'en', 'es', 'de']),
+  to: new Set(['fr', 'en', 'es', 'de']),
+  error_type: new Set(['validation', 'network', 'server']),
+}
+
 const sanitizeParameters = (parameters) => {
   const result = {}
-  const allowedKeys = new Set(['form', 'location', 'from', 'to', 'treatment', 'error_type'])
   Object.entries(parameters || {}).forEach(([key, value]) => {
-    if (!allowedKeys.has(key)) return
-    if (typeof value === 'string') result[key] = value.slice(0, 80)
-    else if (typeof value === 'number' || typeof value === 'boolean') result[key] = value
+    if (typeof value === 'string' && parameterValues[key]?.has(value)) result[key] = value
   })
   return result
 }
 
+function safePageContext(pathname = window.location.pathname, title = document.title) {
+  let referrer = ''
+  try {
+    const url = new URL(document.referrer)
+    if (/^https?:$/.test(url.protocol) && url.origin !== window.location.origin) referrer = url.origin
+  } catch { /* A missing referrer is normal. */ }
+
+  return {
+    page_title: String(title || '').slice(0, 120),
+    page_path: canonicalPath(pathname),
+    page_location: `${window.location.origin}${canonicalPath(pathname)}`,
+    page_referrer: referrer,
+  }
+}
+
 export function enableAnalytics() {
-  if (typeof window === 'undefined' || !hasAnalyticsConsent()) return
+  if (typeof window === 'undefined' || !hasAnalyticsConsent() || trackingDisabled()) return
   window[`ga-disable-${GA_MEASUREMENT_ID}`] = false
   window.dataLayer = window.dataLayer || []
   window.gtag = window.gtag || function gtag() { window.dataLayer.push(arguments) }
@@ -113,6 +138,8 @@ export function enableAnalytics() {
     send_page_view: false,
     anonymize_ip: true,
     allow_google_signals: false,
+    allow_ad_personalization_signals: false,
+    ...safePageContext(),
   })
 
   if (!document.querySelector(`script[data-cabinet-ga="${GA_MEASUREMENT_ID}"]`)) {
@@ -148,38 +175,17 @@ export function disableAnalytics({ clearStorage = true } = {}) {
 function detectSource() {
   try {
     const stored = window.sessionStorage.getItem(SOURCE_KEY)
-    if (stored) return stored
+    if (analyticsSources.has(stored)) return stored
   } catch {
     // Continue with source detection.
   }
 
   const params = new URLSearchParams(window.location.search)
-  const utm = (params.get('utm_source') || '').toLowerCase()
-  let source = 'direct'
-
-  if (utm) {
-    if (utm.includes('google')) source = 'google'
-    else if (utm.includes('bing')) source = 'bing'
-    else if (utm.includes('facebook') || utm === 'fb') source = 'facebook'
-    else if (utm.includes('instagram') || utm === 'ig') source = 'instagram'
-    else if (utm.includes('doctolib')) source = 'doctolib'
-    else if (utm.includes('mail') || utm.includes('newsletter')) source = 'newsletter'
-    else source = 'campaign'
-  } else if (document.referrer) {
-    try {
-      const referrer = new URL(document.referrer)
-      if (referrer.hostname !== window.location.hostname) {
-        if (referrer.hostname.includes('google.')) source = 'google'
-        else if (referrer.hostname.includes('bing.')) source = 'bing'
-        else if (referrer.hostname.includes('facebook.')) source = 'facebook'
-        else if (referrer.hostname.includes('instagram.')) source = 'instagram'
-        else if (referrer.hostname.includes('doctolib.')) source = 'doctolib'
-        else source = 'referral'
-      }
-    } catch {
-      source = 'other'
-    }
-  }
+  const source = classifyAnalyticsSource({
+    utmSource: params.get('utm_source'),
+    referrer: document.referrer,
+    hostname: window.location.hostname,
+  })
 
   try { window.sessionStorage.setItem(SOURCE_KEY, source) } catch { /* no-op */ }
   return source
@@ -215,6 +221,13 @@ async function sendAggregate(event, parameters = {}, identity) {
   if (!resolvedIdentity) return false
   const geo = await getCoarseLocation()
   if (!hasAnalyticsConsent()) return false
+  // Load the database client only for consenting visitors who generate an event.
+  analyticsClient ||= import('../services/analytics')
+  const { ingestAnalytics } = await analyticsClient.catch(() => {
+    analyticsClient = null
+    return { ingestAnalytics: async () => false }
+  })
+  if (!hasAnalyticsConsent()) return false
   return ingestAnalytics({
     consent: true,
     eventId: randomUuid(),
@@ -243,7 +256,7 @@ function startOrContinueSession(pagePath) {
 }
 
 export function trackPageView(pathname = window.location.pathname, title = document.title) {
-  if (typeof window === 'undefined' || !hasAnalyticsConsent() || isPrivatePath(pathname)) return
+  if (typeof window === 'undefined' || !hasAnalyticsConsent() || trackingDisabled(pathname)) return
   enableAnalytics()
   const pagePath = canonicalPath(pathname)
   const now = Date.now()
@@ -253,11 +266,9 @@ export function trackPageView(pathname = window.location.pathname, title = docum
   const identity = startOrContinueSession(pagePath)
   if (!identity) return
   void sendAggregate('page_view', { pagePath }, identity)
-  window.gtag?.('event', 'page_view', {
-    page_title: String(title || '').slice(0, 120),
-    page_path: pagePath,
-    page_location: `${window.location.origin}${pagePath}`,
-  })
+  const context = safePageContext(pagePath, title)
+  window.gtag?.('set', context)
+  window.gtag?.('event', 'page_view', context)
 }
 
 function elementIdentity(element) {
@@ -307,11 +318,11 @@ function clickKind(element) {
 }
 
 export function trackClick(event, pathname = window.location.pathname) {
-  if (typeof window === 'undefined' || !hasAnalyticsConsent() || isPrivatePath(pathname)) return
+  if (typeof window === 'undefined' || !hasAnalyticsConsent() || trackingDisabled(pathname)) return
   const rawTarget = event.target
   if (!(rawTarget instanceof Element)) return
   const element = rawTarget.closest('a, button, [role="button"], [data-analytics-id]')
-  if (!element || element.closest('[data-analytics-ignore]')) return
+  if (!element || element.closest('[data-analytics-ignore], form')) return
 
   const width = Math.max(document.documentElement.scrollWidth, window.innerWidth, 1)
   const height = Math.max(document.documentElement.scrollHeight, window.innerHeight, 1)
@@ -340,10 +351,10 @@ export function trackClick(event, pathname = window.location.pathname) {
  * Names, contact details, messages and form values are never accepted.
  */
 export function trackEvent(name, parameters = {}) {
-  if (!allowedEvents.has(name) || typeof window === 'undefined' || !hasAnalyticsConsent()) return
+  if (!allowedEvents.has(name) || typeof window === 'undefined' || !hasAnalyticsConsent() || trackingDisabled()) return
   enableAnalytics()
   const safeParameters = sanitizeParameters(parameters)
-  window.gtag?.('event', name, safeParameters)
+  window.gtag?.('event', name, { ...safeParameters, ...safePageContext() })
 
   if (name === 'form_success') {
     const conversionKind = safeParameters.form === 'pre_appointment' ? 'pre_appointment' : 'contact'

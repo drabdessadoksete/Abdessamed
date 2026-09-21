@@ -13,3 +13,15 @@
 
 /login
   Cache-Control: no-store
+
+/login/*
+  Cache-Control: no-store
+
+/pre-rendez-vous/*
+  X-Robots-Tag: noindex, follow
+
+/404.html
+  X-Robots-Tag: noindex, nofollow
+
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable

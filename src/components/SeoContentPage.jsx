@@ -5,83 +5,14 @@ import SmileViewSimulator from './SmileViewSimulator'
 import { getPagesByUrls } from '../data/seoContent'
 import { buildArticleBodyBlocks } from '../utils/seoArticleContent'
 import { mediaForRoute } from '../config/media'
-import { absoluteUrl, dentistPersonSchema, dentistSchema, organizationSchema } from '../config/site'
+import { absoluteUrl, site } from '../config/site'
+import { contentPageGraph } from '../utils/pageSchema'
+import { contentOutline, sectionId } from '../utils/contentOutline'
+import { bookingPath } from '../utils/booking'
+import { trackEvent } from '../utils/analytics'
 
 function primaryAsset(page) {
   return mediaForRoute(page.url)
-}
-
-function faqSchema(page) {
-  if (!page.faq?.length) return null
-  return {
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    mainEntity: page.faq.map((item) => ({
-      '@type': 'Question',
-      name: item.question,
-      acceptedAnswer: { '@type': 'Answer', text: item.answer },
-    })),
-  }
-}
-
-// MedicalWebPage classifies the page; lastReviewed/reviewedBy assert that a named
-// practitioner checked it. Only emit those two when the content data actually records a
-// completed review — claiming one otherwise would be a false statement about the praticien.
-function medicalWebPageSchema(page, type) {
-  const reviewed = page.medicalReviewStatus === 'reviewed' && Boolean(page.medicalReviewer)
-  return {
-    '@context': 'https://schema.org',
-    '@type': 'MedicalWebPage',
-    '@id': `${absoluteUrl(page.url)}#webpage`,
-    url: absoluteUrl(page.url),
-    name: page.title,
-    description: page.metaDescription,
-    inLanguage: 'fr',
-    isPartOf: { '@id': `${absoluteUrl('/')}#website` },
-    about: { '@id': dentistSchema['@id'] },
-    audience: { '@type': 'MedicalAudience', audienceType: 'Patient' },
-    ...(type === 'blog' ? { specialty: 'https://schema.org/Dentistry' } : {}),
-    ...(reviewed ? { lastReviewed: page.dateModified, reviewedBy: { '@id': dentistPersonSchema['@id'] } } : {}),
-  }
-}
-
-function breadcrumbSchema(page, type) {
-  return {
-    '@context': 'https://schema.org',
-    '@type': 'BreadcrumbList',
-    itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'Accueil', item: absoluteUrl('/') },
-      { '@type': 'ListItem', position: 2, name: type === 'blog' ? 'Guides' : 'Soins', item: absoluteUrl(type === 'blog' ? '/blog/' : '/services/') },
-      { '@type': 'ListItem', position: 3, name: page.h1, item: absoluteUrl(page.url) },
-    ],
-  }
-}
-
-function primarySchema(page, type, image) {
-  if (type === 'blog') {
-    return {
-      '@context': 'https://schema.org',
-      '@type': 'Article',
-      headline: page.h1,
-      description: page.metaDescription,
-      mainEntityOfPage: absoluteUrl(page.url),
-      datePublished: page.datePublished,
-      dateModified: page.dateModified,
-      author: { '@id': organizationSchema['@id'] },
-      publisher: { '@id': organizationSchema['@id'] },
-      image: absoluteUrl(image.fallback),
-    }
-  }
-
-  return {
-    '@context': 'https://schema.org',
-    '@type': 'Service',
-    name: page.h1,
-    description: page.metaDescription,
-    url: absoluteUrl(page.url),
-    provider: { '@id': dentistSchema['@id'] },
-    areaServed: 'Sète et Bassin de Thau',
-  }
 }
 
 function LongFormContent({ page }) {
@@ -91,8 +22,8 @@ function LongFormContent({ page }) {
     return (
       <section className="article-section">
         {blocks.map((block, index) => {
-          if (block.type === 'heading2') return <h2 key={`${block.text}-${index}`}>{block.text}</h2>
-          if (block.type === 'heading3') return <h3 key={`${block.text}-${index}`}>{block.text}</h3>
+          if (block.type === 'heading2') return <h2 id={sectionId(block.text, index)} key={`${block.text}-${index}`}>{block.text}</h2>
+          if (block.type === 'heading3') return <h3 id={sectionId(block.text, index)} key={`${block.text}-${index}`}>{block.text}</h3>
           if (block.type === 'list') return <ul key={`list-${index}`}>{block.items.map((item) => <li key={item}>{item}</li>)}</ul>
           if (block.type === 'quote') return <blockquote key={`${block.text}-${index}`}>{block.text}</blockquote>
           return <p key={`${block.text}-${index}`}>{block.text}</p>
@@ -101,9 +32,9 @@ function LongFormContent({ page }) {
     )
   }
 
-  return (page.sections || []).map((section) => (
+  return (page.sections || []).map((section, index) => (
     <section className="article-section" key={section.heading}>
-      <h2>{section.heading}</h2>
+      <h2 id={sectionId(section.heading, index)}>{section.heading}</h2>
       {section.blocks.map((block) => (
         <div className="article-section__block" key={block.subheading || block.paragraphs?.[0]}>
           {block.subheading ? <h3>{block.subheading}</h3> : null}
@@ -155,7 +86,12 @@ export default function SeoContentPage({ page, type = 'service' }) {
   const asset = primaryAsset(page)
   const isArticle = type === 'blog'
   const isCityPage = page.menuGroup === 'locals'
-  const schemas = [primarySchema(page, type, asset), medicalWebPageSchema(page, type), breadcrumbSchema(page, type), faqSchema(page)].filter(Boolean)
+  const schemas = contentPageGraph(page, type, asset)
+  const outline = contentOutline(page)
+  const appointmentPath = bookingPath(page.url, page.cluster)
+  const primaryTreatment = page.cluster === 'implantologie' || /implant|dents-manquantes/.test(page.url)
+    ? { href: '/implantologie/', label: 'Implant dentaire à Sète' }
+    : { href: '/orthodontie-invisible-sete/', label: 'Orthodontie invisible à Sète' }
 
   return (
     <>
@@ -170,11 +106,13 @@ export default function SeoContentPage({ page, type = 'service' }) {
         <meta property="og:image:width" content={String(asset.width)} />
         <meta property="og:image:height" content={String(asset.height)} />
         <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={page.title} />
+        <meta name="twitter:description" content={page.metaDescription} />
         <meta name="twitter:image" content={absoluteUrl(asset.fallback)} />
-        <meta name="robots" content={page.indexable === false ? 'noindex,follow' : 'index,follow,max-image-preview:large'} />
+        <meta name="robots" content={page.indexable === false ? 'noindex,follow' : 'index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1'} />
         {isArticle ? <meta property="article:published_time" content={page.datePublished} /> : null}
         {isArticle ? <meta property="article:modified_time" content={page.dateModified} /> : null}
-        {schemas.map((schema, index) => <script key={index} type="application/ld+json">{JSON.stringify(schema)}</script>)}
+        <script id="page-structured-data" type="application/ld+json">{JSON.stringify({ '@context': 'https://schema.org', '@graph': schemas })}</script>
       </Helmet>
 
       <header className="content-hero">
@@ -188,7 +126,7 @@ export default function SeoContentPage({ page, type = 'service' }) {
               <h1>{page.h1}</h1>
               <p>{page.intro}</p>
               <div className="content-hero__actions">
-                <Link to="/pre-rendez-vous/" className="btn-accent">Demander un pré-rendez-vous</Link>
+                <Link to={appointmentPath} className="btn-accent" onClick={() => trackEvent('pre_appointment_click', { location: 'content_hero' })}>Demander un pré-rendez-vous</Link>
                 <Link to="/contact/" className="btn-light">Contacter le cabinet</Link>
               </div>
             </div>
@@ -230,6 +168,13 @@ export default function SeoContentPage({ page, type = 'service' }) {
                 </section>
               ) : null}
 
+              {outline.length > 1 ? (
+                <nav className="content-outline" aria-label="Sommaire de la page">
+                  <h2>Dans cette page</h2>
+                  <ol>{outline.map((item) => <li key={item.id} className={item.level === 3 ? 'content-outline__subsection' : undefined}><a href={`#${item.id}`}>{item.title}</a></li>)}</ol>
+                </nav>
+              ) : null}
+
               <LongFormContent page={page} />
 
               {page.faq?.length ? (
@@ -243,11 +188,19 @@ export default function SeoContentPage({ page, type = 'service' }) {
                 <span className="section-kicker section-kicker--light">Prochaine étape</span>
                 <h2>{page.ctaTitle}</h2>
                 <p>{page.ctaText}</p>
-                <Link to={page.ctaHref || '/pre-rendez-vous/'} className="btn-accent">{page.ctaLabel}</Link>
+                <Link to={page.ctaHref || appointmentPath} className="btn-accent" onClick={() => trackEvent('pre_appointment_click', { location: 'content_end' })}>{page.ctaLabel}</Link>
               </section>
             </article>
 
             <aside className="content-aside" aria-label="Ressources associées">
+              <div className="content-aside__appointment">
+                <h2>Votre bilan à Sète</h2>
+                {page.url !== primaryTreatment.href ? <Link to={primaryTreatment.href}><strong>{primaryTreatment.label}</strong></Link> : null}
+                <address>{site.address.streetAddress}<br />{site.address.postalCode} {site.address.addressLocality}</address>
+                <Link to={appointmentPath} onClick={() => trackEvent('pre_appointment_click', { location: 'content_aside' })}>Demander un pré-rendez-vous →</Link>
+                <a href={`tel:${site.telephone}`} onClick={() => trackEvent('phone_click', { location: 'content_aside' })}>Appeler le {site.telephoneDisplay}</a>
+                <Link to="/contact/">Accès et horaires du cabinet →</Link>
+              </div>
               <div>
                 <h2>Poursuivre votre lecture</h2>
                 {relatedPages.slice(0, 6).map((related) => (

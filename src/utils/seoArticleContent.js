@@ -71,7 +71,7 @@ export function buildArticleBodyBlocks(articleBody) {
       continue
     }
 
-    if (isStandaloneHeading(lines[0])) {
+    if (lines.length === 1 && isStandaloneHeading(lines[0])) {
       blocks.push({
         type: isNumberedHeading(lines[0]) ? 'heading3' : 'heading2',
         text: lines[0],

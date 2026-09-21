@@ -21,6 +21,7 @@ const periods = [
 ]
 
 const sourceLabels = {
+  chatgpt: 'ChatGPT', perplexity: 'Perplexity', gemini: 'Gemini', claude: 'Claude', copilot: 'Microsoft Copilot',
   direct: 'Accès direct', google: 'Google', bing: 'Bing', facebook: 'Facebook', instagram: 'Instagram',
   doctolib: 'Doctolib', newsletter: 'E-mail / newsletter', referral: 'Autre site', campaign: 'Campagne', other: 'Autre',
 }

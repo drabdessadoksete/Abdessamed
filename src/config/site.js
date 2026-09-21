@@ -69,6 +69,7 @@ export const dentistSchema = {
   address: postalAddressSchema,
   geo: { '@type': 'GeoCoordinates', ...site.coordinates },
   hasMap: site.mapLink,
+  areaServed: site.areaServed.map((name) => ({ '@type': 'Place', name })),
   openingHoursSpecification: openingHoursSchema,
   sameAs: site.profiles,
 }

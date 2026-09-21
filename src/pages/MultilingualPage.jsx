@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom'
 import ResponsiveImage from '../components/ResponsiveImage'
 import { getAlternatesForPageType, multilingualRouteByPath } from '../config/multilingualRoutes'
 import { media } from '../config/media'
-import { absoluteUrl, dentistSchema, site } from '../config/site'
+import { absoluteUrl, site } from '../config/site'
 
 export default function MultilingualPage() {
   const { pathname } = useLocation()
@@ -12,17 +12,6 @@ export default function MultilingualPage() {
 
   const asset = route.pageType === 'implant' ? media.implantDigitalPlanning : route.pageType === 'ortho' ? media.orthoTeamExplanation : media.homeConsultation
   const alternates = getAlternatesForPageType(route.pageType)
-  const schemaType = route.pageType === 'contact' ? 'ContactPage' : route.pageType === 'home' ? 'WebPage' : 'Service'
-  const schema = {
-    '@context': 'https://schema.org',
-    '@type': schemaType,
-    name: route.h1,
-    description: route.description,
-    url: absoluteUrl(route.path),
-    inLanguage: route.language,
-    ...(schemaType === 'Service' ? { provider: { '@id': dentistSchema['@id'] }, areaServed: 'Sète, France' } : {}),
-    ...(schemaType === 'ContactPage' ? { mainEntity: { '@id': dentistSchema['@id'] } } : {}),
-  }
 
   return (
     <>
@@ -33,8 +22,7 @@ export default function MultilingualPage() {
         <meta property="og:description" content={route.description} />
         <meta property="og:image" content={absoluteUrl(asset.fallback)} />
         {alternates.map((alternate) => <link key={alternate.language} rel="alternate" hrefLang={alternate.language} href={absoluteUrl(alternate.href)} />)}
-        <link rel="alternate" hrefLang="x-default" href={absoluteUrl('/')} />
-        <script type="application/ld+json">{JSON.stringify(schema)}</script>
+        <link rel="alternate" hrefLang="x-default" href={absoluteUrl(alternates.find((alternate) => alternate.language === 'fr')?.href || '/')} />
       </Helmet>
 
       <header className="localized-hero" lang={route.language}>

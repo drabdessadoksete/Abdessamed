@@ -120,6 +120,13 @@ export const media = {
 }
 
 export const mediaByRoute = {
+  '/': media.homeConsultation,
+  '/about/': media.logo,
+  '/contact/': media.logo,
+  '/gallery/': media.implantModel,
+  '/blog/': media.implantModel,
+  ...Object.fromEntries(['/en/dental-implants-sete/', '/es/implantes-dentales-sete/', '/de/zahnimplantate-sete/'].map((url) => [url, media.implantDigitalPlanning])),
+  ...Object.fromEntries(['/en/invisible-orthodontics-sete/', '/es/ortodoncia-invisible-sete/', '/de/unsichtbare-kieferorthopaedie-sete/'].map((url) => [url, media.orthoTeamExplanation])),
   '/implantologie/': media.implantDigitalPlanning,
   '/orthodontie-sete/': media.orthoPlanning,
   '/orthodontie-invisible-sete/': media.orthoTeamExplanation,

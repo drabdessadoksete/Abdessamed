@@ -1,0 +1,1 @@
+import{e as r,j as o}from"./index-Da0QwEm_.js";import{S as a}from"./SeoContentPage-CXvC0PO6.js";import{g as s}from"./seoContent-DYfNAwY9.js";import n from"./NotFound-DLdSEbXK.js";function u(){const{pathname:t}=r(),e=s(t);return e?o.jsx(a,{page:e,type:"service"}):o.jsx(n,{})}export{u as default};

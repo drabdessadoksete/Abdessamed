@@ -18,7 +18,7 @@ const jsonHeaders = (origin: string | null) => ({
 })
 
 const allowedEvents = new Set(['session_start', 'page_view', 'click', 'conversion'])
-const allowedSources = new Set(['direct', 'google', 'bing', 'facebook', 'instagram', 'doctolib', 'newsletter', 'referral', 'campaign', 'other'])
+const allowedSources = new Set(['direct', 'google', 'bing', 'facebook', 'instagram', 'doctolib', 'newsletter', 'referral', 'campaign', 'other', 'chatgpt', 'perplexity', 'gemini', 'claude', 'copilot'])
 const allowedClickKinds = new Set(['phone', 'email', 'map', 'appointment', 'contact', 'navigation', 'treatment', 'outbound', 'other'])
 const allowedConversions = new Set(['contact', 'pre_appointment', 'other'])
 const allowedViewports = new Set(['sm', 'md', 'lg', 'xl', 'other'])

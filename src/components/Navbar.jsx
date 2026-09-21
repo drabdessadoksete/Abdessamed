@@ -5,13 +5,14 @@ import { useEffect, useRef, useState } from 'react'
 import { media } from '../config/media'
 import { equivalentPath, getLanguageNavigation, routeLanguage } from '../config/multilingualRoutes'
 import { trackEvent } from '../utils/analytics'
+import { bookingPath } from '../utils/booking'
 
 const frenchNavigation = [
-  { label: 'Accueil', href: '/' },
+  { label: 'Orthodontie invisible', href: '/orthodontie-invisible-sete/' },
+  { label: 'Implantologie', href: '/implantologie/' },
   { label: 'À propos', href: '/about/' },
   { label: 'Soins', href: '/services/' },
   { label: 'Guides', href: '/blog/' },
-  { label: 'Galerie', href: '/gallery/' },
   { label: 'Contact', href: '/contact/' },
 ]
 
@@ -41,7 +42,7 @@ export default function Navbar() {
   const localized = language !== 'fr'
   const isHome = pathname === '/' || pathname === `/${language}/`
   const transparent = isHome && !scrolled && !mobileOpen
-  const ctaHref = localized ? getLanguageNavigation(language).paths.contact : '/pre-rendez-vous/'
+  const ctaHref = localized ? getLanguageNavigation(language).paths.contact : bookingPath(pathname)
   const ctaLabel = localized ? getLanguageNavigation(language).labels.cta : 'Pré-rendez-vous'
 
   useEffect(() => {
@@ -94,7 +95,7 @@ export default function Navbar() {
                 <span>{String(index + 1).padStart(2, '0')}</span>{item.label}
               </NavLink>
             ))}
-            <Link to={ctaHref} className="btn-accent" onClick={closeMobileMenu}>{ctaLabel}</Link>
+            <Link to={ctaHref} className="btn-accent" onClick={() => { closeMobileMenu(); if (!localized) trackEvent('pre_appointment_click', { location: 'mobile_navigation' }) }}>{ctaLabel}</Link>
             {!localized ? <Link to="/login/" className="authority-navbar__login" onClick={closeMobileMenu}>Espace cabinet</Link> : null}
           </div>
         </motion.nav>
@@ -126,7 +127,7 @@ export default function Navbar() {
                 </div>
               ) : null}
             </div>
-            <Link to={ctaHref} className="authority-navbar__cta">{ctaLabel}</Link>
+            <Link to={ctaHref} className="authority-navbar__cta" onClick={() => { if (!localized) trackEvent('pre_appointment_click', { location: 'navigation' }) }}>{ctaLabel}</Link>
             <button type="button" className="authority-navbar__toggle" aria-label={mobileOpen ? 'Fermer le menu' : 'Ouvrir le menu'} aria-expanded={mobileOpen} aria-controls="mobile-navigation" onClick={() => setMobileOpen((value) => !value)}>
               <span /><span />
             </button>

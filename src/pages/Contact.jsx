@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { submitMessage } from '../services/api'
-import { openingHoursSchema, site } from '../config/site'
+import { site } from '../config/site'
 import { trackEvent } from '../utils/analytics'
 
 const initialForm = { name: '', email: '', phone: '', message: '' }
@@ -34,19 +34,7 @@ export default function Contact() {
       <Helmet>
         <title>Contact du cabinet dentaire à Sète | Dr Abdessadok</title>
         <meta name="description" content="Adresse, téléphone, e-mail, accès et horaires du cabinet dentaire du Dr Abdessadok à Sète. Envoyez un message au cabinet." />
-        <script type="application/ld+json">{JSON.stringify({
-          '@context': 'https://schema.org',
-          '@type': 'ContactPage',
-          name: 'Contact du Cabinet Dentaire Dr. Abdessadok',
-          mainEntity: {
-            '@type': 'Dentist',
-            name: site.practiceName,
-            telephone: site.telephone,
-            email: site.email,
-            address: { '@type': 'PostalAddress', ...site.address },
-            openingHoursSpecification: openingHoursSchema,
-          },
-        })}</script>
+
       </Helmet>
 
       <header className="page-hero page-hero--light" aria-labelledby="contact-title">
@@ -77,7 +65,8 @@ export default function Contact() {
             </div>
           </div>
 
-          <form className="contact-form" onSubmit={submit}>
+          <form className="contact-form" onSubmit={submit} method="post">
+            <noscript><p>Activez JavaScript pour envoyer le formulaire, ou appelez le <a href={`tel:${site.telephone}`}>{site.telephoneDisplay}</a>.</p></noscript>
             <span className="section-kicker section-kicker--light">Message non urgent</span>
             <h2>Écrire au cabinet</h2>
             <p>Ne transmettez pas de données médicales sensibles dans ce formulaire.</p>

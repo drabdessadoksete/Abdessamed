@@ -2,7 +2,7 @@ import { Helmet } from 'react-helmet-async'
 import { Link } from 'react-router-dom'
 import ResponsiveImage from '../components/ResponsiveImage'
 import { media } from '../config/media'
-import { dentistPersonSchema, site } from '../config/site'
+import { site } from '../config/site'
 
 const approach = [
   {
@@ -29,7 +29,6 @@ export default function About() {
       <Helmet>
         <title>À propos du Dr Abdessadok | Cabinet dentaire Sète</title>
         <meta name="description" content="Parcours universitaire, qualifications et approche clinique du Dr Abdessamed Abdessadok, chirurgien-dentiste à Sète." />
-        <script type="application/ld+json">{JSON.stringify({ '@context': 'https://schema.org', ...dentistPersonSchema })}</script>
       </Helmet>
 
       <header className="page-hero" aria-labelledby="about-title">

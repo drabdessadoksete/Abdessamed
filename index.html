@@ -9,7 +9,7 @@
     <meta name="cf-beacon" content="off" />
     <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline' https:; object-src 'none';" />
     <title>Cabinet Dentaire Dr. Abdessadok</title>
-    <meta name="description" content="Cabinet de chirurgiens-dentistes à Sète spécialisé en Invisalign, Implantologie et soins dentaires. Prenez rendez-vous avec le Dr Abdessadok." data-rh="true">
+    <meta name="description" content="Cabinet dentaire à Sète : implantologie, orthodontie invisible et soins dentaires avec le Dr Abdessamed Abdessadok." data-rh="true">
     <meta name="theme-color" content="#F5F3ED" />
     <meta name="msapplication-TileColor" content="#F5F3ED" />
     <meta name="msapplication-TileImage" content="/android-chrome-192x192.png" />
@@ -29,26 +29,7 @@
     <link rel="manifest" href="/site.webmanifest" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <script>
-      // Prevent Cloudflare Insights from loading
-      const blockedDomains = ["static.cloudflareinsights.com"];
 
-      const origFetch = window.fetch;
-      window.fetch = function (...args) {
-        if (blockedDomains.some(domain => args[0].includes(domain))) {
-          return new Promise(() => {}); // silently cancel request
-        }
-        return origFetch.apply(this, args);
-      };
-
-      const origOpen = XMLHttpRequest.prototype.open;
-      XMLHttpRequest.prototype.open = function (method, url) {
-        if (blockedDomains.some(domain => url.includes(domain))) {
-          return; // silently block
-        }
-        return origOpen.apply(this, arguments);
-      };
-    </script>
   </head>
   <body class="bg-background text-foreground font-sans">
     <div id="root"></div>

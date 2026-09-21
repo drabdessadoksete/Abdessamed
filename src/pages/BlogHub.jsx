@@ -3,7 +3,7 @@ import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { Helmet } from 'react-helmet-async'
 import { Link } from 'react-router-dom'
 import ResponsiveImage from '../components/ResponsiveImage'
-import { blogPages } from '../data/seoContent'
+import { blogPages, servicePages } from '../data/seoContent'
 import { media, mediaForRoute } from '../config/media'
 
 const categories = ['Tous', 'Implantologie', 'Orthodontie', 'Orthodontie invisible', 'Bassin de Thau / Suivi local']
@@ -55,6 +55,17 @@ export default function BlogHub() {
           <ResponsiveImage asset={media.implantModel} eager className="guides-hero__visual" imageClassName="guides-hero__image" />
         </div>
       </header>
+
+      <section className="authority-section authority-section--cream" aria-labelledby="decision-guides-title">
+        <div className="container-max">
+          <div className="authority-heading"><span className="section-kicker">Préparer votre bilan</span><h2 id="decision-guides-title">Traitement, budget et suivi : trouver les informations utiles.</h2></div>
+          <nav className="decision-guides" aria-label="Informations sur les traitements à Sète">
+            {servicePages.filter((page) => page.menuGroup !== 'locals' && page.indexable !== false).map((page) => (
+              <Link key={page.url} to={page.url}><strong>{page.menuLabel || page.h1}</strong><span>{page.metaDescription}</span><b aria-hidden="true">→</b></Link>
+            ))}
+          </nav>
+        </div>
+      </section>
 
       <section className="featured-guides" aria-labelledby="featured-guides-title">
         <div className="container-max">

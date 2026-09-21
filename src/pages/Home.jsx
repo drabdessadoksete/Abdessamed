@@ -197,6 +197,7 @@ export default function Home() {
             <p>Des guides pédagogiques datés et reliés aux pages de soins correspondantes.</p>
           </div>
           <div className="education-links">
+            <Link to="/prix-implant-dentaire-sete/"><span>Budget et devis</span><strong>Comprendre le prix d’un implant dentaire</strong><b aria-hidden="true">→</b></Link>
             <Link to="/prix-orthodontie-invisible-sete/"><span>Budget et devis</span><strong>Comprendre le prix des aligneurs</strong><b aria-hidden="true">→</b></Link>
             <Link to="/orthodontie-sete/"><span>Alignement dentaire</span><strong>Quand demander un bilan d’orthodontie ?</strong><b aria-hidden="true">→</b></Link>
             <Link to="/blog/"><span>Bibliothèque</span><strong>Consulter tous les guides dentaires</strong><b aria-hidden="true">→</b></Link>
@@ -219,6 +220,11 @@ export default function Home() {
             <h3>Patients du Bassin de Thau</h3>
             <p>Le cabinet reçoit à Sète. Les pages de proximité décrivent l’accès depuis Mèze, Frontignan, Marseillan, Agde et Balaruc-les-Bains, sans prétendre à une implantation dans ces villes.</p>
             <Link to="/invisalign-bassin-de-thau/" className="text-link">Préparer votre venue depuis le Bassin de Thau <span aria-hidden="true">→</span></Link>
+            <nav className="local-access-links" aria-label="Venir pour un bilan implantaire à Sète">
+              <Link to="/implant-dentaire-frontignan/">Implant dentaire depuis Frontignan →</Link>
+              <Link to="/implant-dentaire-balaruc-les-bains/">Implant dentaire depuis Balaruc-les-Bains →</Link>
+              <Link to="/implant-dentaire-meze/">Implant dentaire depuis Mèze →</Link>
+            </nav>
           </div>
         </div>
       </section>

@@ -41,7 +41,14 @@ function schemaTypes(html) {
   return [...html.matchAll(/<script[^>]+type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi)].flatMap((match) => {
     try {
       const value = JSON.parse(match[1])
-      return (value['@graph'] || [value]).flatMap((item) => Array.isArray(item['@type']) ? item['@type'] : [item['@type']]).filter(Boolean)
+      const types = []
+      const visit = (item) => {
+        if (!item || typeof item !== 'object') return
+        if (item['@type']) types.push(...(Array.isArray(item['@type']) ? item['@type'] : [item['@type']]))
+        Object.values(item).forEach((child) => Array.isArray(child) ? child.forEach(visit) : visit(child))
+      }
+      visit(value)
+      return types
     } catch {
       fail('Invalid JSON-LD found in generated HTML')
       return []
@@ -135,6 +142,10 @@ for (const url of sitemapUrls) {
   const expectedCanonical = absoluteUrl(pathname)
 
   if (!title) fail(`${pathname}: title missing`)
+  if (title !== route.title) fail(`${pathname}: title differs from route metadata`)
+  if ([...html.matchAll(/<title\b/gi)].length !== 1) fail(`${pathname}: expected one title`)
+  if ([...html.matchAll(/<h1\b/gi)].length !== 1) fail(`${pathname}: expected one H1`)
+  if ([...html.matchAll(/<link\b[^>]*rel="canonical"/gi)].length !== 1) fail(`${pathname}: expected one canonical`)
   if (!h1) fail(`${pathname}: H1 missing`)
   if (h1 !== route.h1) fail(`${pathname}: initial H1 differs from route configuration (${h1})`)
   if (pathname !== '/' && h1 === homepageH1) fail(`${pathname}: homepage H1 found in initial HTML`)
@@ -154,16 +165,23 @@ for (const url of sitemapUrls) {
 
   for (const tag of [...html.matchAll(/<img\b[^>]*>/gi)].map((match) => attributes(match[0]))) {
     if (!('alt' in tag)) fail(`${pathname}: image is missing an alt attribute`)
-    if (tag.src?.startsWith('/images/') && !(await exists(path.join(distDir, tag.src)))) fail(`${pathname}: image asset is missing (${tag.src})`)
+    if (tag.src?.startsWith('/') && !(await exists(path.join(distDir, tag.src)))) fail(`${pathname}: image asset is missing (${tag.src})`)
   }
 
-  for (const href of [...html.matchAll(/<a[^>]+href=["']([^"'#?]+)["']/gi)].map((match) => match[1])) {
-    if (!href.startsWith('/') || href === '/' || /\.[a-z0-9]+$/i.test(href) || href.endsWith('/')) continue
-    fail(`${pathname}: internal link is not trailing-slash canonical (${href})`)
+  for (const href of [...html.matchAll(/<a[^>]+href=["']([^"']+)["']/gi)].map((match) => match[1])) {
+    if (href.startsWith('#')) {
+      if (!html.includes(`id="${href.slice(1)}"`)) fail(`${pathname}: missing anchor target ${href}`)
+      continue
+    }
+    if (!href.startsWith('/')) continue
+    const target = new URL(href.replaceAll('&amp;', '&'), absoluteUrl('/')).pathname
+    if (target !== '/' && !/\.[a-z0-9]+$/i.test(target) && !target.endsWith('/')) fail(`${pathname}: noncanonical internal link ${href}`)
+    if (!/\.[a-z0-9]+$/i.test(target) && target !== '/login/' && !seoRouteByPath.has(target)) fail(`${pathname}: broken or redirected internal link ${href}`)
   }
 
   if (route.pageType) {
-    const expectedAlternates = [...getAlternatesForPageType(route.pageType).map((item) => ({ hreflang: item.language, href: absoluteUrl(item.href) })), { hreflang: 'x-default', href: absoluteUrl('/') }]
+    const alternatives = getAlternatesForPageType(route.pageType)
+    const expectedAlternates = [...alternatives.map((item) => ({ hreflang: item.language, href: absoluteUrl(item.href) })), { hreflang: 'x-default', href: absoluteUrl(alternatives.find((item) => item.language === 'fr').href) }]
     const actualAlternates = alternatesOf(html)
     for (const expected of expectedAlternates) {
       if (!actualAlternates.some((item) => item.hreflang === expected.hreflang && item.href === expected.href)) fail(`${pathname}: missing hreflang ${expected.hreflang} -> ${expected.href}`)
@@ -253,6 +271,43 @@ if (canonicalOf(notFoundHtml)) fail('404 document must not declare a canonical')
 if (h1Of(notFoundHtml) === homepageH1) fail('404 document contains homepage H1')
 results.push({ URL: unknownPath, Status: unknownStatus, Canonical: '', Robots: metaOf(notFoundHtml, 'robots'), H1: h1Of(notFoundHtml), Sitemap: 'no', Result: 'PASS' })
 
+// Check full server-rendered content and linked entities, including noindex guides.
+for (const route of seoRoutes) {
+  const html = await fs.readFile(await fileForPath(route.path), 'utf8')
+  const mainHtml = html.match(/<main\b[^>]*>([\s\S]*?)<\/main>/i)?.[1] || ''
+  const visibleText = stripTags(mainHtml)
+  const textFragments = route.page?.articleBody
+    ? route.page.articleBody.split('\n').map((line) => line.trim().replace(/^(?:#{1,3}\s+|>\s+|-\s+|\d+\.\s+)/, '').replace(/\*\*(.*?)\*\*/g, '$1').replace(/`([^`]+)`/g, '$1')).filter(Boolean)
+    : (route.page?.sections || []).flatMap((section) => section.blocks.flatMap((block) => [...(block.paragraphs || []), ...(block.bullets || [])]))
+  for (const text of textFragments) if (!visibleText.includes(stripTags(text))) fail(`${route.path}: existing editorial text missing from HTML (${text.slice(0, 60)})`)
+
+  const definitions = new Set()
+  const references = new Set()
+  const visit = (node) => {
+    if (!node || typeof node !== 'object') return
+    if (node['@id']) (node['@type'] ? definitions : references).add(node['@id'])
+    Object.values(node).forEach((child) => Array.isArray(child) ? child.forEach(visit) : visit(child))
+  }
+  for (const match of html.matchAll(/<script[^>]*type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/gi)) visit(JSON.parse(match[1]))
+  for (const id of references) if (!definitions.has(id)) fail(`${route.path}: unresolved structured-data reference ${id}`)
+  if (/style="[^"]*(?:^|;)opacity:0(?:;|")/.test(mainHtml)) fail(`${route.path}: content is initially invisible without JavaScript`)
+  for (const form of [...mainHtml.matchAll(/<form\b[^>]*>/gi)].map((match) => attributes(match[0]))) {
+    if (form.method !== 'post') fail(`${route.path}: form could expose values in a GET URL before JavaScript loads`)
+  }
+}
+
+const vercel = JSON.parse(await fs.readFile('vercel.json', 'utf8'))
+if (vercel.rewrites?.some((rule) => rule.destination === '/index.html')) fail('Vercel contains a homepage catch-all rewrite')
+const netlify = await fs.readFile('netlify.toml', 'utf8')
+if (/to\s*=\s*"\/index.html"/.test(netlify)) fail('Netlify contains a homepage catch-all rewrite')
+const apache = await fs.readFile('public/.htaccess', 'utf8')
+if (/RewriteRule\s+\.\s+\/index.html/.test(apache)) fail('Apache contains a homepage catch-all rewrite')
+for (const route of sitemapRoutes) {
+  const entry = [...sitemap.matchAll(/<url>([\s\S]*?)<\/url>/g)].map((match) => match[1]).find((xml) => xml.includes(`<loc>${absoluteUrl(route.path)}</loc>`))
+  const lastmod = entry?.match(/<lastmod>(.*?)<\/lastmod>/)?.[1]
+  if (lastmod && lastmod !== (route.page?.dateModified || route.dateModified)) fail(`${route.path}: sitemap lastmod lacks an editorial source`)
+}
+
 console.table(results)
 if (failures.length) {
   console.error(`\nSEO check failed with ${failures.length} issue(s):`)
@@ -260,4 +315,4 @@ if (failures.length) {
   process.exit(1)
 }
 
-console.log(`\nSEO check passed for ${results.length} routes without requiring a local HTTP listener.`)
+console.log(`\nSEO check passed: ${seoRoutes.length} public routes, ${sitemapRoutes.length} sitemap URLs, private exclusions, editorial content, structured-data links and 404 configuration (no live HTTP listener).`)

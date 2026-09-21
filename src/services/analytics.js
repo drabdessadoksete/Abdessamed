@@ -7,9 +7,13 @@ const requireAnalyticsClient = () => {
 
 export async function ingestAnalytics(payload) {
   if (!supabase) return false
-  const { data, error } = await supabase.functions.invoke('analytics-ingest', { body: payload })
-  if (error || !data?.ok) return false
-  return true
+  try {
+    const { data, error } = await supabase.functions.invoke('analytics-ingest', { body: payload })
+    return !error && data?.ok === true
+  } catch {
+    // Measurement must never interrupt navigation or an appointment request.
+    return false
+  }
 }
 
 export async function getAnalyticsDashboard(from, to) {
